@@ -3,7 +3,6 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import DottedMap from "dotted-map";
 
 interface MapProps {
   dots?: Array<{
@@ -18,14 +17,6 @@ export function WorldMap({
   lineColor = "#0ea5e9",
 }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const map = new DottedMap({ height: 100, grid: "diagonal" });
-
-  const svgMap = map.getSVG({
-    radius: 0.22,
-    color: "#00000020",
-    shape: "circle",
-    backgroundColor: "#f5f3ef",
-  });
 
   const projectPoint = (lat: number, lng: number) => {
     const x = (lng + 180) * (800 / 360);
@@ -42,10 +33,51 @@ export function WorldMap({
     return `M ${start.x} ${start.y} Q ${midX} ${midY} ${end.x} ${end.y}`;
   };
 
+  // Create a simple world map SVG with dots pattern
+  const createWorldMapSVG = () => {
+    const dots = [];
+    const spacing = 8;
+    const mapWidth = 800;
+    const mapHeight = 400;
+    
+    for (let x = 0; x < mapWidth; x += spacing) {
+      for (let y = 0; y < mapHeight; y += spacing) {
+        // Create a world-like distribution of dots
+        const isLand = (
+          // North America
+          (x >= 80 && x <= 200 && y >= 60 && y <= 180) ||
+          // South America
+          (x >= 150 && x <= 220 && y >= 200 && y <= 350) ||
+          // Europe
+          (x >= 300 && x <= 380 && y >= 60 && y <= 140) ||
+          // Africa
+          (x >= 320 && x <= 420 && y >= 120 && y <= 320) ||
+          // Asia
+          (x >= 400 && x <= 650 && y >= 40 && y <= 200) ||
+          // Australia
+          (x >= 580 && x <= 680 && y >= 280 && y <= 340)
+        );
+        
+        if (isLand && Math.random() > 0.3) {
+          dots.push(`<circle cx="${x}" cy="${y}" r="1" fill="#00000020" />`);
+        }
+      }
+    }
+    
+    return `
+      <svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+        <rect width="800" height="400" fill="#f5f3ef"/>
+        ${dots.join('')}
+      </svg>
+    `;
+  };
+
+  const worldMapSVG = createWorldMapSVG();
+
   return (
     <div className="w-full aspect-[2/1] rounded-lg relative font-sans">
       <img
-        src={`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`}
+        src={`data:image/svg+xml;utf8,${encodeURIComponent(worldMapSVG)}`}
         className="h-full w-full [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)] pointer-events-none select-none"
         alt="world map"
         height="495"
