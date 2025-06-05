@@ -2,59 +2,78 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { MapPin, Calendar, Users, Search } from "lucide-react";
+import { MapPin, Calendar, Users, Search, Plus } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 const TripSearchSection = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+
+  const laptopScale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
+
   return (
-    <section className="py-20 bg-spot-beige/30" id="trip-search-section">
-      <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-              Where will you go?
-            </h2>
-            <p className="text-xl text-gray-600">
-              Tell us your dream destination and we'll create the perfect itinerary
-            </p>
-          </div>
-
-          <Card className="p-8 shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
-            <form id="trip-search-form" className="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <section ref={containerRef} className="relative bg-[#f5f3ef] -mt-20 pt-10 pb-20">
+      {/* Trip Search Form */}
+      <div className="container mx-auto px-4 relative z-20">
+        <div className="max-w-5xl mx-auto">
+          <Card className="p-6 shadow-2xl border-0 bg-white/90 backdrop-blur-sm mb-8">
+            <form id="trip-search-form" className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-spot-primary w-5 h-5" />
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-600 w-5 h-5" />
                 <Input 
-                  placeholder="Destination"
-                  className="pl-12 h-14 bg-white border-gray-200 focus:border-spot-primary transition-colors"
+                  placeholder="🇧🇭 Bahrain"
+                  className="pl-12 h-12 bg-white border-gray-200 focus:border-blue-600 transition-colors"
                 />
               </div>
 
               <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-spot-primary w-5 h-5" />
+                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-600 w-5 h-5" />
                 <Input 
-                  type="date"
-                  placeholder="Start Date"
-                  className="pl-12 h-14 bg-white border-gray-200 focus:border-spot-primary transition-colors"
+                  placeholder="📅 Jun 16"
+                  className="pl-12 h-12 bg-white border-gray-200 focus:border-blue-600 transition-colors"
                 />
               </div>
 
               <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-spot-primary w-5 h-5" />
+                <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-600 w-5 h-5" />
                 <Input 
-                  type="date"
-                  placeholder="End Date"
-                  className="pl-12 h-14 bg-white border-gray-200 focus:border-spot-primary transition-colors"
+                  placeholder="👤 1 traveler"
+                  className="pl-12 h-12 bg-white border-gray-200 focus:border-blue-600 transition-colors"
                 />
               </div>
 
               <Button 
                 type="submit"
-                className="h-14 bg-spot-primary hover:bg-spot-secondary text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                className="h-12 bg-lime-400 hover:bg-lime-500 text-black font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
-                <Search className="w-5 h-5 mr-2" />
-                Search
+                <Plus className="w-5 h-5 mr-2" />
+                Plan your trip
               </Button>
             </form>
           </Card>
+        </div>
+      </div>
+
+      {/* Gradient Overlay for Laptop */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-[#f5f3ef]/80 z-10"></div>
+
+      {/* Laptop Mockup */}
+      <div className="container mx-auto px-4 relative z-5">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div 
+            style={{ scale: laptopScale }}
+            className="relative"
+          >
+            <img 
+              src="/images/landingpage/herosectionmockup.png" 
+              alt="Travel planning app mockup"
+              className="w-full max-w-3xl mx-auto shadow-2xl rounded-lg"
+            />
+          </motion.div>
         </div>
       </div>
     </section>
