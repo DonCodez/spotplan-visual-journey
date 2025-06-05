@@ -5,7 +5,7 @@ const HeroSection = () => {
   return (
     <section className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#f5f3ef' }}>
       {/* World Map Background */}
-      <div className="absolute inset-0 opacity-60">
+      <div className="absolute inset-0 opacity-25">
         <WorldMap
           dots={[
             {
@@ -44,14 +44,19 @@ const HeroSection = () => {
             </p>
           </div>
 
-          {/* Laptop Mockup */}
-          <div className="flex justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <div className="relative max-w-2xl w-full">
-              <img 
-                src="/images/landingpage/herosectionmockup.png" 
-                alt="SpotPlan App Mockup"
-                className="w-full h-auto drop-shadow-2xl transform transition-transform duration-300 hover:scale-105"
-              />
+          {/* Gradient overlay before laptop mockup */}
+          <div className="relative w-full">
+            <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent via-[#f5f3ef]/50 to-[#f5f3ef]/90 z-20"></div>
+            
+            {/* Laptop Mockup */}
+            <div className="flex justify-center animate-fade-in relative z-10" style={{ animationDelay: '0.4s' }}>
+              <div className="relative max-w-2xl w-full">
+                <img 
+                  src="/images/landingpage/herosectionmockup.png" 
+                  alt="SpotPlan App Mockup"
+                  className="w-full h-auto drop-shadow-2xl transform transition-transform duration-300 hover:scale-105"
+                />
+              </div>
             </div>
           </div>
         </div>

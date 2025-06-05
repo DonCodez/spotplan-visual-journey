@@ -14,7 +14,7 @@ interface MapProps {
 
 export function WorldMap({
   dots = [],
-  lineColor = "#0ea5e9",
+  lineColor = "#24BAEC",
 }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -33,33 +33,45 @@ export function WorldMap({
     return `M ${start.x} ${start.y} Q ${midX} ${midY} ${end.x} ${end.y}`;
   };
 
-  // Create a simple world map SVG with dots pattern
+  // Create a more detailed world map SVG with better dot distribution
   const createWorldMapSVG = () => {
     const dots = [];
-    const spacing = 6;
+    const spacing = 4;
     const mapWidth = 800;
     const mapHeight = 400;
     
     for (let x = 0; x < mapWidth; x += spacing) {
       for (let y = 0; y < mapHeight; y += spacing) {
-        // Create a world-like distribution of dots
+        // Create a more detailed world-like distribution of dots
         const isLand = (
-          // North America
-          (x >= 80 && x <= 200 && y >= 60 && y <= 180) ||
-          // South America
-          (x >= 150 && x <= 220 && y >= 200 && y <= 350) ||
-          // Europe
-          (x >= 300 && x <= 380 && y >= 60 && y <= 140) ||
-          // Africa
-          (x >= 320 && x <= 420 && y >= 120 && y <= 320) ||
-          // Asia
-          (x >= 400 && x <= 650 && y >= 40 && y <= 200) ||
-          // Australia
-          (x >= 580 && x <= 680 && y >= 280 && y <= 340)
+          // North America - more detailed
+          (x >= 60 && x <= 220 && y >= 50 && y <= 200 && 
+           !(x >= 80 && x <= 120 && y >= 160 && y <= 200)) || // exclude Gulf of Mexico
+          // South America - better shape
+          (x >= 140 && x <= 240 && y >= 200 && y <= 360 &&
+           !(x >= 200 && x <= 240 && y >= 320 && y <= 360)) || // exclude southern tip
+          // Europe - more detailed
+          (x >= 290 && x <= 390 && y >= 50 && y <= 150) ||
+          // Africa - better outline
+          (x >= 310 && x <= 430 && y >= 120 && y <= 340 &&
+           !(x >= 380 && x <= 430 && y >= 300 && y <= 340)) || // exclude Horn of Africa
+          // Asia - more comprehensive
+          (x >= 400 && x <= 700 && y >= 30 && y <= 220 &&
+           !(x >= 620 && x <= 700 && y >= 180 && y <= 220)) || // exclude southeastern islands
+          // Australia and Oceania
+          (x >= 560 && x <= 700 && y >= 270 && y <= 350) ||
+          // Additional islands and archipelagos
+          (x >= 720 && x <= 750 && y >= 150 && y <= 180) || // Japan
+          (x >= 500 && x <= 540 && y >= 240 && y <= 280) || // Indonesia
+          (x >= 340 && x <= 360 && y >= 180 && y <= 200) // Madagascar
         );
         
-        if (isLand && Math.random() > 0.2) {
-          dots.push(`<circle cx="${x}" cy="${y}" r="1.5" fill="#00000040" />`);
+        // Add some randomness for coastlines and vary dot sizes
+        const randomFactor = Math.random();
+        if (isLand && randomFactor > 0.15) {
+          const dotSize = randomFactor > 0.8 ? 2 : randomFactor > 0.5 ? 1.5 : 1;
+          const opacity = randomFactor > 0.7 ? 60 : randomFactor > 0.4 ? 40 : 25;
+          dots.push(`<circle cx="${x}" cy="${y}" r="${dotSize}" fill="#000000${opacity.toString(16).padStart(2, '0')}" />`);
         }
       }
     }
