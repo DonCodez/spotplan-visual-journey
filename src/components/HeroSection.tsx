@@ -1,13 +1,11 @@
 
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Plane } from "lucide-react";
 import { WorldMap } from "@/components/ui/world-map";
 
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#f5f3ef' }}>
       {/* World Map Background */}
-      <div className="absolute inset-0 opacity-30">
+      <div className="absolute inset-0 opacity-60">
         <WorldMap
           dots={[
             {
@@ -32,45 +30,27 @@ const HeroSection = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 pt-20 pb-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-screen">
-          {/* Left Column - Text Content */}
-          <div className="text-left lg:pr-8">
-            {/* Floating plane icon */}
-            <div className="mb-8 flex justify-start">
-              <div className="relative">
-                <Plane className="w-16 h-16 text-spot-blue animate-float" />
-                <div className="absolute -inset-4 bg-spot-blue/10 rounded-full blur-lg"></div>
-              </div>
-            </div>
-
+      <div className="relative z-10 container mx-auto px-4 pt-20 pb-10">
+        <div className="flex flex-col items-center text-center min-h-screen justify-center">
+          {/* Text Content */}
+          <div className="mb-8">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 animate-fade-in">
               <span className="text-slate-800">Plan Your Perfect Trip</span>
               <span className="block text-spot-sky">with AI</span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-2xl animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <p className="text-xl md:text-2xl text-slate-600 mb-6 max-w-2xl animate-fade-in" style={{ animationDelay: '0.2s' }}>
               Smart itineraries, expense tracking, and group planning made simple
             </p>
-
-            <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              <Button 
-                size="lg" 
-                className="start-planning-button bg-spot-sky hover:bg-spot-blue text-white px-8 py-6 text-lg rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105"
-              >
-                Start Planning
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </div>
           </div>
 
-          {/* Right Column - Laptop Mockup */}
-          <div className="flex justify-center lg:justify-end animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            <div className="relative max-w-lg w-full">
+          {/* Laptop Mockup */}
+          <div className="flex justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <div className="relative max-w-2xl w-full">
               <img 
                 src="/images/landingpage/herosectionmockup.png" 
                 alt="SpotPlan App Mockup"
-                className="w-full h-auto drop-shadow-2xl animate-float"
+                className="w-full h-auto drop-shadow-2xl transform transition-transform duration-300 hover:scale-105"
               />
             </div>
           </div>

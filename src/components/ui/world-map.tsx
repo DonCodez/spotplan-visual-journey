@@ -36,7 +36,7 @@ export function WorldMap({
   // Create a simple world map SVG with dots pattern
   const createWorldMapSVG = () => {
     const dots = [];
-    const spacing = 8;
+    const spacing = 6;
     const mapWidth = 800;
     const mapHeight = 400;
     
@@ -58,8 +58,8 @@ export function WorldMap({
           (x >= 580 && x <= 680 && y >= 280 && y <= 340)
         );
         
-        if (isLand && Math.random() > 0.3) {
-          dots.push(`<circle cx="${x}" cy="${y}" r="1" fill="#00000020" />`);
+        if (isLand && Math.random() > 0.2) {
+          dots.push(`<circle cx="${x}" cy="${y}" r="1.5" fill="#00000040" />`);
         }
       }
     }

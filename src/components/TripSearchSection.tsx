@@ -2,11 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { MapPin, Calendar, Users, Search } from "lucide-react";
+import { MapPin, Calendar, Search } from "lucide-react";
 
 const TripSearchSection = () => {
   return (
-    <section className="py-20 bg-spot-beige/30" id="trip-search-section">
+    <section className="py-12 bg-spot-beige/30" id="trip-search-section">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
