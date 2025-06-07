@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { WorldMap } from "@/components/ui/world-map";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import Image from "next/image";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -41,34 +42,31 @@ const HeroSection = () => {
 
       {/* Hero Content */}
       <div className="relative z-10 container mx-auto px-4">
-        <div className="max-w-4xl mx-auto text-center mb-12">
+        <div className="max-w-4xl mx-auto text-center mb-20">
           <h1 className="text-5xl md:text-7xl font-bold text-blue-900 mb-4">
             YOUR PERFECT TRIP,
             <br />
             PLANNED IN <span className="text-blue-600">MINUTES.</span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-blue-800 mb-12 max-w-2xl mx-auto">
-            Navigate like a local, eat like a foodie, and explore like a pro with an
-            intelligent itinerary for you and your group.
+          <p className="text-xl md:text-2xl text-blue-800 mb-8 max-w-2xl mx-auto">
+            Navigate like a local, eat like a foodie, and explore like a pro
+            with an intelligent itinerary for you and your group.
           </p>
+        </div>
 
-          {/* Search bar mockup */}
-          <div className="mb-24">
-            {/* Replace with your actual search bar component */}
-            <div className="bg-white rounded-xl shadow-lg p-4 inline-block">
-              {/* ...your inputs/buttons */}
-              <p className="text-gray-400">[Search Bar Component]</p>
-            </div>
-          </div>
-
-          {/* Laptop mockup */}
-          <motion.img
-            style={{ scale: laptopScale }}
-            src="/images/landingpage/herosectionmockup.png"
-            alt="Laptop mockup"
-            className="mx-auto mt-12 w-full max-w-5xl"
-          />
+        {/* Hero Image */}
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <motion.div style={{ scale: laptopScale }}>
+            <Image
+              src="/images/landingpage/herosectionmockup.png"
+              alt="Hero section laptop mockup"
+              width={1600}
+              height={900}
+              className="w-full h-auto mx-auto"
+              priority
+            />
+          </motion.div>
         </div>
       </div>
     </section>
