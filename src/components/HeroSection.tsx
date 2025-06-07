@@ -15,7 +15,7 @@ const HeroSection = () => {
 
   return (
     // Removed full-screen min height to let hero content dictate its own height
-    <section ref={containerRef} className="relative bg-[#f5f3ef] overflow-hidden pt-12 pb-8">
+    <section ref={containerRef} className="relative bg-[#f5f3ef] overflow-hidden pt-12 pb-9">
       {/* Background World Map */}
       <div className="absolute inset-0 opacity-40">
         <WorldMap
