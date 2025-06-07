@@ -1,6 +1,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Users, Calculator, Sparkles } from "lucide-react";
+import { GradientText } from "@/components/ui/gradient-text";
 import landingData from "@/data/landing-page.json";
 
 const iconMap = {
@@ -14,12 +15,21 @@ const HighlightsSection = () => {
     <section id="features-section" className="py-20 bg-gradient-to-b from-[#f5f3ef] to-[#eff5f5]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-            Why Choose SpotPlan?
-          </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Powerful features designed to make trip planning effortless and enjoyable
-          </p>
+          <div className="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-relaxed max-w-4xl mx-auto">
+            With SpotPlan, you can{" "}
+            <GradientText className="bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] bg-clip-text text-transparent">
+              Plan with Friends
+            </GradientText>{" "}
+            in real-time, effortlessly coordinating every detail of your trip. Enjoy a{" "}
+            <GradientText className="bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] bg-clip-text text-transparent">
+              Smart Expense Estimator
+            </GradientText>{" "}
+            that handles budgeting and cost-splitting with precision. Plus, discover activities and dining options with our{" "}
+            <GradientText className="bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] bg-clip-text text-transparent">
+              AI-Powered Suggestions
+            </GradientText>{" "}
+            designed to personalize your travel experience.
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
