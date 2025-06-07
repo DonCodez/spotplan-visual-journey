@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -50,13 +49,6 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
-
-    --color-1: 330 100% 40%; /* Dark Neon Pink */
-    --color-2: 140 100% 55%; /* Bright Electric Green */
-    --color-3: 210 100% 30%; /* Deep Neon Blue */
-    --color-4: 60 100% 70%; /* Light Neon Yellow */
-    --color-5: 295 100% 45%; /* Dark Neon Purple */
-    --brand: 50 100% 50%; /* Bright, punchy yellow */
   }
 
   .dark {
@@ -95,13 +87,6 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
-
-    --color-1: 330 100% 40%; /* Dark Neon Pink */
-    --color-2: 140 100% 55%; /* Bright Electric Green */
-    --color-3: 210 100% 30%; /* Deep Neon Blue */
-    --color-4: 60 100% 70%; /* Light Neon Yellow */
-    --color-5: 295 100% 45%; /* Dark Neon Purple */
-    --brand: 50 100% 50%; /* Bright, punchy yellow */
   }
 }
 
