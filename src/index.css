@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -125,5 +126,14 @@
     100% {
       background-position: 0% 50%;
     }
+  }
+
+  .gradient-text-animated {
+    background: linear-gradient(-45deg, #1e3a8a, #2563eb, #1e3a8a, #2563eb);
+    background-size: 400% 400%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-shift 1.5s ease-in-out infinite;
   }
 }
