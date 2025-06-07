@@ -3,6 +3,7 @@ import { WorldMap } from "@/components/ui/world-map";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import TripSearchForm from "./TripSearchForm";
+import { Button } from "@/components/ui/button";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,8 +17,33 @@ const HeroSection = () => {
   return (
     <section
       ref={containerRef}
-      className="relative bg-[#f5f3ef] overflow-hidden pt-12 pb-9"
+      className="relative bg-[#f5f3ef] overflow-hidden pt-0 pb-9"
     >
+      {/* Navigation Header */}
+      <div className="relative z-20 w-full py-4 px-6">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          {/* Logo */}
+          <div className="flex items-center">
+            <span className="text-2xl font-bold text-blue-900">TRAVELPAL</span>
+          </div>
+          
+          {/* Login Buttons */}
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              className="text-blue-900 hover:bg-blue-50 font-medium"
+            >
+              Log in
+            </Button>
+            <Button 
+              className="bg-blue-900 hover:bg-blue-800 text-white font-medium px-6 py-2 rounded-full"
+            >
+              Sign up
+            </Button>
+          </div>
+        </div>
+      </div>
+
       {/* Background World Map */}
       <div className="absolute inset-0 opacity-40">
         <WorldMap
@@ -41,7 +67,7 @@ const HeroSection = () => {
 
       {/* Hero Content */}
       <div className="relative z-10 container mx-auto px-4">
-        <div className="max-w-4xl mx-auto text-center mb-56">
+        <div className="max-w-4xl mx-auto text-center mb-56 pt-8">
           <h1 className="text-5xl md:text-7xl font-bold text-blue-900 mb-4">
             YOUR PERFECT TRIP,
             <br />
