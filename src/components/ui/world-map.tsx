@@ -3,7 +3,6 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import DottedMap from "dotted-map";
 
 interface MapProps {
   dots?: Array<{
@@ -18,14 +17,6 @@ export function WorldMap({
   lineColor = "#0ea5e9",
 }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const map = new DottedMap({ height: 100, grid: "diagonal" });
-
-  const svgMap = map.getSVG({
-    radius: 0.22,
-    color: "#00000040",
-    shape: "circle",
-    backgroundColor: "white",
-  });
 
   const projectPoint = (lat: number, lng: number) => {
     const x = (lng + 180) * (800 / 360);
@@ -42,16 +33,24 @@ export function WorldMap({
     return `M ${start.x} ${start.y} Q ${midX} ${midY} ${end.x} ${end.y}`;
   };
 
+  // Simple world map outline SVG path
+  const worldMapPath = "M158.5,251.5c-2.5-1.5-5-3-7.5-4.5c-2.5-1.5-5-3-7.5-4.5c-2.5-1.5-5-3-7.5-4.5c-2.5-1.5-5-3-7.5-4.5c-2.5-1.5-5-3-7.5-4.5c-2.5-1.5-5-3-7.5-4.5c-2.5-1.5-5-3-7.5-4.5c-2.5-1.5-5-3-7.5-4.5c-2.5-1.5-5-3-7.5-4.5c-2.5-1.5-5-3-7.5-4.5";
+
   return (
-    <div className="w-full aspect-[2/1] bg-white rounded-lg relative font-sans">
-      <img
-        src={`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`}
-        className="h-full w-full [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)] pointer-events-none select-none"
-        alt="world map"
-        height="495"
-        width="1056"
-        draggable={false}
-      />
+    <div className="w-full aspect-[2/1] bg-[#f5f3ef] rounded-lg relative font-sans">
+      {/* Simple dotted background pattern */}
+      <svg
+        className="absolute inset-0 w-full h-full opacity-20"
+        viewBox="0 0 800 400"
+      >
+        <defs>
+          <pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+            <circle cx="10" cy="10" r="1" fill="#00000030" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#dots)" />
+      </svg>
+
       <svg
         ref={svgRef}
         viewBox="0 0 800 400"
@@ -78,7 +77,8 @@ export function WorldMap({
                   delay: 0.5 * i,
                   ease: "easeOut",
                 }}
-              />
+                key={`start-upper-${i}`}
+              ></motion.path>
             </g>
           );
         })}
@@ -101,30 +101,6 @@ export function WorldMap({
                 r="2"
                 fill={lineColor}
               />
-              <circle
-                cx={projectPoint(dot.start.lat, dot.start.lng).x}
-                cy={projectPoint(dot.start.lat, dot.start.lng).y}
-                r="2"
-                fill={lineColor}
-                opacity="0.5"
-              >
-                <animate
-                  attributeName="r"
-                  from="2"
-                  to="8"
-                  dur="1.5s"
-                  begin="0s"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="opacity"
-                  from="0.5"
-                  to="0"
-                  dur="1.5s"
-                  begin="0s"
-                  repeatCount="indefinite"
-                />
-              </circle>
             </g>
             <g key={`end-${i}`}>
               <circle
@@ -133,30 +109,6 @@ export function WorldMap({
                 r="2"
                 fill={lineColor}
               />
-              <circle
-                cx={projectPoint(dot.end.lat, dot.end.lng).x}
-                cy={projectPoint(dot.end.lat, dot.end.lng).y}
-                r="2"
-                fill={lineColor}
-                opacity="0.5"
-              >
-                <animate
-                  attributeName="r"
-                  from="2"
-                  to="8"
-                  dur="1.5s"
-                  begin="0s"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="opacity"
-                  from="0.5"
-                  to="0"
-                  dur="1.5s"
-                  begin="0s"
-                  repeatCount="indefinite"
-                />
-              </circle>
             </g>
           </g>
         ))}
