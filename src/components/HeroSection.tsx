@@ -27,18 +27,13 @@ const HeroSection = () => {
             <span className="text-2xl font-bold text-blue-900">TRAVELPAL</span>
           </div>
           
-          {/* Login Buttons */}
+          {/* Login Button */}
           <div className="flex items-center gap-4">
             <Button 
               variant="ghost" 
               className="text-blue-900 hover:bg-blue-50 font-medium"
             >
               Log in
-            </Button>
-            <Button 
-              className="bg-blue-900 hover:bg-blue-800 text-white font-medium px-6 py-2 rounded-full"
-            >
-              Sign up
             </Button>
           </div>
         </div>
