@@ -4,12 +4,15 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { MapPin, Calendar as CalendarIcon, Users, Plus, Minus } from "lucide-react";
 import { WorldMap } from "@/components/ui/world-map";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { DateRange } from "react-day-picker";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -23,7 +26,10 @@ const HeroSection = () => {
   // Form state for backend connection
   const [searchData, setSearchData] = useState({
     destination: "",
+    dateType: "single" as "single" | "range",
     startDate: null as Date | null,
+    endDate: null as Date | null,
+    dateRange: undefined as DateRange | undefined,
     travelers: {
       adults: 1,
       children: 0,
@@ -39,7 +45,13 @@ const HeroSection = () => {
     e.preventDefault();
     console.log("Search data for backend:", {
       destination: searchData.destination,
+      dateType: searchData.dateType,
       startDate: searchData.startDate?.toISOString(),
+      endDate: searchData.endDate?.toISOString(),
+      dateRange: searchData.dateRange ? {
+        from: searchData.dateRange.from?.toISOString(),
+        to: searchData.dateRange.to?.toISOString()
+      } : null,
       totalTravelers: searchData.travelers.adults + searchData.travelers.children + searchData.travelers.infants,
       travelerBreakdown: searchData.travelers
     });
@@ -58,6 +70,38 @@ const HeroSection = () => {
 
   const getTotalTravelers = () => {
     return searchData.travelers.adults + searchData.travelers.children + searchData.travelers.infants;
+  };
+
+  const handleDateSelect = (date: Date | DateRange | undefined) => {
+    if (searchData.dateType === "single") {
+      setSearchData(prev => ({ 
+        ...prev, 
+        startDate: date as Date | null,
+        endDate: null,
+        dateRange: undefined
+      }));
+    } else {
+      setSearchData(prev => ({ 
+        ...prev, 
+        dateRange: date as DateRange | undefined,
+        startDate: null,
+        endDate: null
+      }));
+    }
+  };
+
+  const getDateDisplayText = () => {
+    if (searchData.dateType === "single") {
+      return searchData.startDate ? format(searchData.startDate, "🗓️ MMM dd") : "🗓️ Jun 16";
+    } else {
+      if (searchData.dateRange?.from) {
+        if (searchData.dateRange.to) {
+          return `🗓️ ${format(searchData.dateRange.from, "MMM dd")} - ${format(searchData.dateRange.to, "MMM dd")}`;
+        }
+        return `🗓️ ${format(searchData.dateRange.from, "MMM dd")} - ?`;
+      }
+      return "🗓️ Select dates";
+    }
   };
 
   return (
@@ -108,7 +152,7 @@ const HeroSection = () => {
               <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {/* Destination Input */}
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-600 w-5 h-5" />
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lime-500 w-5 h-5" />
                   <Input 
                     placeholder="🇧🇭 Bahrain"
                     value={searchData.destination}
@@ -125,21 +169,42 @@ const HeroSection = () => {
                         variant="outline"
                         className={cn(
                           "w-full h-12 pl-12 justify-start text-left font-normal bg-white border-gray-200 focus:border-blue-600 transition-colors",
-                          !searchData.startDate && "text-muted-foreground"
+                          !searchData.startDate && !searchData.dateRange?.from && "text-muted-foreground"
                         )}
                       >
-                        <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-600 w-5 h-5" />
-                        {searchData.startDate ? format(searchData.startDate, "🗓️ MMM dd") : "🗓️ Jun 16"}
+                        <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lime-500 w-5 h-5" />
+                        {getDateDisplayText()}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
+                      <div className="p-4 border-b">
+                        <RadioGroup
+                          value={searchData.dateType}
+                          onValueChange={(value: "single" | "range") => 
+                            setSearchData(prev => ({ 
+                              ...prev, 
+                              dateType: value,
+                              startDate: null,
+                              endDate: null,
+                              dateRange: undefined
+                            }))
+                          }
+                          className="flex gap-4"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="single" id="single" />
+                            <Label htmlFor="single">Single day</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="range" id="range" />
+                            <Label htmlFor="range">Date range</Label>
+                          </div>
+                        </RadioGroup>
+                      </div>
                       <Calendar
-                        mode="single"
-                        selected={searchData.startDate}
-                        onSelect={(date) => {
-                          setSearchData(prev => ({ ...prev, startDate: date }));
-                          setIsDateOpen(false);
-                        }}
+                        mode={searchData.dateType === "single" ? "single" : "range"}
+                        selected={searchData.dateType === "single" ? searchData.startDate : searchData.dateRange}
+                        onSelect={handleDateSelect}
                         initialFocus
                         className="pointer-events-auto"
                       />
@@ -155,7 +220,7 @@ const HeroSection = () => {
                         variant="outline"
                         className="w-full h-12 pl-12 justify-start text-left font-normal bg-white border-gray-200 focus:border-blue-600 transition-colors"
                       >
-                        <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-600 w-5 h-5" />
+                        <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lime-500 w-5 h-5" />
                         👤 {getTotalTravelers()} traveler{getTotalTravelers() !== 1 ? 's' : ''}
                       </Button>
                     </PopoverTrigger>
