@@ -31,36 +31,6 @@ const HighlightsSection = () => {
             designed to personalize your travel experience.
           </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {landingData.highlights.map((highlight, index) => {
-            const IconComponent = iconMap[highlight.icon as keyof typeof iconMap];
-            
-            return (
-              <Card 
-                key={highlight.id}
-                className="group p-8 border-0 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white to-spot-beige/20"
-                style={{ animationDelay: `${index * 0.2}s` }}
-              >
-                <CardContent className="p-0 text-center">
-                  <div className="mb-6 flex justify-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-spot-primary to-spot-secondary rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <IconComponent className="w-8 h-8 text-white" />
-                    </div>
-                  </div>
-                  
-                  <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                    {highlight.title}
-                  </h3>
-                  
-                  <p className="text-gray-600 leading-relaxed">
-                    {highlight.description}
-                  </p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
       </div>
     </section>
   );
