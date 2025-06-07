@@ -3,7 +3,6 @@ import { ArrowRight } from "lucide-react";
 import { WorldMap } from "@/components/ui/world-map";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import Image from "next/image";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -58,13 +57,11 @@ const HeroSection = () => {
         {/* Hero Image */}
         <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div style={{ scale: laptopScale }}>
-            <Image
+            <img
               src="/images/landingpage/herosectionmockup.png"
               alt="Hero section laptop mockup"
-              width={1600}
-              height={900}
               className="w-full h-auto mx-auto"
-              priority
+              loading="eager"
             />
           </motion.div>
         </div>
