@@ -1,9 +1,7 @@
-
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { MapPin, Calendar, Users, Search, Plus } from "lucide-react";
+import { MapPin, Calendar, Users, Plus } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
@@ -34,7 +32,7 @@ const TripSearchSection = () => {
               <div className="relative">
                 <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-600 w-5 h-5" />
                 <Input 
-                  placeholder="📅 Jun 16"
+                  placeholder="🗕️ Jun 16"
                   className="pl-12 h-12 bg-white border-gray-200 focus:border-blue-600 transition-colors"
                 />
               </div>
@@ -62,24 +60,9 @@ const TripSearchSection = () => {
       {/* Gradient Overlay for Laptop */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-[#f5f3ef]/80 z-10"></div>
 
-      {/* Laptop Mockup */}
-      <div className="container mx-auto px-4 relative z-5">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div 
-            style={{ scale: laptopScale }}
-            className="relative"
-          >
-            <img 
-              src="/images/landingpage/herosectionmockup.png" 
-              alt="Travel planning app mockup"
-              className="w-full max-w-3xl mx-auto shadow-2xl"
-            />
-          </motion.div>
-        </div>
-      </div>
+      {/* Removed Laptop Mockup */}
     </section>
   );
 };
 
 export default TripSearchSection;
-
