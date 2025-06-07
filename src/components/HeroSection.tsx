@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { WorldMap } from "@/components/ui/world-map";
@@ -30,7 +31,7 @@ const HeroSection = () => {
 
       {/* Hero Content */}
       <div className="relative z-10 container mx-auto px-4">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center mb-64">
           <h1 className="text-5xl md:text-7xl font-bold text-blue-900 mb-4">
             YOUR PERFECT TRIP,
             <br />

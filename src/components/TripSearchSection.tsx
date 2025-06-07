@@ -1,4 +1,5 @@
 
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -18,7 +19,7 @@ const TripSearchSection = () => {
   return (
     <section ref={containerRef} className="relative bg-[#f5f3ef] -mt-16 pt-4 pb-20">
       {/* Trip Search Form */}
-      <div className="container mx-auto px-4 relative z-20">
+      <div className="container mx-auto px-4 relative z-20 -mt-48">
         <div className="max-w-5xl mx-auto">
           <Card className="p-6 shadow-2xl border-0 bg-white/90 backdrop-blur-sm mb-6">
             <form id="trip-search-form" className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -81,3 +82,4 @@ const TripSearchSection = () => {
 };
 
 export default TripSearchSection;
+
