@@ -72,22 +72,22 @@ const HeroSection = () => {
     return searchData.travelers.adults + searchData.travelers.children + searchData.travelers.infants;
   };
 
-  const handleDateSelect = (date: Date | DateRange | undefined) => {
-    if (searchData.dateType === "single") {
-      setSearchData(prev => ({ 
-        ...prev, 
-        startDate: date as Date | null,
-        endDate: null,
-        dateRange: undefined
-      }));
-    } else {
-      setSearchData(prev => ({ 
-        ...prev, 
-        dateRange: date as DateRange | undefined,
-        startDate: null,
-        endDate: null
-      }));
-    }
+  const handleSingleDateSelect = (date: Date | undefined) => {
+    setSearchData(prev => ({ 
+      ...prev, 
+      startDate: date || null,
+      endDate: null,
+      dateRange: undefined
+    }));
+  };
+
+  const handleRangeDateSelect = (dateRange: DateRange | undefined) => {
+    setSearchData(prev => ({ 
+      ...prev, 
+      dateRange: dateRange,
+      startDate: null,
+      endDate: null
+    }));
   };
 
   const getDateDisplayText = () => {
@@ -201,13 +201,23 @@ const HeroSection = () => {
                           </div>
                         </RadioGroup>
                       </div>
-                      <Calendar
-                        mode={searchData.dateType === "single" ? "single" : "range"}
-                        selected={searchData.dateType === "single" ? searchData.startDate : searchData.dateRange}
-                        onSelect={handleDateSelect}
-                        initialFocus
-                        className="pointer-events-auto"
-                      />
+                      {searchData.dateType === "single" ? (
+                        <Calendar
+                          mode="single"
+                          selected={searchData.startDate}
+                          onSelect={handleSingleDateSelect}
+                          initialFocus
+                          className="pointer-events-auto"
+                        />
+                      ) : (
+                        <Calendar
+                          mode="range"
+                          selected={searchData.dateRange}
+                          onSelect={handleRangeDateSelect}
+                          initialFocus
+                          className="pointer-events-auto"
+                        />
+                      )}
                     </PopoverContent>
                   </Popover>
                 </div>
