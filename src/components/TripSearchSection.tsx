@@ -16,11 +16,11 @@ const TripSearchSection = () => {
   const laptopScale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
 
   return (
-    <section ref={containerRef} className="relative bg-[#f5f3ef] -mt-20 pt-10 pb-20">
+    <section ref={containerRef} className="relative bg-[#f5f3ef] -mt-16 pt-4 pb-20">
       {/* Trip Search Form */}
       <div className="container mx-auto px-4 relative z-20">
         <div className="max-w-5xl mx-auto">
-          <Card className="p-6 shadow-2xl border-0 bg-white/90 backdrop-blur-sm mb-8">
+          <Card className="p-6 shadow-2xl border-0 bg-white/90 backdrop-blur-sm mb-6">
             <form id="trip-search-form" className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="relative">
                 <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-600 w-5 h-5" />
@@ -71,7 +71,7 @@ const TripSearchSection = () => {
             <img 
               src="/images/landingpage/herosectionmockup.png" 
               alt="Travel planning app mockup"
-              className="w-full max-w-3xl mx-auto shadow-2xl rounded-lg"
+              className="w-full max-w-3xl mx-auto shadow-2xl"
             />
           </motion.div>
         </div>
