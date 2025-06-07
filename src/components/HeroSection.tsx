@@ -54,17 +54,7 @@ const HeroSection = () => {
           </p>
         </div>
 
-        {/* Hero Image */}
-        <div className="relative z-10 max-w-6xl mx-auto">
-          <motion.div style={{ scale: laptopScale }}>
-            <img
-              src="/images/landingpage/herosectionmockup.png"
-              alt="Hero section laptop mockup"
-              className="w-full h-auto mx-auto"
-              loading="eager"
-            />
-          </motion.div>
-        </div>
+        {/* Removed laptop mockup image */}
       </div>
     </section>
   );
