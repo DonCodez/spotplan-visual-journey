@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { WorldMap } from "@/components/ui/world-map";
@@ -38,15 +37,15 @@ const HeroSection = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 pt-20 pb-6">
+      <div className="relative z-10 container mx-auto px-4 pt-20 pb-4 md:pb-2">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-blue-900 mb-6">
+          <h1 className="text-5xl md:text-7xl font-bold text-blue-900 mb-4 md:mb-5">
             YOUR PERFECT TRIP,
             <br />
             PLANNED IN <span className="text-blue-600">MINUTES.</span>
           </h1>
-          
-          <p className="text-xl md:text-2xl text-blue-800 mb-6 max-w-2xl mx-auto">
+
+          <p className="text-xl md:text-2xl text-blue-800 mb-4 max-w-2xl mx-auto">
             Navigate like a local, eat like a foodie, and explore like a pro with an intelligent itinerary for you and your group.
           </p>
         </div>
