@@ -15,7 +15,7 @@ const HighlightsSection = () => {
     <section id="features-section" className="py-20 bg-gradient-to-b from-[#f5f3ef] to-[#eff5f5]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <div className="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-relaxed max-w-4xl mx-auto">
+          <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-6 leading-tight sm:leading-relaxed max-w-7xl mx-auto">
             With SpotPlan, you can{" "}
             <GradientText className="bg-gradient-to-r from-[#1e3a8a] to-[#2563eb] bg-clip-text text-transparent">
               Plan with Friends
