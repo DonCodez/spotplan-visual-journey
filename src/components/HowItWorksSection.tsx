@@ -58,11 +58,11 @@ const HowItWorksSection = () => {
     <section className="bg-white">
       <div className="container mx-auto px-4 pt-20 pb-0">
         <div className="text-center mb-0">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            4 Easy Steps to Get Started
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-2">
+            How It Works
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Planning your dream trip has never been this simple
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-0">
+            Coordinate, Calculate, Discover, and Go – All in Four Steps
           </p>
         </div>
       </div>
