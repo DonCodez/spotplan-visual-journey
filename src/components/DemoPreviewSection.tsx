@@ -1,12 +1,47 @@
-
 import { Card } from "@/components/ui/card";
 import { Play } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import VideoPlayer from "@/components/ui/video-player";
 import { motion, AnimatePresence } from "framer-motion";
 
 const DemoPreviewSection = () => {
   const [showVideo, setShowVideo] = useState(false);
+  const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const videoSrc = "https://videos.pexels.com/video-files/30333849/13003128_2560_1440_25fps.mp4";
+
+  useEffect(() => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    
+    if (video && canvas) {
+      const handleLoadedData = () => {
+        video.currentTime = 0.1; // Set to a small time to get first frame
+      };
+
+      const handleSeeked = () => {
+        const context = canvas.getContext('2d');
+        if (context) {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const dataURL = canvas.toDataURL('image/jpeg', 0.8);
+          setThumbnailUrl(dataURL);
+        }
+      };
+
+      video.addEventListener('loadeddata', handleLoadedData);
+      video.addEventListener('seeked', handleSeeked);
+      video.load();
+
+      return () => {
+        video.removeEventListener('loadeddata', handleLoadedData);
+        video.removeEventListener('seeked', handleSeeked);
+      };
+    }
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -46,6 +81,16 @@ const DemoPreviewSection = () => {
       viewport={{ once: true, margin: "-100px" }}
     >
       <div className="container mx-auto px-4">
+        {/* Hidden video and canvas for thumbnail generation */}
+        <video 
+          ref={videoRef} 
+          src={videoSrc}
+          style={{ display: 'none' }}
+          muted
+          playsInline
+        />
+        <canvas ref={canvasRef} style={{ display: 'none' }} />
+
         <motion.div className="text-center mb-8" variants={itemVariants}>
           <motion.h2 
             className="text-4xl md:text-5xl font-bold text-gray-800 mb-3"
@@ -71,45 +116,55 @@ const DemoPreviewSection = () => {
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute inset-0 flex items-center justify-center bg-black/20"
+                    className="absolute inset-0"
+                    style={{
+                      backgroundImage: thumbnailUrl ? `url(${thumbnailUrl})` : 'none',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
                   >
-                    <motion.div 
-                      className="text-center"
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ delay: 0.8, duration: 0.5 }}
-                    >
+                    {/* Overlay for better contrast */}
+                    <div className="absolute inset-0 bg-black/20" />
+                    
+                    <div className="absolute inset-0 flex items-center justify-center">
                       <motion.div 
-                        className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 cursor-pointer"
-                        onClick={() => setShowVideo(true)}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
+                        className="text-center"
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.8, duration: 0.5 }}
                       >
-                        <Play className="w-8 h-8 text-spot-primary ml-1" />
+                        <motion.div 
+                          className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 cursor-pointer"
+                          onClick={() => setShowVideo(true)}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Play className="w-8 h-8 text-spot-primary ml-1" />
+                        </motion.div>
+                        <p className="text-white text-lg font-semibold">Watch Demo</p>
                       </motion.div>
-                      <p className="text-white text-lg font-semibold">Watch Demo</p>
-                    </motion.div>
-                    
-                    {/* Floating UI elements for visual interest */}
-                    <motion.div 
-                      className="absolute top-4 left-4 bg-white/90 rounded-lg p-3 shadow-lg"
-                      initial={{ opacity: 0, x: -50, y: -20 }}
-                      animate={{ opacity: 1, x: 0, y: 0 }}
-                      transition={{ delay: 1.2, duration: 0.6, ease: "easeOut" }}
-                    >
-                      <div className="text-sm font-semibold text-spot-primary">✈️ Paris, France</div>
-                      <div className="text-xs text-gray-600">5 days • $1,200</div>
-                    </motion.div>
-                    
-                    <motion.div 
-                      className="absolute bottom-4 right-4 bg-white/90 rounded-lg p-3 shadow-lg"
-                      initial={{ opacity: 0, x: 50, y: 20 }}
-                      animate={{ opacity: 1, x: 0, y: 0 }}
-                      transition={{ delay: 1.4, duration: 0.6, ease: "easeOut" }}
-                    >
-                      <div className="text-sm font-semibold text-spot-primary">🍽️ Restaurant booked</div>
-                      <div className="text-xs text-gray-600">Tonight at 7 PM</div>
-                    </motion.div>
+                      
+                      {/* Floating UI elements for visual interest */}
+                      <motion.div 
+                        className="absolute top-4 left-4 bg-white/90 rounded-lg p-3 shadow-lg"
+                        initial={{ opacity: 0, x: -50, y: -20 }}
+                        animate={{ opacity: 1, x: 0, y: 0 }}
+                        transition={{ delay: 1.2, duration: 0.6, ease: "easeOut" }}
+                      >
+                        <div className="text-sm font-semibold text-spot-primary">✈️ Paris, France</div>
+                        <div className="text-xs text-gray-600">5 days • $1,200</div>
+                      </motion.div>
+                      
+                      <motion.div 
+                        className="absolute bottom-4 right-4 bg-white/90 rounded-lg p-3 shadow-lg"
+                        initial={{ opacity: 0, x: 50, y: 20 }}
+                        animate={{ opacity: 1, x: 0, y: 0 }}
+                        transition={{ delay: 1.4, duration: 0.6, ease: "easeOut" }}
+                      >
+                        <div className="text-sm font-semibold text-spot-primary">🍽️ Restaurant booked</div>
+                        <div className="text-xs text-gray-600">Tonight at 7 PM</div>
+                      </motion.div>
+                    </div>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -119,7 +174,7 @@ const DemoPreviewSection = () => {
                     transition={{ duration: 0.3 }}
                     className="absolute inset-0"
                   >
-                    <VideoPlayer src="https://videos.pexels.com/video-files/30333849/13003128_2560_1440_25fps.mp4" />
+                    <VideoPlayer src={videoSrc} />
                   </motion.div>
                 )}
               </AnimatePresence>
