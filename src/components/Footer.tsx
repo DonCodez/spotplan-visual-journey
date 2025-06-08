@@ -13,20 +13,42 @@ const iconMap = {
 };
 
 const travelTags = [
-  { text: "Culture", icon: "🎭", delay: 0, row: 1, col: 1 },
-  { text: "Nightlife", icon: "🌙", delay: 0.1, row: 1, col: 2 },
-  { text: "Animals", icon: "🐾", delay: 0.2, row: 1, col: 3 },
-  { text: "Family friendly", icon: "👨‍👩‍👧‍👦", delay: 0.3, row: 1, col: 4 },
-  { text: "Art", icon: "🎨", delay: 0.4, row: 2, col: 1 },
-  { text: "Indoor", icon: "🏢", delay: 0.5, row: 2, col: 2 },
-  { text: "Long walks", icon: "🚶", delay: 0.6, row: 2, col: 3 },
-  { text: "Sightseeing", icon: "👀", delay: 0.7, row: 2, col: 4 },
-  { text: "Ships", icon: "🚢", delay: 0.8, row: 3, col: 1 },
-  { text: "Beaches", icon: "🏖️", delay: 0.9, row: 3, col: 2 },
-  { text: "Outdoor", icon: "🌲", delay: 1.0, row: 3, col: 3 },
-  { text: "Hiking", icon: "🥾", delay: 1.1, row: 3, col: 4 },
-  { text: "Cooking", icon: "👨‍🍳", delay: 1.2, row: 3, col: 5 },
+  { text: "Culture", icon: "🎭", delay: 0 },
+  { text: "Nightlife", icon: "🌙", delay: 0.1 },
+  { text: "Animals", icon: "🐾", delay: 0.2 },
+  { text: "Family friendly", icon: "👨‍👩‍👧‍👦", delay: 0.3 },
+  { text: "Art", icon: "🎨", delay: 0.4 },
+  { text: "Indoor", icon: "🏢", delay: 0.5 },
+  { text: "Long walks", icon: "🚶", delay: 0.6 },
+  { text: "Sightseeing", icon: "👀", delay: 0.7 },
+  { text: "Ships", icon: "🚢", delay: 0.8 },
+  { text: "Beaches", icon: "🏖️", delay: 0.9 },
+  { text: "Outdoor", icon: "🌲", delay: 1.0 },
+  { text: "Hiking", icon: "🥾", delay: 1.1 },
+  { text: "Cooking", icon: "👨‍🍳", delay: 1.2 },
+  { text: "Photography", icon: "📸", delay: 1.3 },
+  { text: "Museums", icon: "🏛️", delay: 1.4 },
+  { text: "Shopping", icon: "🛍️", delay: 1.5 },
+  { text: "Food tours", icon: "🍜", delay: 1.6 },
+  { text: "Adventure", icon: "🏔️", delay: 1.7 },
+  { text: "Relaxation", icon: "🧘", delay: 1.8 },
+  { text: "Wildlife", icon: "🦁", delay: 1.9 },
+  { text: "Architecture", icon: "🏰", delay: 2.0 },
+  { text: "Festivals", icon: "🎪", delay: 2.1 },
+  { text: "Sports", icon: "⚽", delay: 2.2 },
+  { text: "Local life", icon: "🏘️", delay: 2.3 },
+  { text: "History", icon: "📜", delay: 2.4 },
+  { text: "Gardens", icon: "🌺", delay: 2.5 },
+  { text: "Markets", icon: "🏪", delay: 2.6 },
+  { text: "Street art", icon: "🎨", delay: 2.7 },
+  { text: "Music", icon: "🎵", delay: 2.8 },
+  { text: "Cafes", icon: "☕", delay: 2.9 },
 ];
+
+const getRandomRotation = () => {
+  const rotations = [-10, -5, 0, 5, 10];
+  return rotations[Math.floor(Math.random() * rotations.length)];
+};
 
 const Footer = () => {
   return (
@@ -74,9 +96,9 @@ const Footer = () => {
                 </motion.button>
               </motion.div>
 
-              {/* Organized Travel Tags Grid */}
+              {/* Scattered Travel Tags in Multiple Lines */}
               <div className="relative mb-16">
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-4xl mx-auto">
+                <div className="flex flex-wrap justify-center items-center gap-2 max-w-5xl mx-auto">
                   {travelTags.map((tag, index) => (
                     <motion.div
                       key={tag.text}
@@ -84,23 +106,23 @@ const Footer = () => {
                       whileInView={{ opacity: 1, scale: 1, y: 0 }}
                       transition={{ 
                         duration: 0.6, 
-                        delay: tag.delay,
+                        delay: tag.delay * 0.1,
                         type: "spring",
                         stiffness: 100
                       }}
                       viewport={{ once: true }}
                       whileHover={{ 
                         scale: 1.1, 
-                        rotate: Math.random() * 6 - 3,
+                        rotate: getRandomRotation() + 5,
                         transition: { duration: 0.2 }
                       }}
-                      className="bg-white/95 backdrop-blur-sm text-spot-primary px-4 py-3 rounded-full text-sm font-medium shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 text-center"
+                      className="bg-white/95 backdrop-blur-sm text-spot-primary px-3 py-2 rounded-full text-sm font-medium shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 text-center whitespace-nowrap"
                       style={{
-                        transform: `rotate(${Math.random() * 6 - 3}deg)`,
+                        transform: `rotate(${getRandomRotation()}deg)`,
                       }}
                     >
-                      <span className="block mb-1">{tag.icon}</span>
-                      <span className="block">{tag.text}</span>
+                      <span className="mr-1">{tag.icon}</span>
+                      <span>{tag.text}</span>
                     </motion.div>
                   ))}
                 </div>
