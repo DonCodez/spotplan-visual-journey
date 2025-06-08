@@ -1,8 +1,21 @@
 
 import { Card } from "@/components/ui/card";
 import { Play } from "lucide-react";
+import { useState } from "react";
+import { AnimatePresence } from "framer-motion";
+import VideoPlayer from "@/components/ui/video-player";
 
 const DemoPreviewSection = () => {
+  const [showVideo, setShowVideo] = useState(false);
+
+  const handlePlayClick = () => {
+    setShowVideo(true);
+  };
+
+  const handleCloseVideo = () => {
+    setShowVideo(false);
+  };
+
   return (
     <section className="pt-8 pb-20 bg-gray-50" id="demo-preview">
       <div className="container mx-auto px-4">
@@ -20,7 +33,10 @@ const DemoPreviewSection = () => {
             {/* Placeholder for demo video/screenshots */}
             <div className="absolute inset-0 flex items-center justify-center bg-black/20">
               <div className="text-center">
-                <div className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 cursor-pointer">
+                <div 
+                  className="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 cursor-pointer"
+                  onClick={handlePlayClick}
+                >
                   <Play className="w-8 h-8 text-spot-primary ml-1" />
                 </div>
                 <p className="text-white text-lg font-semibold">Watch Demo</p>
@@ -39,6 +55,16 @@ const DemoPreviewSection = () => {
             </div>
           </div>
         </Card>
+
+        {/* Video Player Modal */}
+        <AnimatePresence>
+          {showVideo && (
+            <VideoPlayer 
+              src="/images/landingpage/herovideo.mp4"
+              onClose={handleCloseVideo}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
