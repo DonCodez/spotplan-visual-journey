@@ -1,3 +1,4 @@
+
 import { MapPin, Calendar, DollarSign, Share2 } from "lucide-react";
 import { Timeline } from "@/components/ui/timeline";
 import landingData from "@/data/landing-page.json";
@@ -35,11 +36,9 @@ const HowItWorksSection = () => {
           <div className="bg-gradient-to-br from-spot-beige/20 to-spot-sky/10 rounded-xl p-6 border border-spot-beige/30">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-white rounded-lg p-4 shadow-sm border">
-                <img 
-                  src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=400&h=300" 
-                  alt="Travel destination map"
-                  className="w-full h-32 object-cover rounded-lg"
-                />
+                <div className="w-full h-32 bg-gradient-to-br from-spot-primary/10 to-spot-secondary/10 rounded-lg flex items-center justify-center">
+                  <IconComponent className="w-12 h-12 text-spot-primary opacity-50" />
+                </div>
               </div>
               <div className="bg-white rounded-lg p-4 shadow-sm border">
                 <div className="space-y-2">
