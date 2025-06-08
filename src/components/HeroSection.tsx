@@ -79,7 +79,7 @@ const HeroSection = () => {
         <TripSearchForm />
 
         {/* Hero MacBook with Video */}
-        <div className="relative z-10 max-w-6xl mx-auto">
+        <div className="relative z-10 max-w-6xl mx-auto mt-20">
           <motion.div style={{ scale: laptopScale }}>
             <MacbookPro className="w-full h-auto mx-auto">
               <video
