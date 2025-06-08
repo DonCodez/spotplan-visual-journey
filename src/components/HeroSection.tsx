@@ -21,27 +21,47 @@ const HeroSection = () => {
       className="relative bg-gray-50 pt-0 pb-20"
     >
       {/* Navigation Header */}
-      <div className="relative z-20 w-full py-4 px-6">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative z-20 w-full py-4 px-6"
+      >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+            className="flex items-center"
+          >
             <span className="text-2xl font-bold text-blue-900">TRAVELPAL</span>
-          </div>
+          </motion.div>
           
           {/* Login Button */}
-          <div className="flex items-center gap-4">
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+            className="flex items-center gap-4"
+          >
             <Button 
               variant="ghost" 
               className="text-blue-900 hover:bg-blue-50 font-medium"
             >
               Log in
             </Button>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Background World Map */}
-      <div className="absolute inset-0 opacity-40">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.4 }}
+        transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
+        className="absolute inset-0"
+      >
         <WorldMap
           dots={[
             {
@@ -59,27 +79,48 @@ const HeroSection = () => {
           ]}
           lineColor="#3B82F6"
         />
-      </div>
+      </motion.div>
 
       {/* Hero Content */}
       <div className="relative z-10 container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center mb-56 pt-8">
-          <h1 className="text-5xl md:text-7xl font-bold text-blue-900 mb-4">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+            className="text-5xl md:text-7xl font-bold text-blue-900 mb-4"
+          >
             YOUR PERFECT TRIP,
             <br />
             PLANNED IN <span className="text-blue-600">MINUTES.</span>
-          </h1>
+          </motion.h1>
 
-          <p className="text-xl md:text-2xl text-blue-800 mb-10 max-w-2xl mx-auto">
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+            className="text-xl md:text-2xl text-blue-800 mb-10 max-w-2xl mx-auto"
+          >
             Navigate like a local, eat like a foodie, and explore like a pro
             with an intelligent itinerary for you and your group.
-          </p>
+          </motion.p>
         </div>
 
-        <TripSearchForm />
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
+        >
+          <TripSearchForm />
+        </motion.div>
 
         {/* Hero MacBook with Video */}
-        <div className="relative z-10 max-w-6xl mx-auto mt-20 mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 50, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 1, delay: 1, ease: "easeOut" }}
+          className="relative z-10 max-w-6xl mx-auto mt-20 mb-16"
+        >
           <motion.div 
             style={{ scale: laptopScale }}
             className="drop-shadow-[0_35px_70px_rgba(0,0,0,0.45)] shadow-black/40"
@@ -97,7 +138,7 @@ const HeroSection = () => {
               </video>
             </MacbookPro>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
