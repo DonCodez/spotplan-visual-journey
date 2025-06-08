@@ -93,7 +93,7 @@ const Footer = () => {
                 <h2 className="text-4xl md:text-6xl font-bold mb-6">
                   YOUR DREAM TRIP,
                   <br />
-                  <span style={{ color: '#84cc16' }}>YOUR WAY</span>
+                  <span className="text-spot-beige">YOUR WAY</span>
                 </h2>
                 <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto">
                   Everyone's perfect journey looks different. Share your vision, and we'll
