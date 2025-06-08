@@ -56,8 +56,8 @@ const HowItWorksSection = () => {
 
   return (
     <section className="bg-white">
-      <div className="container mx-auto px-4 py-20">
-        <div className="text-center mb-16">
+      <div className="container mx-auto px-4 pt-20 pb-8">
+        <div className="text-center mb-8">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
             4 Easy Steps to Get Started
           </h2>
