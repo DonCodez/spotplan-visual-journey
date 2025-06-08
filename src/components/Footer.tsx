@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { Twitter, Instagram, Facebook, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
@@ -10,54 +11,12 @@ const iconMap = {
   linkedin: Linkedin,
 };
 
-const travelTags = [
-  { text: "Culture", icon: "🎭" },
-  { text: "Nightlife", icon: "🌙" },
-  { text: "Animals", icon: "🐾" },
-  { text: "Family friendly", icon: "👨‍👩‍👧‍👦" },
-  { text: "Art", icon: "🎨" },
-  { text: "Indoor", icon: "🏢" },
-  { text: "Long walks", icon: "🚶" },
-  { text: "Sightseeing", icon: "👀" },
-  { text: "Ships", icon: "🚢" },
-  { text: "Beaches", icon: "🏖️" },
-  { text: "Outdoor", icon: "🌲" },
-  { text: "Hiking", icon: "🥾" },
-  { text: "Cooking", icon: "👨‍🍳" },
-  { text: "Photography", icon: "📸" },
-  { text: "Museums", icon: "🏛️" },
-  { text: "Shopping", icon: "🛍️" },
-  { text: "Food tours", icon: "🍜" },
-  { text: "Adventure", icon: "🏔️" },
-  { text: "Relaxation", icon: "🧘" },
-  { text: "Wildlife", icon: "🦁" },
-  { text: "Architecture", icon: "🏰" },
-  { text: "Festivals", icon: "🎪" },
-  { text: "Sports", icon: "⚽" },
-  { text: "Local life", icon: "🏘️" },
-  { text: "History", icon: "📜" },
-  { text: "Gardens", icon: "🌺" },
-  { text: "Markets", icon: "🏪" },
-  { text: "Street art", icon: "🎨" },
-  { text: "Music", icon: "🎵" },
-  { text: "Cafes", icon: "☕" },
-];
-
-const getRandomRotation = () => {
-  const rotations = [-10, 0, 10];
-  return rotations[Math.floor(Math.random() * rotations.length)];
-};
-
-const getRandomSpacing = () => {
-  return Math.random() * 12 - 10; // Random spacing between -10 and 2px
-};
-
 const Footer = () => {
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
         {/* Rectangle container matching How It Works section */}
-        <div className="relative bg-gradient-to-br from-spot-primary via-spot-secondary to-spot-blue text-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+        <div className="relative bg-gradient-to-br from-spot-blue via-spot-sky to-spot-primary text-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
           {/* Background Dotted World Map */}
           <div 
             className="absolute inset-0 opacity-20 bg-cover bg-center bg-no-repeat"
@@ -97,39 +56,6 @@ const Footer = () => {
                   ✈️ Discover Now
                 </motion.button>
               </motion.div>
-
-              {/* Scattered Travel Tags with Random Spacing and Rotations */}
-              <div className="relative mb-16 overflow-x-hidden" style={{ marginLeft: '-60px', marginRight: '-60px' }}>
-                <div className="flex flex-wrap justify-start items-start px-8">
-                  {travelTags.map((tag, index) => (
-                    <motion.div
-                      key={`${tag.text}-${index}`}
-                      initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                      whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                      transition={{ 
-                        duration: 0.6, 
-                        delay: index * 0.03,
-                        type: "spring",
-                        stiffness: 100
-                      }}
-                      viewport={{ once: true }}
-                      whileHover={{ 
-                        scale: 1.1, 
-                        rotate: getRandomRotation() + 5,
-                        transition: { duration: 0.2 }
-                      }}
-                      className="bg-white/95 backdrop-blur-sm text-spot-primary px-3 py-2 rounded-full text-sm font-medium shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 text-center whitespace-nowrap"
-                      style={{
-                        transform: `rotate(${getRandomRotation()}deg)`,
-                        margin: `${getRandomSpacing()}px ${getRandomSpacing()}px`,
-                      }}
-                    >
-                      <span className="mr-1">{tag.icon}</span>
-                      <span>{tag.text}</span>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
 
               {/* Footer Links Grid */}
               <motion.div 
