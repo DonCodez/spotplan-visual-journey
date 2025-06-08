@@ -119,7 +119,7 @@ const VideoPlayer = ({ src }: { src: string }) => {
 
   return (
     <motion.div
-      className="relative w-full max-w-4xl mx-auto rounded-xl overflow-hidden bg-[#11111198] shadow-[0_0_20px_rgba(0,0,0,0.2)] backdrop-blur-sm"
+      className="relative w-full h-full overflow-hidden bg-[#11111198] shadow-[0_0_20px_rgba(0,0,0,0.2)] backdrop-blur-sm"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -128,7 +128,7 @@ const VideoPlayer = ({ src }: { src: string }) => {
     >
       <video
         ref={videoRef}
-        className="w-full"
+        className="w-full h-full object-cover"
         onTimeUpdate={handleTimeUpdate}
         src={src}
         onClick={togglePlay}
