@@ -12,7 +12,7 @@ const iconMap = {
 
 const HighlightsSection = () => {
   return (
-    <section id="features-section" className="py-20 bg-gradient-to-b from-[#f5f3ef] to-white">
+    <section id="features-section" className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-gray-800 mb-6 leading-tight sm:leading-snug max-w-6xl mx-auto">
