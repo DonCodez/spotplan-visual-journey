@@ -5,6 +5,7 @@ import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
 import LocationCard from "@/components/LocationCard";
 import landingData from "@/data/landing-page.json";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 const iconMap = {
   "map-pin": MapPin,
@@ -14,6 +15,24 @@ const iconMap = {
 };
 
 const HowItWorksSection = () => {
+  const [selectedRange, setSelectedRange] = useState({ start: 7, end: 12 });
+  
+  const handleDateClick = (dayNumber: number) => {
+    if (dayNumber === selectedRange.start) {
+      // If clicking start date, extend range by 3 days
+      setSelectedRange({ start: dayNumber, end: Math.min(dayNumber + 5, 21) });
+    } else if (dayNumber === selectedRange.end) {
+      // If clicking end date, shrink range by 2 days
+      setSelectedRange({ start: selectedRange.start, end: Math.max(dayNumber - 2, selectedRange.start + 2) });
+    } else if (dayNumber > selectedRange.start && dayNumber < selectedRange.end) {
+      // If clicking in middle, make it a 3-day trip around that date
+      setSelectedRange({ start: Math.max(dayNumber - 1, 1), end: Math.min(dayNumber + 2, 21) });
+    } else {
+      // If clicking outside range, create new 5-day range
+      setSelectedRange({ start: dayNumber, end: Math.min(dayNumber + 5, 21) });
+    }
+  };
+
   const timelineData = landingData.howItWorks.map((step, index) => {
     const IconComponent = iconMap[step.icon as keyof typeof iconMap];
     
@@ -66,7 +85,9 @@ const HowItWorksSection = () => {
         </div>
       );
     } else if (index === 1) {
-      // Step 2: Calendar/schedule view with specific date range
+      // Step 2: Interactive calendar/schedule view
+      const tripDuration = selectedRange.end - selectedRange.start + 1;
+      
       stepContent = (
         <div className="space-y-6">
           <div className="flex items-center gap-4 mb-6">
@@ -94,28 +115,35 @@ const HowItWorksSection = () => {
             <div className="grid grid-cols-7 gap-2">
               {Array.from({ length: 21 }, (_, i) => {
                 const dayNumber = i + 1;
-                let cellClass = 'aspect-square rounded-lg flex items-center justify-center text-sm ';
+                let cellClass = 'aspect-square rounded-lg flex items-center justify-center text-sm cursor-pointer transition-all duration-200 ';
                 
-                if (dayNumber === 7 || dayNumber === 12) {
+                if (dayNumber === selectedRange.start || dayNumber === selectedRange.end) {
                   // Start and end dates - dark colored
-                  cellClass += 'bg-spot-primary text-white font-bold';
-                } else if (dayNumber > 7 && dayNumber < 12) {
+                  cellClass += 'bg-spot-primary text-white font-bold hover:bg-spot-primary/80 shadow-md';
+                } else if (dayNumber > selectedRange.start && dayNumber < selectedRange.end) {
                   // Dates in between - light colored
-                  cellClass += 'bg-spot-primary/30 text-spot-primary font-semibold';
+                  cellClass += 'bg-spot-primary/30 text-spot-primary font-semibold hover:bg-spot-primary/50';
                 } else {
                   // Other dates
-                  cellClass += 'bg-white text-gray-400';
+                  cellClass += 'bg-white text-gray-400 hover:bg-gray-50 hover:text-gray-600 hover:shadow-sm';
                 }
                 
                 return (
-                  <div key={i} className={cellClass}>
+                  <div 
+                    key={i} 
+                    className={cellClass}
+                    onClick={() => handleDateClick(dayNumber)}
+                  >
                     {dayNumber}
                   </div>
                 );
               })}
             </div>
             <div className="mt-4 text-center">
-              <p className="text-sm text-gray-600">Trip Duration: 6 Days (7th - 12th)</p>
+              <p className="text-sm text-gray-600">
+                Trip Duration: {tripDuration} Days ({selectedRange.start}{selectedRange.start === 1 ? 'st' : selectedRange.start === 2 ? 'nd' : selectedRange.start === 3 ? 'rd' : 'th'} - {selectedRange.end}{selectedRange.end === 1 ? 'st' : selectedRange.end === 2 ? 'nd' : selectedRange.end === 3 ? 'rd' : 'th'})
+              </p>
+              <p className="text-xs text-gray-500 mt-1">Click on dates to adjust your trip duration</p>
             </div>
           </div>
         </div>
