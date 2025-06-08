@@ -18,7 +18,7 @@ const HeroSection = () => {
   return (
     <section
       ref={containerRef}
-      className="relative bg-[#f5f3ef] pt-0 pb-20"
+      className="relative bg-gray-50 pt-0 pb-20"
     >
       {/* Navigation Header */}
       <div className="relative z-20 w-full py-4 px-6">
