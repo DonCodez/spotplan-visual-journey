@@ -1,5 +1,3 @@
-
-
 import { Card } from "@/components/ui/card";
 import { Twitter, Instagram, Facebook, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
@@ -124,7 +122,7 @@ const getRandomRotation = () => {
 };
 
 const getRandomSpacing = () => {
-  return Math.random() * 30 + 10; // Random spacing between 10-40px
+  return Math.random() * 12 - 10; // Random spacing between -10 and 2px
 };
 
 const Footer = () => {
