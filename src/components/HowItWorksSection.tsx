@@ -119,7 +119,7 @@ const HowItWorksSection = () => {
         </div>
       );
     } else if (index === 2) {
-      // Step 3: Budget breakdown
+      // Step 3: Budget breakdown with interactive elements
       stepContent = (
         <div className="space-y-6">
           <div className="flex items-center gap-4 mb-6">
@@ -138,19 +138,19 @@ const HowItWorksSection = () => {
           
           <div className="bg-gradient-to-br from-spot-beige/20 to-spot-sky/10 rounded-xl p-6 border border-spot-beige/30">
             <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm">
+              <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md hover:bg-blue-50 transition-all duration-200 cursor-pointer">
                 <span className="font-medium">Flights</span>
                 <span className="text-spot-primary font-bold">$750</span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm">
+              <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md hover:bg-green-50 transition-all duration-200 cursor-pointer">
                 <span className="font-medium">Hotels</span>
                 <span className="text-spot-primary font-bold">$450</span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm">
+              <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md hover:bg-purple-50 transition-all duration-200 cursor-pointer">
                 <span className="font-medium">Activities</span>
                 <span className="text-spot-primary font-bold">$300</span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-spot-primary/10 rounded-lg border-2 border-spot-primary/20">
+              <div className="flex justify-between items-center p-3 bg-spot-primary/10 rounded-lg border-2 border-spot-primary/20 hover:bg-spot-primary/20 transition-all duration-200">
                 <span className="font-bold text-spot-primary">Total Budget</span>
                 <span className="text-spot-primary font-bold text-xl">$1,500</span>
               </div>
@@ -178,7 +178,7 @@ const HowItWorksSection = () => {
           
           <div className="bg-gradient-to-br from-spot-beige/20 to-spot-sky/10 rounded-xl p-6 border border-spot-beige/30">
             <div className="space-y-4">
-              <HoverCard>
+              <HoverCard openDelay={200}>
                 <HoverCardTrigger asChild>
                   <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow">
                     <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
@@ -200,17 +200,29 @@ const HowItWorksSection = () => {
                 </HoverCardContent>
               </HoverCard>
 
-              <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
-                <div className="w-8 h-8 bg-spot-secondary rounded-full flex items-center justify-center text-white text-sm font-bold">
-                  S
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium">Sarah updated budget</div>
-                  <div className="text-sm text-gray-500">5 minutes ago</div>
-                </div>
-              </div>
+              <HoverCard openDelay={200}>
+                <HoverCardTrigger asChild>
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow">
+                    <div className="w-8 h-8 bg-spot-secondary rounded-full flex items-center justify-center text-white text-sm font-bold">
+                      S
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium">Sarah updated budget</div>
+                      <div className="text-sm text-gray-500">5 minutes ago</div>
+                    </div>
+                  </div>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-80">
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-semibold">Sarah's Update</h4>
+                    <p className="text-xs text-muted-foreground">
+                      Sarah adjusted the budget by finding a better hotel deal and adding a Seine river cruise. She saved $150 on accommodation and allocated it to a romantic dinner experience.
+                    </p>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
 
-              <HoverCard>
+              <HoverCard openDelay={200}>
                 <HoverCardTrigger asChild>
                   <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow">
                     <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
