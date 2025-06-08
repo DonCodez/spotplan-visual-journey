@@ -56,9 +56,9 @@ const HowItWorksSection = () => {
 
   return (
     <section className="bg-white">
-      <div className="container mx-auto px-4 pt-20 pb-2">
-        <div className="text-center mb-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+      <div className="container mx-auto px-4 pt-20 pb-0">
+        <div className="text-center mb-0">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
             4 Easy Steps to Get Started
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
