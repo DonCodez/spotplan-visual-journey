@@ -4,7 +4,7 @@ import { Play } from "lucide-react";
 
 const DemoPreviewSection = () => {
   return (
-    <section className="pt-5 pb-20 bg-gray-50" id="demo-preview">
+    <section className="pt-8 pb-20 bg-gray-50" id="demo-preview">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">

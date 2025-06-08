@@ -287,7 +287,7 @@ const HowItWorksSection = () => {
   });
 
   return (
-    <section className="py-20 bg-gray-50 pb-5">
+    <section className="py-20 bg-gray-50 pb-12">
       <div className="container mx-auto px-4">
         {/* Rectangle container with animated grid pattern */}
         <div className="relative bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
