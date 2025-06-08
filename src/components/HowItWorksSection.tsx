@@ -1,9 +1,10 @@
-
 import { MapPin, Calendar, DollarSign, Share2 } from "lucide-react";
 import { Timeline } from "@/components/ui/timeline";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
 import LocationCard from "@/components/LocationCard";
 import landingData from "@/data/landing-page.json";
+import { cn } from "@/lib/utils";
 
 const iconMap = {
   "map-pin": MapPin,
@@ -257,20 +258,38 @@ const HowItWorksSection = () => {
   });
 
   return (
-    <section className="bg-white">
-      <div className="container mx-auto px-4 pt-20 pb-0">
-        <div className="text-center mb-0">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-2">
-            How It Works
-          </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-0">
-            Coordinate, Calculate, Discover, and Go – All in Four Steps
-          </p>
+    <section className="py-20 bg-gray-50">
+      <div className="container mx-auto px-4">
+        {/* Rectangle container with animated grid pattern */}
+        <div className="relative bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+          {/* Animated Grid Pattern Background */}
+          <AnimatedGridPattern
+            numSquares={30}
+            maxOpacity={0.1}
+            duration={3}
+            repeatDelay={1}
+            className={cn(
+              "[mask-image:radial-gradient(800px_circle_at_center,white,transparent)]",
+              "inset-x-0 inset-y-0 h-full opacity-30",
+            )}
+          />
+          
+          {/* Content */}
+          <div className="relative z-10 px-8 py-16">
+            <div className="text-center mb-0">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-2">
+                How It Works
+              </h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-0">
+                Coordinate, Calculate, Discover, and Go – All in Four Steps
+              </p>
+            </div>
+            
+            <div className="-mt-16">
+              <Timeline data={timelineData} />
+            </div>
+          </div>
         </div>
-      </div>
-      
-      <div className="-mt-16">
-        <Timeline data={timelineData} />
       </div>
     </section>
   );
