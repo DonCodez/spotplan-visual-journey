@@ -13,41 +13,118 @@ const iconMap = {
 };
 
 const travelTags = [
-  { text: "Culture", icon: "🎭", delay: 0 },
-  { text: "Nightlife", icon: "🌙", delay: 0.1 },
-  { text: "Animals", icon: "🐾", delay: 0.2 },
-  { text: "Family friendly", icon: "👨‍👩‍👧‍👦", delay: 0.3 },
-  { text: "Art", icon: "🎨", delay: 0.4 },
-  { text: "Indoor", icon: "🏢", delay: 0.5 },
-  { text: "Long walks", icon: "🚶", delay: 0.6 },
-  { text: "Sightseeing", icon: "👀", delay: 0.7 },
-  { text: "Ships", icon: "🚢", delay: 0.8 },
-  { text: "Beaches", icon: "🏖️", delay: 0.9 },
-  { text: "Outdoor", icon: "🌲", delay: 1.0 },
-  { text: "Hiking", icon: "🥾", delay: 1.1 },
-  { text: "Cooking", icon: "👨‍🍳", delay: 1.2 },
-  { text: "Photography", icon: "📸", delay: 1.3 },
-  { text: "Museums", icon: "🏛️", delay: 1.4 },
-  { text: "Shopping", icon: "🛍️", delay: 1.5 },
-  { text: "Food tours", icon: "🍜", delay: 1.6 },
-  { text: "Adventure", icon: "🏔️", delay: 1.7 },
-  { text: "Relaxation", icon: "🧘", delay: 1.8 },
-  { text: "Wildlife", icon: "🦁", delay: 1.9 },
-  { text: "Architecture", icon: "🏰", delay: 2.0 },
-  { text: "Festivals", icon: "🎪", delay: 2.1 },
-  { text: "Sports", icon: "⚽", delay: 2.2 },
-  { text: "Local life", icon: "🏘️", delay: 2.3 },
-  { text: "History", icon: "📜", delay: 2.4 },
-  { text: "Gardens", icon: "🌺", delay: 2.5 },
-  { text: "Markets", icon: "🏪", delay: 2.6 },
-  { text: "Street art", icon: "🎨", delay: 2.7 },
-  { text: "Music", icon: "🎵", delay: 2.8 },
-  { text: "Cafes", icon: "☕", delay: 2.9 },
+  { text: "Culture", icon: "🎭" },
+  { text: "Nightlife", icon: "🌙" },
+  { text: "Animals", icon: "🐾" },
+  { text: "Family friendly", icon: "👨‍👩‍👧‍👦" },
+  { text: "Art", icon: "🎨" },
+  { text: "Indoor", icon: "🏢" },
+  { text: "Long walks", icon: "🚶" },
+  { text: "Sightseeing", icon: "👀" },
+  { text: "Ships", icon: "🚢" },
+  { text: "Beaches", icon: "🏖️" },
+  { text: "Outdoor", icon: "🌲" },
+  { text: "Hiking", icon: "🥾" },
+  { text: "Cooking", icon: "👨‍🍳" },
+  { text: "Photography", icon: "📸" },
+  { text: "Museums", icon: "🏛️" },
+  { text: "Shopping", icon: "🛍️" },
+  { text: "Food tours", icon: "🍜" },
+  { text: "Adventure", icon: "🏔️" },
+  { text: "Relaxation", icon: "🧘" },
+  { text: "Wildlife", icon: "🦁" },
+  { text: "Architecture", icon: "🏰" },
+  { text: "Festivals", icon: "🎪" },
+  { text: "Sports", icon: "⚽" },
+  { text: "Local life", icon: "🏘️" },
+  { text: "History", icon: "📜" },
+  { text: "Gardens", icon: "🌺" },
+  { text: "Markets", icon: "🏪" },
+  { text: "Street art", icon: "🎨" },
+  { text: "Music", icon: "🎵" },
+  { text: "Cafes", icon: "☕" },
+  { text: "Romance", icon: "💕" },
+  { text: "Street food", icon: "🥙" },
+  { text: "Cycling", icon: "🚴" },
+  { text: "Wine tasting", icon: "🍷" },
+  { text: "Yoga", icon: "🧘‍♀️" },
+  { text: "Wellness", icon: "💆" },
+  { text: "Dancing", icon: "💃" },
+  { text: "Theater", icon: "🎭" },
+  { text: "Boat trips", icon: "⛵" },
+  { text: "Stargazing", icon: "⭐" },
+  { text: "Hot springs", icon: "♨️" },
+  { text: "Temples", icon: "⛩️" },
+  { text: "Castles", icon: "🏰" },
+  { text: "Vintage", icon: "📻" },
+  { text: "Design", icon: "🎨" },
+  { text: "Technology", icon: "💻" },
+  { text: "Luxury", icon: "💎" },
+  { text: "Budget travel", icon: "💰" },
+  { text: "Solo travel", icon: "🎒" },
+  { text: "Group tours", icon: "👥" },
+  { text: "Road trips", icon: "🚗" },
+  { text: "Train journeys", icon: "🚂" },
+  { text: "Flying", icon: "✈️" },
+  { text: "Camping", icon: "⛺" },
+  { text: "Glamping", icon: "🏕️" },
+  { text: "Hostels", icon: "🏠" },
+  { text: "Hotels", icon: "🏨" },
+  { text: "Airbnb", icon: "🏡" },
+  { text: "Resorts", icon: "🏖️" },
+  { text: "City breaks", icon: "🏙️" },
+  { text: "Countryside", icon: "🌾" },
+  { text: "Mountains", icon: "⛰️" },
+  { text: "Islands", icon: "🏝️" },
+  { text: "Deserts", icon: "🏜️" },
+  { text: "Forests", icon: "🌲" },
+  { text: "Lakes", icon: "🏞️" },
+  { text: "Rivers", icon: "🌊" },
+  { text: "Waterfalls", icon: "💦" },
+  { text: "Caves", icon: "🕳️" },
+  { text: "Volcanoes", icon: "🌋" },
+  { text: "Glaciers", icon: "🧊" },
+  { text: "Safaris", icon: "🦒" },
+  { text: "Scuba diving", icon: "🤿" },
+  { text: "Surfing", icon: "🏄" },
+  { text: "Skiing", icon: "⛷️" },
+  { text: "Snowboarding", icon: "🏂" },
+  { text: "Rock climbing", icon: "🧗" },
+  { text: "Paragliding", icon: "🪂" },
+  { text: "Bungee jumping", icon: "🤸" },
+  { text: "Zip lining", icon: "🎢" },
+  { text: "River rafting", icon: "🚣" },
+  { text: "Kayaking", icon: "🛶" },
+  { text: "Fishing", icon: "🎣" },
+  { text: "Bird watching", icon: "🦅" },
+  { text: "Astronomy", icon: "🔭" },
+  { text: "Science", icon: "🔬" },
+  { text: "Learning", icon: "📚" },
+  { text: "Languages", icon: "🗣️" },
+  { text: "Meditation", icon: "🧘‍♂️" },
+  { text: "Spirituality", icon: "🙏" },
+  { text: "Religion", icon: "⛪" },
+  { text: "Pilgrimage", icon: "🚶‍♂️" },
+  { text: "Volunteering", icon: "🤝" },
+  { text: "Eco-tourism", icon: "🌱" },
+  { text: "Sustainable", icon: "♻️" },
+  { text: "Off the grid", icon: "📵" },
+  { text: "Digital detox", icon: "🔌" },
+  { text: "Workation", icon: "💼" },
+  { text: "Business travel", icon: "🤵" },
+  { text: "Conferences", icon: "🎤" },
+  { text: "Networking", icon: "🤝" },
+  { text: "Startup hubs", icon: "🚀" },
+  { text: "Coworking", icon: "💻" },
 ];
 
 const getRandomRotation = () => {
-  const rotations = [-10, -5, 0, 5, 10];
+  const rotations = [-10, 0, 10];
   return rotations[Math.floor(Math.random() * rotations.length)];
+};
+
+const getRandomSpacing = () => {
+  return Math.random() * 30 + 10; // Random spacing between 10-40px
 };
 
 const Footer = () => {
@@ -96,17 +173,17 @@ const Footer = () => {
                 </motion.button>
               </motion.div>
 
-              {/* Scattered Travel Tags in Multiple Lines */}
-              <div className="relative mb-16">
-                <div className="flex flex-wrap justify-center items-center gap-2 max-w-5xl mx-auto">
+              {/* Scattered Travel Tags with Random Spacing and Rotations */}
+              <div className="relative mb-16 overflow-hidden">
+                <div className="flex flex-wrap justify-start items-start -mx-8 px-8" style={{ marginLeft: '-60px', marginRight: '-60px' }}>
                   {travelTags.map((tag, index) => (
                     <motion.div
-                      key={tag.text}
+                      key={`${tag.text}-${index}`}
                       initial={{ opacity: 0, scale: 0.8, y: 20 }}
                       whileInView={{ opacity: 1, scale: 1, y: 0 }}
                       transition={{ 
                         duration: 0.6, 
-                        delay: tag.delay * 0.1,
+                        delay: index * 0.03,
                         type: "spring",
                         stiffness: 100
                       }}
@@ -119,6 +196,7 @@ const Footer = () => {
                       className="bg-white/95 backdrop-blur-sm text-spot-primary px-3 py-2 rounded-full text-sm font-medium shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 text-center whitespace-nowrap"
                       style={{
                         transform: `rotate(${getRandomRotation()}deg)`,
+                        margin: `${getRandomSpacing()}px ${getRandomSpacing()}px`,
                       }}
                     >
                       <span className="mr-1">{tag.icon}</span>
@@ -255,4 +333,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
