@@ -1,5 +1,7 @@
+
 import { MapPin, Calendar, DollarSign, Share2 } from "lucide-react";
 import { Timeline } from "@/components/ui/timeline";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import landingData from "@/data/landing-page.json";
 
 const iconMap = {
@@ -157,7 +159,7 @@ const HowItWorksSection = () => {
         </div>
       );
     } else {
-      // Step 4: Collaboration/sharing
+      // Step 4: Collaboration/sharing with hover cards
       stepContent = (
         <div className="space-y-6">
           <div className="flex items-center gap-4 mb-6">
@@ -176,15 +178,28 @@ const HowItWorksSection = () => {
           
           <div className="bg-gradient-to-br from-spot-beige/20 to-spot-sky/10 rounded-xl p-6 border border-spot-beige/30">
             <div className="space-y-4">
-              <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
-                <div className="w-8 h-8 bg-spot-primary rounded-full flex items-center justify-center text-white text-sm font-bold">
-                  J
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium">John added Eiffel Tower</div>
-                  <div className="text-sm text-gray-500">2 minutes ago</div>
-                </div>
-              </div>
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow">
+                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                      J
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium">John added Eiffel Tower</div>
+                      <div className="text-sm text-gray-500">2 minutes ago</div>
+                    </div>
+                  </div>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-80">
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-semibold">John's Activity</h4>
+                    <p className="text-xs text-muted-foreground">
+                      John added the Eiffel Tower to the itinerary for Day 3. He also included viewing times and nearby restaurant recommendations for a complete Paris experience.
+                    </p>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+
               <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
                 <div className="w-8 h-8 bg-spot-secondary rounded-full flex items-center justify-center text-white text-sm font-bold">
                   S
@@ -194,15 +209,28 @@ const HowItWorksSection = () => {
                   <div className="text-sm text-gray-500">5 minutes ago</div>
                 </div>
               </div>
-              <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm">
-                <div className="w-8 h-8 bg-spot-primary/70 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                  M
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium">Mike suggested restaurant</div>
-                  <div className="text-sm text-gray-500">10 minutes ago</div>
-                </div>
-              </div>
+
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow">
+                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                      M
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium">Mike suggested restaurant</div>
+                      <div className="text-sm text-gray-500">10 minutes ago</div>
+                    </div>
+                  </div>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-80">
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-semibold">Mike's Suggestion</h4>
+                    <p className="text-xs text-muted-foreground">
+                      Mike recommended "Le Comptoir du Relais" - a highly-rated bistro in Saint-Germain. He included menu highlights, price range, and notes about making reservations in advance.
+                    </p>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
             </div>
           </div>
         </div>
