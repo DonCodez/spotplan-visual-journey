@@ -59,10 +59,10 @@ const HowItWorksSection = () => {
       <div className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-            How SpotPlan Works
+            4 Easy Steps to Get Started
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Four simple steps to transform your travel planning experience
+            Planning your dream trip has never been this simple
           </p>
         </div>
       </div>
