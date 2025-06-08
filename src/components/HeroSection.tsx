@@ -18,7 +18,7 @@ const HeroSection = () => {
   return (
     <section
       ref={containerRef}
-      className="relative bg-[#f5f3ef] overflow-hidden pt-0 pb-9"
+      className="relative bg-[#f5f3ef] pt-0 pb-20"
     >
       {/* Navigation Header */}
       <div className="relative z-20 w-full py-4 px-6">
@@ -79,7 +79,7 @@ const HeroSection = () => {
         <TripSearchForm />
 
         {/* Hero MacBook with Video */}
-        <div className="relative z-10 max-w-6xl mx-auto mt-20">
+        <div className="relative z-10 max-w-6xl mx-auto mt-20 mb-16">
           <motion.div 
             style={{ scale: laptopScale }}
             className="drop-shadow-2xl shadow-black/20"
