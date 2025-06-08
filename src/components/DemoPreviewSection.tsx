@@ -7,8 +7,8 @@ const DemoPreviewSection = () => {
     <section className="pt-8 pb-20 bg-gray-50" id="demo-preview">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+          <div className="text-center mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-3">
               See SpotPlan in Action
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
