@@ -1,3 +1,4 @@
+
 import { MapPin, Calendar, DollarSign, Share2 } from "lucide-react";
 import { Timeline } from "@/components/ui/timeline";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -268,7 +269,9 @@ const HowItWorksSection = () => {
         </div>
       </div>
       
-      <Timeline data={timelineData} />
+      <div className="-mt-16">
+        <Timeline data={timelineData} />
+      </div>
     </section>
   );
 };
