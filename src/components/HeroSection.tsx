@@ -80,7 +80,10 @@ const HeroSection = () => {
 
         {/* Hero MacBook with Video */}
         <div className="relative z-10 max-w-6xl mx-auto mt-20">
-          <motion.div style={{ scale: laptopScale }}>
+          <motion.div 
+            style={{ scale: laptopScale }}
+            className="drop-shadow-2xl shadow-black/20"
+          >
             <MacbookPro className="w-full h-auto mx-auto">
               <video
                 className="w-full h-full object-cover"
