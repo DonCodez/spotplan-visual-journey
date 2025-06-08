@@ -82,7 +82,7 @@ const HeroSection = () => {
         <div className="relative z-10 max-w-6xl mx-auto mt-20 mb-16">
           <motion.div 
             style={{ scale: laptopScale }}
-            className="drop-shadow-[0_35px_80px_rgba(0,0,0,0.25)] shadow-2xl"
+            className="drop-shadow-2xl shadow-black/20"
           >
             <MacbookPro className="w-full h-auto mx-auto">
               <video
