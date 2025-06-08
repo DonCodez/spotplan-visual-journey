@@ -10,16 +10,16 @@ const curtainVriants: Variants = {
   visible: {
     clipPath: "polygon(0 0,100% 0,100% 100%,0 100%)",
     transition: {
-      duration: 0.4,
-      ease: ["easeOut", [0.25, 1.5, 0.5, 1]],
+      duration: 0.2,
+      ease: "easeOut",
     },
   },
 
   hidden: {
     clipPath: "polygon(50% 0,50% 0,50% 100%,50% 100%)",
     transition: {
-      duration: 0.3,
-      ease: ["easeOut", [0.25, 1.5, 0.5, 1]],
+      duration: 0.6,
+      ease: "easeOut",
     },
   },
 }
