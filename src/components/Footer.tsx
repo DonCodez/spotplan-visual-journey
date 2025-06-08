@@ -63,7 +63,7 @@ const Footer = () => {
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
         {/* Rectangle container matching How It Works section */}
-        <div className="relative text-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden" style={{ background: 'linear-gradient(135deg, #22afed, #2563eb, #1e3a8a)' }}>
+        <div className="relative text-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden" style={{ background: 'linear-gradient(180deg, #22afed 0%, #2563eb 50%, #1e3a8a 100%)' }}>
           {/* Background Paths */}
           <div className="absolute inset-0">
             <FloatingPaths position={1} />
@@ -104,7 +104,8 @@ const Footer = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-spot-beige text-spot-primary px-8 py-4 rounded-full text-lg font-semibold hover:shadow-lg transition-all duration-300"
+                  className="text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-lg transition-all duration-300"
+                  style={{ backgroundColor: '#84cc16' }}
                 >
                   ✈️ Discover Now
                 </motion.button>
