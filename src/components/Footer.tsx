@@ -1,4 +1,5 @@
 
+
 import { Card } from "@/components/ui/card";
 import { Twitter, Instagram, Facebook, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
@@ -16,7 +17,7 @@ const Footer = () => {
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
         {/* Rectangle container matching How It Works section */}
-        <div className="relative bg-gradient-to-br from-spot-blue via-spot-sky to-spot-primary text-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+        <div className="relative text-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden" style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb, #22afed)' }}>
           {/* Background Dotted World Map */}
           <div 
             className="absolute inset-0 opacity-20 bg-cover bg-center bg-no-repeat"
@@ -184,3 +185,4 @@ const Footer = () => {
 };
 
 export default Footer;
+
