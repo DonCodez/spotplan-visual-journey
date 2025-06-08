@@ -1,7 +1,5 @@
-
 import { MapPin, Calendar, DollarSign, Share2 } from "lucide-react";
 import { Timeline } from "@/components/ui/timeline";
-import { WorldMap } from "@/components/ui/world-map";
 import landingData from "@/data/landing-page.json";
 
 const iconMap = {
@@ -19,7 +17,7 @@ const HowItWorksSection = () => {
     let stepContent;
     
     if (index === 0) {
-      // Step 1: Interactive map
+      // Step 1: Destination selection
       stepContent = (
         <div className="space-y-6">
           <div className="flex items-center gap-4 mb-6">
@@ -37,24 +35,34 @@ const HowItWorksSection = () => {
           </div>
           
           <div className="bg-gradient-to-br from-spot-beige/20 to-spot-sky/10 rounded-xl p-6 border border-spot-beige/30">
-            <WorldMap
-              dots={[
-                {
-                  start: { lat: 40.7128, lng: -74.0060 }, // New York
-                  end: { lat: 48.8566, lng: 2.3522 }, // Paris
-                },
-                {
-                  start: { lat: 35.6762, lng: 139.6503 }, // Tokyo
-                  end: { lat: -33.8688, lng: 151.2093 }, // Sydney
-                },
-              ]}
-              lineColor="#e5a852"
-            />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white rounded-lg p-4 shadow-sm border-2 border-spot-primary/20">
+                <div className="w-full h-32 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg mb-3 flex items-center justify-center">
+                  <span className="text-2xl">🏝️</span>
+                </div>
+                <h4 className="font-semibold text-gray-800">Tropical Islands</h4>
+                <p className="text-sm text-gray-600">Maldives, Bali, Hawaii</p>
+              </div>
+              <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-full h-32 bg-gradient-to-br from-green-100 to-green-200 rounded-lg mb-3 flex items-center justify-center">
+                  <span className="text-2xl">🏔️</span>
+                </div>
+                <h4 className="font-semibold text-gray-800">Mountain Adventures</h4>
+                <p className="text-sm text-gray-600">Alps, Himalayas, Rockies</p>
+              </div>
+              <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-full h-32 bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg mb-3 flex items-center justify-center">
+                  <span className="text-2xl">🏛️</span>
+                </div>
+                <h4 className="font-semibold text-gray-800">Historic Cities</h4>
+                <p className="text-sm text-gray-600">Rome, Paris, Tokyo</p>
+              </div>
+            </div>
           </div>
         </div>
       );
     } else if (index === 1) {
-      // Step 2: Calendar/schedule view
+      // Step 2: Calendar/schedule view with specific date range
       stepContent = (
         <div className="space-y-6">
           <div className="flex items-center gap-4 mb-6">
@@ -80,20 +88,30 @@ const HowItWorksSection = () => {
               ))}
             </div>
             <div className="grid grid-cols-7 gap-2">
-              {Array.from({ length: 14 }, (_, i) => (
-                <div
-                  key={i}
-                  className={`aspect-square rounded-lg flex items-center justify-center text-sm ${
-                    i === 3 || i === 4 || i === 10
-                      ? 'bg-spot-primary text-white font-semibold'
-                      : i === 6 || i === 7
-                      ? 'bg-spot-secondary/30 text-spot-secondary font-medium'
-                      : 'bg-white text-gray-400'
-                  }`}
-                >
-                  {i + 1}
-                </div>
-              ))}
+              {Array.from({ length: 21 }, (_, i) => {
+                const dayNumber = i + 1;
+                let cellClass = 'aspect-square rounded-lg flex items-center justify-center text-sm ';
+                
+                if (dayNumber === 7 || dayNumber === 12) {
+                  // Start and end dates - dark colored
+                  cellClass += 'bg-spot-primary text-white font-bold';
+                } else if (dayNumber > 7 && dayNumber < 12) {
+                  // Dates in between - light colored
+                  cellClass += 'bg-spot-primary/30 text-spot-primary font-semibold';
+                } else {
+                  // Other dates
+                  cellClass += 'bg-white text-gray-400';
+                }
+                
+                return (
+                  <div key={i} className={cellClass}>
+                    {dayNumber}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-4 text-center">
+              <p className="text-sm text-gray-600">Trip Duration: 6 Days (7th - 12th)</p>
             </div>
           </div>
         </div>
