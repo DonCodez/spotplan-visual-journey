@@ -21,13 +21,13 @@ const LocationCard = ({ title, subtitle, description, imageSrc, emoji }: Locatio
     <CardCurtainReveal className="h-64 w-full border border-gray-200 bg-white text-gray-800 shadow-sm rounded-lg">
       <CardCurtainRevealBody className="p-4 flex flex-col justify-center">
         <div className="text-2xl mb-2">{emoji}</div>
-        <CardCurtainRevealTitle className="text-lg font-semibold mb-1">
+        <h3 className="text-lg font-semibold mb-1">
           {title}
-        </CardCurtainRevealTitle>
+        </h3>
         <div className="text-sm text-gray-600 mb-2">{subtitle}</div>
-        <CardCurtainRevealDescription className="text-sm text-gray-700">
+        <p className="text-sm text-gray-700">
           {description}
-        </CardCurtainRevealDescription>
+        </p>
       </CardCurtainRevealBody>
 
       <CardCurtainRevealFooter className="absolute inset-0">
