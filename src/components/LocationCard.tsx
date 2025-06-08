@@ -2,10 +2,7 @@
 import { 
   CardCurtainReveal,
   CardCurtainRevealBody,
-  CardCurtainRevealDescription,
   CardCurtainRevealFooter,
-  CardCurtainRevealTitle,
-  CardCurtain 
 } from "@/components/ui/card-curtain-reveal"
 
 interface LocationCardProps {
@@ -18,14 +15,14 @@ interface LocationCardProps {
 
 const LocationCard = ({ title, subtitle, description, imageSrc, emoji }: LocationCardProps) => {
   return (
-    <CardCurtainReveal className="h-64 w-full border border-gray-200 bg-white text-gray-800 shadow-sm rounded-lg">
-      <CardCurtainRevealBody className="p-4 flex flex-col justify-center">
-        <div className="text-2xl mb-2">{emoji}</div>
-        <h3 className="text-lg font-semibold mb-1">
+    <CardCurtainReveal className="h-80 w-full border border-gray-200 bg-white text-gray-800 shadow-sm rounded-lg">
+      <CardCurtainRevealBody className="p-4 flex flex-col justify-start h-full">
+        <div className="text-2xl mb-3">{emoji}</div>
+        <h3 className="text-lg font-semibold mb-2">
           {title}
         </h3>
-        <div className="text-sm text-gray-600 mb-2">{subtitle}</div>
-        <p className="text-sm text-gray-700">
+        <div className="text-sm text-gray-600 mb-3">{subtitle}</div>
+        <p className="text-xs text-gray-700 leading-relaxed flex-1">
           {description}
         </p>
       </CardCurtainRevealBody>
