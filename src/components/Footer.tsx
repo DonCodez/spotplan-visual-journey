@@ -107,7 +107,7 @@ const Footer = () => {
                   className="text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-lg transition-all duration-300"
                   style={{ backgroundColor: '#84cc16' }}
                 >
-                  ✈️ Discover Now
+                   Discover Now
                 </motion.button>
               </motion.div>
 
