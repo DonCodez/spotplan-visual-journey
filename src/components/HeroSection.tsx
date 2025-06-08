@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import TripSearchForm from "./TripSearchForm";
 import { Button } from "@/components/ui/button";
+import { MacbookPro } from "@/components/ui/macbook-pro";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -77,15 +78,21 @@ const HeroSection = () => {
 
         <TripSearchForm />
 
-        {/* Hero Image */}
+        {/* Hero MacBook with Video */}
         <div className="relative z-10 max-w-6xl mx-auto">
           <motion.div style={{ scale: laptopScale }}>
-            <img
-              src="/images/landingpage/herosectionmockup.png"
-              alt="Hero section laptop mockup"
-              className="w-full h-auto mx-auto"
-              loading="eager"
-            />
+            <MacbookPro className="w-full h-auto mx-auto">
+              <video
+                className="w-full h-full object-cover"
+                autoPlay
+                loop
+                muted
+                playsInline
+              >
+                <source src="/images/landingpage/herovideo.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </MacbookPro>
           </motion.div>
         </div>
       </div>
