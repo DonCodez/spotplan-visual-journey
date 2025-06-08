@@ -1,47 +1,15 @@
+
 import { Card } from "@/components/ui/card";
 import { Play } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import VideoPlayer from "@/components/ui/video-player";
 import { motion, AnimatePresence } from "framer-motion";
 
 const DemoPreviewSection = () => {
   const [showVideo, setShowVideo] = useState(false);
-  const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const videoSrc = "https://videos.pexels.com/video-files/30333849/13003128_2560_1440_25fps.mp4";
-
-  useEffect(() => {
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    
-    if (video && canvas) {
-      const handleLoadedData = () => {
-        video.currentTime = 0.1; // Set to a small time to get first frame
-      };
-
-      const handleSeeked = () => {
-        const context = canvas.getContext('2d');
-        if (context) {
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          context.drawImage(video, 0, 0, canvas.width, canvas.height);
-          const dataURL = canvas.toDataURL('image/jpeg', 0.8);
-          setThumbnailUrl(dataURL);
-        }
-      };
-
-      video.addEventListener('loadeddata', handleLoadedData);
-      video.addEventListener('seeked', handleSeeked);
-      video.load();
-
-      return () => {
-        video.removeEventListener('loadeddata', handleLoadedData);
-        video.removeEventListener('seeked', handleSeeked);
-      };
-    }
-  }, []);
+  const videoSrc = "/images/landingpage/demovideo.mp4";
+  const thumbnailSrc = "/images/landingpage/demothumbnail.png";
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -81,16 +49,6 @@ const DemoPreviewSection = () => {
       viewport={{ once: true, margin: "-100px" }}
     >
       <div className="container mx-auto px-4">
-        {/* Hidden video and canvas for thumbnail generation */}
-        <video 
-          ref={videoRef} 
-          src={videoSrc}
-          style={{ display: 'none' }}
-          muted
-          playsInline
-        />
-        <canvas ref={canvasRef} style={{ display: 'none' }} />
-
         <motion.div className="text-center mb-8" variants={itemVariants}>
           <motion.h2 
             className="text-4xl md:text-5xl font-bold text-gray-800 mb-3"
@@ -118,7 +76,7 @@ const DemoPreviewSection = () => {
                     transition={{ duration: 0.3 }}
                     className="absolute inset-0"
                     style={{
-                      backgroundImage: thumbnailUrl ? `url(${thumbnailUrl})` : 'none',
+                      backgroundImage: `url(${thumbnailSrc})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                     }}
