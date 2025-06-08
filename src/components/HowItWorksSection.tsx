@@ -1,7 +1,7 @@
-
 import { MapPin, Calendar, DollarSign, Share2 } from "lucide-react";
 import { Timeline } from "@/components/ui/timeline";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import LocationCard from "@/components/LocationCard";
 import landingData from "@/data/landing-page.json";
 
 const iconMap = {
@@ -19,7 +19,7 @@ const HowItWorksSection = () => {
     let stepContent;
     
     if (index === 0) {
-      // Step 1: Destination selection
+      // Step 1: Destination selection with new location cards
       stepContent = (
         <div className="space-y-6">
           <div className="flex items-center gap-4 mb-6">
@@ -38,27 +38,27 @@ const HowItWorksSection = () => {
           
           <div className="bg-gradient-to-br from-spot-beige/20 to-spot-sky/10 rounded-xl p-6 border border-spot-beige/30">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white rounded-lg p-4 shadow-sm border-2 border-spot-primary/20">
-                <div className="w-full h-32 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg mb-3 flex items-center justify-center">
-                  <span className="text-2xl">🏝️</span>
-                </div>
-                <h4 className="font-semibold text-gray-800">Tropical Islands</h4>
-                <p className="text-sm text-gray-600">Maldives, Bali, Hawaii</p>
-              </div>
-              <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-full h-32 bg-gradient-to-br from-green-100 to-green-200 rounded-lg mb-3 flex items-center justify-center">
-                  <span className="text-2xl">🏔️</span>
-                </div>
-                <h4 className="font-semibold text-gray-800">Mountain Adventures</h4>
-                <p className="text-sm text-gray-600">Alps, Himalayas, Rockies</p>
-              </div>
-              <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-full h-32 bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg mb-3 flex items-center justify-center">
-                  <span className="text-2xl">🏛️</span>
-                </div>
-                <h4 className="font-semibold text-gray-800">Historic Cities</h4>
-                <p className="text-sm text-gray-600">Rome, Paris, Tokyo</p>
-              </div>
+              <LocationCard
+                title="Tropical Islands"
+                subtitle="Maldives, Bali, Hawaii"
+                description="Experience pristine beaches, crystal-clear waters, and luxury resorts in paradise destinations."
+                imageSrc="/images/landingpage/bali.jpg"
+                emoji="🏝️"
+              />
+              <LocationCard
+                title="Mountain Adventures"
+                subtitle="Alps, Himalayas, Rockies"
+                description="Discover breathtaking peaks, alpine villages, and world-class skiing and hiking trails."
+                imageSrc="/images/landingpage/alps.jpg"
+                emoji="🏔️"
+              />
+              <LocationCard
+                title="Historic Cities"
+                subtitle="Rome, Paris, Tokyo"
+                description="Immerse yourself in rich culture, ancient architecture, and vibrant city life."
+                imageSrc="/images/landingpage/rome.jpg"
+                emoji="🏛️"
+              />
             </div>
           </div>
         </div>
