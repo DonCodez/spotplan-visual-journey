@@ -1,4 +1,5 @@
 
+
 import { Card } from "@/components/ui/card";
 import { Twitter, Instagram, Facebook, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
@@ -12,19 +13,19 @@ const iconMap = {
 };
 
 const travelTags = [
-  { text: "Culture", icon: "🎭", delay: 0 },
-  { text: "Nightlife", icon: "🌙", delay: 0.2 },
-  { text: "Animals", icon: "🐾", delay: 0.4 },
-  { text: "Family friendly", icon: "👨‍👩‍👧‍👦", delay: 0.6 },
-  { text: "Art", icon: "🎨", delay: 0.8 },
-  { text: "Indoor", icon: "🏢", delay: 1.0 },
-  { text: "Long walks", icon: "🚶", delay: 1.2 },
-  { text: "Sightseeing", icon: "👀", delay: 1.4 },
-  { text: "Ships", icon: "🚢", delay: 1.6 },
-  { text: "Beaches", icon: "🏖️", delay: 1.8 },
-  { text: "Outdoor", icon: "🌲", delay: 2.0 },
-  { text: "Hiking", icon: "🥾", delay: 2.2 },
-  { text: "Cooking", icon: "👨‍🍳", delay: 2.4 },
+  { text: "Culture", icon: "🎭", delay: 0, row: 1, col: 1 },
+  { text: "Nightlife", icon: "🌙", delay: 0.1, row: 1, col: 2 },
+  { text: "Animals", icon: "🐾", delay: 0.2, row: 1, col: 3 },
+  { text: "Family friendly", icon: "👨‍👩‍👧‍👦", delay: 0.3, row: 1, col: 4 },
+  { text: "Art", icon: "🎨", delay: 0.4, row: 2, col: 1 },
+  { text: "Indoor", icon: "🏢", delay: 0.5, row: 2, col: 2 },
+  { text: "Long walks", icon: "🚶", delay: 0.6, row: 2, col: 3 },
+  { text: "Sightseeing", icon: "👀", delay: 0.7, row: 2, col: 4 },
+  { text: "Ships", icon: "🚢", delay: 0.8, row: 3, col: 1 },
+  { text: "Beaches", icon: "🏖️", delay: 0.9, row: 3, col: 2 },
+  { text: "Outdoor", icon: "🌲", delay: 1.0, row: 3, col: 3 },
+  { text: "Hiking", icon: "🥾", delay: 1.1, row: 3, col: 4 },
+  { text: "Cooking", icon: "👨‍🍳", delay: 1.2, row: 3, col: 5 },
 ];
 
 const Footer = () => {
@@ -73,32 +74,36 @@ const Footer = () => {
                 </motion.button>
               </motion.div>
 
-              {/* Floating Travel Tags */}
-              <div className="relative h-64 mb-16 overflow-hidden">
-                {travelTags.map((tag, index) => (
-                  <motion.div
-                    key={tag.text}
-                    initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ 
-                      duration: 0.6, 
-                      delay: tag.delay,
-                      type: "spring",
-                      stiffness: 100
-                    }}
-                    viewport={{ once: true }}
-                    whileHover={{ scale: 1.1, rotate: Math.random() * 10 - 5 }}
-                    className="absolute bg-white/95 backdrop-blur-sm text-spot-primary px-4 py-2 rounded-full text-sm font-medium shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
-                    style={{
-                      left: `${Math.random() * 80 + 10}%`,
-                      top: `${Math.random() * 60 + 20}%`,
-                      transform: `rotate(${Math.random() * 20 - 10}deg)`,
-                    }}
-                  >
-                    <span className="mr-2">{tag.icon}</span>
-                    {tag.text}
-                  </motion.div>
-                ))}
+              {/* Organized Travel Tags Grid */}
+              <div className="relative mb-16">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-4xl mx-auto">
+                  {travelTags.map((tag, index) => (
+                    <motion.div
+                      key={tag.text}
+                      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                      transition={{ 
+                        duration: 0.6, 
+                        delay: tag.delay,
+                        type: "spring",
+                        stiffness: 100
+                      }}
+                      viewport={{ once: true }}
+                      whileHover={{ 
+                        scale: 1.1, 
+                        rotate: Math.random() * 6 - 3,
+                        transition: { duration: 0.2 }
+                      }}
+                      className="bg-white/95 backdrop-blur-sm text-spot-primary px-4 py-3 rounded-full text-sm font-medium shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 text-center"
+                      style={{
+                        transform: `rotate(${Math.random() * 6 - 3}deg)`,
+                      }}
+                    >
+                      <span className="block mb-1">{tag.icon}</span>
+                      <span className="block">{tag.text}</span>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
 
               {/* Footer Links Grid */}
@@ -228,3 +233,4 @@ const Footer = () => {
 };
 
 export default Footer;
+
