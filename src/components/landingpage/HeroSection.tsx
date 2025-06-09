@@ -2,7 +2,7 @@
 import { WorldMap } from "@/components/ui/world-map";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import TripSearchForm from "./TripSearchForm";
+import TripSearchForm from "../TripSearchForm";
 import { Button } from "@/components/ui/button";
 import { MacbookPro } from "@/components/ui/macbook-pro";
 

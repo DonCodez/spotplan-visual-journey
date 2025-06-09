@@ -1,15 +1,5 @@
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Users, Calculator, Sparkles } from "lucide-react";
-import { GradientText } from "@/components/ui/gradient-text";
 import { AnimatedMixedText } from "@/components/ui/animated-mixed-text";
-import landingData from "@/data/landing-page.json";
-
-const iconMap = {
-  users: Users,
-  calculator: Calculator,
-  sparkles: Sparkles,
-};
 
 const HighlightsSection = () => {
   const textSegments = [
