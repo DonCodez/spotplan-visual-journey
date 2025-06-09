@@ -38,6 +38,19 @@ const DashboardSidebar = () => {
   return (
     <Sidebar className={collapsed ? "w-12" : "w-48"} collapsible="icon">
       <SidebarContent className="bg-white border-r border-gray-100 flex flex-col h-full">
+        {/* Company Name */}
+        {!collapsed && (
+          <div className="p-3 border-b border-gray-100">
+            <motion.h1 
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="text-lg font-bold text-spot-primary text-center"
+            >
+              SpotPlan
+            </motion.h1>
+          </div>
+        )}
+
         {/* Header with Profile Avatar */}
         <div className="p-3 border-b border-gray-100">
           <div className="flex items-center justify-center">
