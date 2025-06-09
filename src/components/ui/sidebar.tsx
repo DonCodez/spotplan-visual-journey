@@ -72,11 +72,11 @@ export const Sidebar = ({
   );
 };
 
-export const SidebarBody = (props: React.ComponentProps<typeof motion.div>) => {
+export const SidebarBody = (props: React.ComponentProps<"div">) => {
   return (
     <>
       <DesktopSidebar {...props} />
-      <MobileSidebar {...(props as React.ComponentProps<"div">)} />
+      <MobileSidebar {...props} />
     </>
   );
 };
@@ -85,16 +85,16 @@ export const DesktopSidebar = ({
   className,
   children,
   ...props
-}: React.ComponentProps<typeof motion.div>) => {
+}: React.ComponentProps<"div">) => {
   const { open, setOpen, animate } = useSidebar();
   return (
     <motion.div
       className={cn(
-        "h-full px-4 py-4 hidden md:flex md:flex-col bg-white border-r border-spot-primary/10 w-[300px] flex-shrink-0",
+        "h-full px-4 py-4 hidden md:flex md:flex-col bg-white border-r border-spot-primary/10 flex-shrink-0",
         className
       )}
       animate={{
-        width: animate ? (open ? "300px" : "60px") : "300px",
+        width: animate ? (open ? 300 : 60) : 300,
       }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
@@ -169,21 +169,22 @@ export const SidebarLink = ({
     <Link
       to={link.href}
       className={cn(
-        "flex items-center justify-start gap-2 group/sidebar py-2 px-2 rounded-md hover:bg-spot-primary/10 transition-colors",
+        "flex items-center gap-3 group/sidebar py-3 px-3 rounded-md hover:bg-spot-primary/10 transition-colors min-h-[48px]",
         className
       )}
       {...props}
     >
-      {link.icon}
-      <motion.span
-        animate={{
-          display: animate ? (open ? "inline-block" : "none") : "inline-block",
-          opacity: animate ? (open ? 1 : 0) : 1,
-        }}
-        className="text-spot-primary text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
+      <div className="flex-shrink-0 flex items-center justify-center w-5 h-5">
+        {link.icon}
+      </div>
+      <span
+        className={cn(
+          "text-spot-primary text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-nowrap flex-1",
+          animate && !open && "opacity-0 w-0 overflow-hidden"
+        )}
       >
         {link.label}
-      </motion.span>
+      </span>
     </Link>
   );
 };
