@@ -22,7 +22,7 @@ interface Trip {
 }
 
 const DashboardContent = () => {
-  const { trips } = dashboardData;
+  const { trips, user, welcome } = dashboardData;
   
   // Type assertion to ensure status values match the expected union type
   const typedTrips = trips as Trip[];
@@ -41,8 +41,22 @@ const DashboardContent = () => {
 
       {/* Content with higher z-index */}
       <div className="relative z-10">
-        {/* Create New Trip Button - Top Right */}
-        <div className="flex justify-end mb-8">
+        {/* Welcome Message and Create New Trip Button - Same Line */}
+        <div className="flex justify-between items-center mb-8">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-white rounded-lg border border-gray-200 px-6 py-4 shadow-sm"
+          >
+            <h1 className="text-xl font-bold text-gray-900">
+              {welcome.greeting}, {user.name}!
+            </h1>
+            <p className="text-sm text-gray-600 mt-1">
+              {welcome.subtitle}
+            </p>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
