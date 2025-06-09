@@ -5,7 +5,6 @@ import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import { Users, Target, Lightbulb, Heart, Mail, Phone, MapPin } from "lucide-react";
 import { CountAnimation } from "@/components/ui/count-animation";
-import { ContainerScroll, CardSticky } from "@/components/ui/cards-stack";
 
 const AboutPage = () => {
   const values = [
@@ -90,48 +89,110 @@ const AboutPage = () => {
               </div>
             </motion.div>
 
-            {/* Values Section with Cards Stack */}
-            <div className="container min-h-[400vh] place-content-center px-6">
-              <div className="grid md:grid-cols-2 md:gap-8 xl:gap-12">
-                <div className="left-0 top-0 md:sticky md:h-svh md:py-12">
-                  <h5 className="text-xs uppercase tracking-wide text-gray-500">our values</h5>
-                  <h2 className="mb-6 mt-4 text-4xl font-bold tracking-tight text-blue-900">
-                    Guiding principles that{" "}
-                    <span className="text-blue-600">shape our journey</span>
-                  </h2>
-                  <p className="max-w-prose text-sm text-gray-600">
-                    These core values are the foundation of everything we do at SpotPlan. 
-                    They guide our decisions, inspire our innovations, and ensure we always 
-                    put travelers first in creating exceptional experiences.
-                  </p>
-                </div>
-                <ContainerScroll className="min-h-[400vh] space-y-8 py-12">
-                  {values.map((value, index) => {
-                    const Icon = value.icon;
-                    return (
-                      <CardSticky
-                        key={value.title}
-                        index={index + 2}
-                        className="rounded-2xl border border-blue-200 bg-white p-8 shadow-lg backdrop-blur-md hover:shadow-xl transition-shadow duration-300"
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                            <Icon className="w-6 h-6 text-blue-600" />
-                          </div>
-                          <h3 className="text-2xl font-bold text-blue-600">
-                            {String(index + 1).padStart(2, "0")}
-                          </h3>
-                        </div>
-                        <h2 className="text-2xl font-bold text-blue-900 mb-4 tracking-tight">
-                          {value.title}
-                        </h2>
-                        <p className="text-gray-600 leading-relaxed">{value.description}</p>
-                      </CardSticky>
-                    );
-                  })}
-                </ContainerScroll>
+            {/* Values Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="mb-16"
+            >
+              <div className="text-center mb-12">
+                <motion.h5 
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  viewport={{ once: true }}
+                  className="text-xs uppercase tracking-wide text-gray-500 mb-4"
+                >
+                  our values
+                </motion.h5>
+                <motion.h2 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  viewport={{ once: true }}
+                  className="text-4xl font-bold tracking-tight text-blue-900 mb-6"
+                >
+                  Guiding principles that{" "}
+                  <span className="text-blue-600">shape our journey</span>
+                </motion.h2>
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  viewport={{ once: true }}
+                  className="max-w-3xl mx-auto text-gray-600 leading-relaxed"
+                >
+                  These core values are the foundation of everything we do at SpotPlan. 
+                  They guide our decisions, inspire our innovations, and ensure we always 
+                  put travelers first in creating exceptional experiences.
+                </motion.p>
               </div>
-            </div>
+
+              <div className="grid md:grid-cols-2 gap-8">
+                {values.map((value, index) => {
+                  const Icon = value.icon;
+                  return (
+                    <motion.div
+                      key={value.title}
+                      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ 
+                        duration: 0.8, 
+                        delay: index * 0.2,
+                        type: "spring",
+                        stiffness: 100
+                      }}
+                      viewport={{ once: true }}
+                      whileHover={{ 
+                        y: -8, 
+                        scale: 1.02,
+                        transition: { duration: 0.3 }
+                      }}
+                      className="group bg-white rounded-2xl border border-blue-200 p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                    >
+                      <div className="flex items-start justify-between gap-4 mb-6">
+                        <motion.div 
+                          className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center group-hover:from-blue-200 group-hover:to-blue-300 transition-all duration-300"
+                          whileHover={{ rotate: 5, scale: 1.1 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <Icon className="w-8 h-8 text-blue-600" />
+                        </motion.div>
+                        <motion.div 
+                          className="text-3xl font-bold text-blue-600 opacity-20 group-hover:opacity-40 transition-opacity duration-300"
+                          initial={{ scale: 0 }}
+                          whileInView={{ scale: 1 }}
+                          transition={{ duration: 0.5, delay: index * 0.2 + 0.3 }}
+                          viewport={{ once: true }}
+                        >
+                          {String(index + 1).padStart(2, "0")}
+                        </motion.div>
+                      </div>
+                      <motion.h3 
+                        className="text-2xl font-bold text-blue-900 mb-4 tracking-tight group-hover:text-blue-700 transition-colors duration-300"
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.6, delay: index * 0.2 + 0.4 }}
+                        viewport={{ once: true }}
+                      >
+                        {value.title}
+                      </motion.h3>
+                      <motion.p 
+                        className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ duration: 0.8, delay: index * 0.2 + 0.6 }}
+                        viewport={{ once: true }}
+                      >
+                        {value.description}
+                      </motion.p>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
