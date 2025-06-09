@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { Twitter, Instagram, Facebook, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
@@ -64,6 +65,13 @@ function FloatingPaths({ position }: { position: number }) {
 
 const Footer = ({ theme = "light" }: FooterProps) => {
   const isDark = theme === "dark";
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   
   return (
     <section className={`py-20 ${isDark ? 'bg-black' : 'bg-gray-50'}`}>
@@ -181,19 +189,34 @@ const Footer = ({ theme = "light" }: FooterProps) => {
                 >
                   <h4 className="text-lg font-semibold mb-4 text-spot-beige">Product</h4>
                   <ul className="space-y-2">
-                    {["Features", "Pricing", "How it Works", "Reviews"].map((link, index) => (
-                      <motion.li 
-                        key={link}
-                        initial={{ opacity: 0, x: -10 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.4, delay: 0.7 + index * 0.1 }}
-                        viewport={{ once: true }}
+                    <motion.li 
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: 0.7 }}
+                      viewport={{ once: true }}
+                    >
+                      <Link 
+                        to="/" 
+                        onClick={() => setTimeout(() => scrollToSection('features-section'), 100)}
+                        className="text-white/80 hover:text-spot-beige transition-colors hover:underline"
                       >
-                        <a href="#" className="text-white/80 hover:text-spot-beige transition-colors hover:underline">
-                          {link}
-                        </a>
-                      </motion.li>
-                    ))}
+                        Features
+                      </Link>
+                    </motion.li>
+                    <motion.li 
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: 0.8 }}
+                      viewport={{ once: true }}
+                    >
+                      <Link 
+                        to="/" 
+                        onClick={() => setTimeout(() => scrollToSection('how-it-works'), 100)}
+                        className="text-white/80 hover:text-spot-beige transition-colors hover:underline"
+                      >
+                        How it Works
+                      </Link>
+                    </motion.li>
                   </ul>
                 </motion.div>
 
