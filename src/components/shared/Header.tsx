@@ -1,7 +1,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ExpandableTabs } from "@/components/ui/expandable-tabs";
 import { Home, User, FileText, Contact } from "lucide-react";
 
@@ -11,6 +11,7 @@ interface HeaderProps {
 
 const Header = ({ theme = "light" }: HeaderProps) => {
   const isDark = theme === "dark";
+  const location = useLocation();
   
   const tabs = [
     { title: "Home", icon: Home },
@@ -18,6 +19,22 @@ const Header = ({ theme = "light" }: HeaderProps) => {
     { title: "Privacy", icon: FileText },
     { title: "Contact", icon: Contact },
   ];
+
+  // Determine which tab should be active based on current route
+  const getActiveTabIndex = () => {
+    switch (location.pathname) {
+      case "/":
+        return 0; // Home
+      case "/about":
+        return 1; // About
+      case "/privacy-policy":
+        return 2; // Privacy
+      case "/contact":
+        return 3; // Contact
+      default:
+        return null;
+    }
+  };
 
   const handleTabChange = (index: number | null) => {
     if (index !== null) {
@@ -74,6 +91,7 @@ const Header = ({ theme = "light" }: HeaderProps) => {
               onChange={handleTabChange}
               activeColor={isDark ? "text-white" : "text-blue-600"}
               className={isDark ? "border-white/20 bg-black/50" : "border-gray-200 bg-white/80"}
+              defaultSelected={getActiveTabIndex()}
             />
           </motion.div>
           
