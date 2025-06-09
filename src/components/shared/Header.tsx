@@ -1,7 +1,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ExpandableTabs } from "@/components/ui/expandable-tabs";
 import { Home, User, FileText, Contact } from "lucide-react";
 
@@ -12,6 +12,7 @@ interface HeaderProps {
 const Header = ({ theme = "light" }: HeaderProps) => {
   const isDark = theme === "dark";
   const location = useLocation();
+  const navigate = useNavigate();
   
   const tabs = [
     { title: "Home", icon: Home },
@@ -40,14 +41,14 @@ const Header = ({ theme = "light" }: HeaderProps) => {
     if (index !== null) {
       switch (index) {
         case 0:
-          window.location.href = "/";
+          navigate("/");
           break;
         case 1:
           // Navigate to About page when it exists
           console.log("About page coming soon");
           break;
         case 2:
-          window.location.href = "/privacy-policy";
+          navigate("/privacy-policy");
           break;
         case 3:
           // Navigate to Contact page when it exists
