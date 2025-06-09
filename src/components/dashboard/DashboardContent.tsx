@@ -5,7 +5,6 @@ import { Plus, MapPin } from "lucide-react";
 import { Tiles } from "@/components/ui/tiles";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import TripCard from "@/components/dashboard/TripCard";
 import dashboardData from "@/data/dashboard.json";
 
@@ -29,7 +28,7 @@ const DashboardContent = () => {
   const typedTrips = trips as Trip[];
 
   return (
-    <div className="flex-1 px-6 py-8 relative flex flex-col h-full" id="dashboard-main-content">
+    <div className="flex-1 px-6 py-8 relative" id="dashboard-main-content">
       {/* Background Tiles */}
       <div className="absolute inset-0 overflow-hidden">
         <Tiles 
@@ -41,7 +40,7 @@ const DashboardContent = () => {
       </div>
 
       {/* Content with higher z-index */}
-      <div className="relative z-10 flex flex-col h-full">
+      <div className="relative z-10">
         {/* Create New Trip Button - Top Right */}
         <div className="flex justify-end mb-8">
           <motion.div
@@ -68,29 +67,26 @@ const DashboardContent = () => {
           </motion.div>
         </div>
 
-        {/* Trips Section - Now scrollable */}
+        {/* Trips Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex-1 min-h-0"
         >
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Trips</h2>
           
-          <ScrollArea className="h-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-6">
-              {typedTrips.map((trip, index) => (
-                <motion.div
-                  key={trip.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
-                >
-                  <TripCard trip={trip} />
-                </motion.div>
-              ))}
-            </div>
-          </ScrollArea>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {typedTrips.map((trip, index) => (
+              <motion.div
+                key={trip.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
+              >
+                <TripCard trip={trip} />
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
 
         {/* Empty state if no trips */}

@@ -53,8 +53,8 @@ const TripCard = ({ trip }: TripCardProps) => {
       data-trip-id={trip.id}
     >
       <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border-0 bg-white rounded-xl">
-        {/* Trip Image - Made smaller */}
-        <div className="relative h-32 overflow-hidden">
+        {/* Trip Image */}
+        <div className="relative h-48 overflow-hidden">
           <img
             src={trip.image}
             alt={trip.destination}
@@ -63,22 +63,22 @@ const TripCard = ({ trip }: TripCardProps) => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
           
           {/* Status Badge */}
-          <div className="absolute top-2 left-2">
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(trip.status)}`}>
+          <div className="absolute top-4 left-4">
+            <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(trip.status)}`}>
               {trip.status}
             </span>
           </div>
 
           {/* Actions Menu */}
-          <div className="absolute top-2 right-2">
+          <div className="absolute top-4 right-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 bg-white/80 hover:bg-white text-gray-700 backdrop-blur-sm"
+                  className="h-12 w-12 bg-white/80 hover:bg-white text-gray-700 backdrop-blur-sm"
                 >
-                  <MoreVertical className="h-4 w-4" />
+                  <MoreVertical className="h-6 w-6" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-white border border-gray-200 shadow-lg">
@@ -99,31 +99,31 @@ const TripCard = ({ trip }: TripCardProps) => {
           </div>
         </div>
 
-        <CardContent className="p-4">
+        <CardContent className="p-6">
           {/* Destination */}
-          <div className="flex items-center mb-2">
-            <MapPin className="h-4 w-4 text-spot-primary mr-2" />
-            <h3 className="text-lg font-bold text-gray-900">{trip.destination}</h3>
+          <div className="flex items-center mb-3">
+            <MapPin className="h-5 w-5 text-spot-primary mr-2" />
+            <h3 className="text-xl font-bold text-gray-900">{trip.destination}</h3>
           </div>
 
           {/* Dates */}
-          <div className="flex items-center mb-3">
-            <Calendar className="h-3 w-3 text-gray-500 mr-2" />
-            <span className="text-sm text-gray-600">{trip.dates}</span>
+          <div className="flex items-center mb-4">
+            <Calendar className="h-4 w-4 text-gray-500 mr-2" />
+            <span className="text-gray-600">{trip.dates}</span>
           </div>
 
           {/* Members */}
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <Users className="h-3 w-3 text-gray-500 mr-2" />
-              <span className="text-xs text-gray-600 mr-3">
+              <Users className="h-4 w-4 text-gray-500 mr-2" />
+              <span className="text-sm text-gray-600 mr-3">
                 {trip.members.length} member{trip.members.length !== 1 ? 's' : ''}
               </span>
             </div>
             
-            <div className="flex -space-x-1">
+            <div className="flex -space-x-2">
               {trip.members.slice(0, 4).map((member, index) => (
-                <Avatar key={index} className="h-6 w-6 border-2 border-white">
+                <Avatar key={index} className="h-8 w-8 border-2 border-white">
                   <AvatarImage src={member.avatar} alt={member.name} />
                   <AvatarFallback className="bg-spot-primary text-white text-xs">
                     {member.initials}
@@ -131,7 +131,7 @@ const TripCard = ({ trip }: TripCardProps) => {
                 </Avatar>
               ))}
               {trip.members.length > 4 && (
-                <div className="h-6 w-6 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center">
+                <div className="h-8 w-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center">
                   <span className="text-xs font-medium text-gray-600">
                     +{trip.members.length - 4}
                   </span>
