@@ -35,7 +35,7 @@ const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
             className="flex items-center"
           >
-            <span className="text-2xl font-bold text-blue-900">TRAVELPAL</span>
+            <span className="text-2xl font-bold text-blue-900">SPOTPLAN</span>
           </motion.div>
           
           {/* Login Button */}
