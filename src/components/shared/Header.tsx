@@ -93,12 +93,14 @@ const Header = ({ theme = "light" }: HeaderProps) => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
           >
-            <Button 
-              className="font-medium text-white hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: '#2563eb' }}
-            >
-              Log in
-            </Button>
+            <Link to="/login">
+              <Button 
+                className="font-medium text-white hover:opacity-90 transition-opacity"
+                style={{ backgroundColor: '#2563eb' }}
+              >
+                Log in
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </div>
