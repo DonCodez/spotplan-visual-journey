@@ -168,7 +168,7 @@ export const SidebarLink = ({
     <Link
       to={link.href}
       className={cn(
-        "flex items-center gap-2 group/sidebar py-1 px-0 rounded-md hover:bg-spot-primary/10 transition-colors min-h-[32px]",
+        "flex items-center gap-2 group/sidebar py-2 px-1 rounded-md hover:bg-spot-primary/10 transition-colors min-h-[40px]",
         className
       )}
       {...props}
