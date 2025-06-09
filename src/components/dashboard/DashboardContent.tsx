@@ -3,7 +3,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Plus, MapPin } from "lucide-react";
 import { Tiles } from "@/components/ui/tiles";
-import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import TripCard from "@/components/dashboard/TripCard";
 import dashboardData from "@/data/dashboard.json";
 
@@ -47,13 +48,22 @@ const DashboardContent = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mb-8"
         >
-          <InteractiveHoverButton
-            text="Create new trip"
-            className="h-14 w-14 group-hover:w-48 bg-spot-primary hover:bg-spot-primary/90 border-spot-primary text-white shadow-lg hover:shadow-xl transition-all duration-300"
-            id="create-trip-button"
-          >
-            <Plus className="h-6 w-6" />
-          </InteractiveHoverButton>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="icon"
+                  className="h-14 w-14 rounded-full bg-lime-500 hover:bg-lime-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  id="create-trip-button"
+                >
+                  <Plus className="h-6 w-6" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="px-3 py-2">
+                Create new trip
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </motion.div>
 
         {/* Trips Section */}
