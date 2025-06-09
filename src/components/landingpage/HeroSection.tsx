@@ -3,8 +3,8 @@ import { WorldMap } from "@/components/ui/world-map";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import TripSearchForm from "../TripSearchForm";
-import { Button } from "@/components/ui/button";
 import { MacbookPro } from "@/components/ui/macbook-pro";
+import Header from "@/components/shared/Header";
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -20,40 +20,7 @@ const HeroSection = () => {
       ref={containerRef}
       className="relative bg-gray-50 pt-0 pb-20"
     >
-      {/* Navigation Header */}
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative z-20 w-full py-4 px-6"
-      >
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Logo */}
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-            className="flex items-center"
-          >
-            <span className="text-2xl font-bold text-blue-900">SPOTPLAN</span>
-          </motion.div>
-          
-          {/* Login Button */}
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-            className="flex items-center gap-4"
-          >
-            <Button 
-              variant="ghost" 
-              className="text-blue-900 hover:bg-blue-50 font-medium"
-            >
-              Log in
-            </Button>
-          </motion.div>
-        </div>
-      </motion.div>
+      <Header theme="light" />
 
       {/* Background World Map */}
       <motion.div 

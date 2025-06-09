@@ -3,7 +3,7 @@ import HeroSection from "@/components/landingpage/HeroSection";
 import HighlightsSection from "@/components/landingpage/HighlightsSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import DemoPreviewSection from "@/components/landingpage/DemoPreviewSection";
-import Footer from "@/components/landingpage/Footer";
+import Footer from "@/components/shared/Footer";
 
 const LandingPage = () => {
   return (
@@ -12,7 +12,7 @@ const LandingPage = () => {
       <HighlightsSection />
       <HowItWorksSection />
       <DemoPreviewSection />
-      <Footer />
+      <Footer theme="light" />
     </div>
   );
 };
