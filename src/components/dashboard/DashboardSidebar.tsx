@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { Home, MapPin, Settings, LogOut, User } from "lucide-react";
@@ -31,18 +30,37 @@ const DashboardSidebar = () => {
 
   const isActive = (path: string) => currentPath === path || (path === "/dashboard" && currentPath === "/");
 
-  // Filter out profile and settings from main navigation
+  // Filter out settings from main navigation (we'll keep it in main nav as requested)
   const mainNavItems = dashboardData.navigation.filter(item => 
-    !['profile', 'settings'].includes(item.icon)
+    !['profile'].includes(item.icon)
   );
-  
-  const settingsItem = dashboardData.navigation.find(item => item.icon === 'settings');
 
   return (
-    <Sidebar className={collapsed ? "w-16" : "w-64"} collapsible="icon">
+    <Sidebar className={collapsed ? "w-16" : "w-52"} collapsible="icon">
       <SidebarContent className="bg-white border-r border-gray-100 flex flex-col h-full">
+        {/* Header with SpotPlan and Profile */}
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex items-center justify-between">
+            {!collapsed && (
+              <motion.h1 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="text-lg font-bold text-spot-primary"
+              >
+                SpotPlan
+              </motion.h1>
+            )}
+            <Avatar className="h-8 w-8">
+              <AvatarImage src="/lovable-uploads/78296343-29d6-4141-a8ff-28b5730a0c66.png" alt="Profile" />
+              <AvatarFallback className="bg-spot-primary/10 text-spot-primary font-medium text-xs">
+                JD
+              </AvatarFallback>
+            </Avatar>
+          </div>
+        </div>
+
         {/* Main Navigation */}
-        <SidebarGroup className="pt-6 flex-1">
+        <SidebarGroup className="pt-4 flex-1">
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {mainNavItems.map((item, index) => {
@@ -66,7 +84,7 @@ const DashboardSidebar = () => {
                       <SidebarMenuButton
                         asChild
                         className={`
-                          w-full h-11 px-3 rounded-lg transition-all duration-200 group
+                          w-full h-10 px-3 rounded-md transition-all duration-200 group
                           ${active 
                             ? "bg-spot-primary/10 text-spot-primary shadow-sm" 
                             : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -75,7 +93,7 @@ const DashboardSidebar = () => {
                         id={`sidebar-nav-${item.label.toLowerCase()}`}
                       >
                         <Link to={item.path} className="flex items-center w-full">
-                          <IconComponent className={`h-5 w-5 ${collapsed ? "" : "mr-3"} transition-colors`} />
+                          <IconComponent className={`h-4 w-4 ${collapsed ? "" : "mr-3"} transition-colors`} />
                           {!collapsed && (
                             <span className="font-medium text-sm">{item.label}</span>
                           )}
@@ -92,41 +110,10 @@ const DashboardSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Bottom Section with Profile and Actions */}
+        {/* Bottom Section with Logout */}
         <SidebarGroup className="pb-4 mt-auto">
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-2">
-              {/* Settings */}
-              {settingsItem && (
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.4 }}
-                >
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      className={`
-                        w-full h-11 px-3 rounded-lg transition-all duration-200
-                        ${isActive(settingsItem.path) 
-                          ? "bg-spot-primary/10 text-spot-primary shadow-sm" 
-                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                        }
-                      `}
-                      id="sidebar-nav-settings"
-                    >
-                      <Link to={settingsItem.path} className="flex items-center w-full">
-                        <Settings className={`h-5 w-5 ${collapsed ? "" : "mr-3"} transition-colors`} />
-                        {!collapsed && (
-                          <span className="font-medium text-sm">{settingsItem.label}</span>
-                        )}
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </motion.div>
-              )}
-              
-              {/* Logout */}
+            <SidebarMenu>
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -134,37 +121,12 @@ const DashboardSidebar = () => {
               >
                 <SidebarMenuItem>
                   <SidebarMenuButton
-                    className="w-full h-11 px-3 rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group"
+                    className="w-full h-10 px-3 rounded-md text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group"
                     id="sidebar-nav-logout"
                   >
-                    <LogOut className={`h-5 w-5 ${collapsed ? "" : "mr-3"} transition-colors`} />
+                    <LogOut className={`h-4 w-4 ${collapsed ? "" : "mr-3"} transition-colors`} />
                     {!collapsed && <span className="font-medium text-sm">Logout</span>}
                   </SidebarMenuButton>
-                </SidebarMenuItem>
-              </motion.div>
-
-              {/* Profile Section */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: 0.6 }}
-                className="pt-3 border-t border-gray-100"
-              >
-                <SidebarMenuItem>
-                  <div className={`flex items-center ${collapsed ? "justify-center" : "px-3"} py-3`}>
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage src="/lovable-uploads/78296343-29d6-4141-a8ff-28b5730a0c66.png" alt="Profile" />
-                      <AvatarFallback className="bg-spot-primary/10 text-spot-primary font-medium">
-                        JD
-                      </AvatarFallback>
-                    </Avatar>
-                    {!collapsed && (
-                      <div className="ml-3 flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">John Doe</p>
-                        <p className="text-xs text-gray-500 truncate">john@example.com</p>
-                      </div>
-                    )}
-                  </div>
                 </SidebarMenuItem>
               </motion.div>
             </SidebarMenu>
