@@ -90,9 +90,8 @@ const Header = ({ theme = "light" }: HeaderProps) => {
             <ExpandableTabs 
               tabs={tabs} 
               onChange={handleTabChange}
-              activeColor={isDark ? "text-white" : "text-blue-600"}
-              className={isDark ? "border-white/20 bg-black/50" : "border-gray-200 bg-white/80"}
               defaultSelected={getActiveTabIndex()}
+              theme={theme}
             />
           </motion.div>
           

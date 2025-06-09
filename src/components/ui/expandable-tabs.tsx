@@ -27,6 +27,7 @@ interface ExpandableTabsProps {
   activeColor?: string;
   onChange?: (index: number | null) => void;
   defaultSelected?: number | null;
+  theme?: "light" | "dark";
 }
 
 const buttonVariants = {
@@ -53,9 +54,10 @@ const transition = { delay: 0.1, type: "spring", bounce: 0, duration: 0.6 };
 export function ExpandableTabs({
   tabs,
   className,
-  activeColor = "text-white",
+  activeColor,
   onChange,
   defaultSelected = null,
+  theme = "light",
 }: ExpandableTabsProps) {
   const [selected, setSelected] = React.useState<number | null>(defaultSelected);
   const outsideClickRef = React.useRef(null);
@@ -75,15 +77,30 @@ export function ExpandableTabs({
     onChange?.(index);
   };
 
+  const isDark = theme === "dark";
+  
+  // Set default active color based on theme if not provided
+  const defaultActiveColor = isDark ? "text-white" : "text-blue-600";
+  const finalActiveColor = activeColor || defaultActiveColor;
+
   const Separator = () => (
-    <div className="mx-1 h-[24px] w-[1.2px] bg-white/30" aria-hidden="true" />
+    <div 
+      className={cn(
+        "mx-1 h-[24px] w-[1.2px]",
+        isDark ? "bg-white/30" : "bg-gray-300"
+      )} 
+      aria-hidden="true" 
+    />
   );
 
   return (
     <div
       ref={outsideClickRef}
       className={cn(
-        "flex flex-wrap items-center gap-2 rounded-2xl border border-white/20 bg-black/30 backdrop-blur-sm p-1 shadow-sm",
+        "flex flex-wrap items-center gap-2 rounded-2xl border p-1 shadow-sm",
+        isDark 
+          ? "border-white/20 bg-black/30 backdrop-blur-sm" 
+          : "border-gray-200 bg-white/80 backdrop-blur-sm",
         className
       )}
     >
@@ -108,8 +125,13 @@ export function ExpandableTabs({
             className={cn(
               "relative flex items-center rounded-xl px-4 py-2 text-sm font-medium transition-colors duration-300",
               selected === index
-                ? cn("bg-white/20 backdrop-blur-sm", activeColor)
-                : "text-white/70 hover:bg-white/10 hover:text-white"
+                ? cn(
+                    isDark ? "bg-white/20 backdrop-blur-sm" : "bg-blue-100/80",
+                    finalActiveColor
+                  )
+                : isDark 
+                  ? "text-white/70 hover:bg-white/10 hover:text-white"
+                  : "text-gray-600 hover:bg-gray-100/80 hover:text-gray-900"
             )}
           >
             <Icon size={20} />
