@@ -85,8 +85,6 @@ const AboutPage = () => {
                   <div className="text-gray-600">Founded with a vision</div>
                   <CountAnimation number={195} className="text-4xl font-bold text-blue-600 mb-2 mt-6" />
                   <div className="text-gray-600">Countries covered</div>
-                  <CountAnimation number={50} className="text-4xl font-bold text-blue-600 mb-2 mt-6" />
-                  <div className="text-gray-600">AI recommendations per second</div>
                 </div>
               </div>
             </motion.div>
@@ -127,30 +125,6 @@ const AboutPage = () => {
               })}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl p-8 md:p-12 text-center text-white"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Start Your Journey?</h2>
-            <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-              Join thousands of travelers who trust SpotPlan to create unforgettable experiences.
-            </p>
-            <Button 
-              className="text-blue-600 px-8 py-4 rounded-full text-lg font-semibold hover:shadow-lg transition-all duration-300"
-              style={{ backgroundColor: '#84cc16' }}
-            >
-              Start Planning Today
-            </Button>
-          </motion.div>
         </div>
       </section>
 
