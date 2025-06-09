@@ -1,25 +1,27 @@
 
 import React from "react";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardNavbar from "@/components/dashboard/DashboardNavbar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardContent from "@/components/dashboard/DashboardContent";
+import { cn } from "@/lib/utils";
 
 const DashboardPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full">
-          <DashboardSidebar />
-          
-          <div className="flex-1 flex flex-col">
-            <DashboardNavbar />
-            <DashboardHeader />
-            <DashboardContent />
-          </div>
+    <div
+      className={cn(
+        "flex flex-col md:flex-row bg-gray-50 w-full flex-1 mx-auto border border-gray-200 overflow-hidden",
+        "h-screen"
+      )}
+    >
+      <DashboardSidebar />
+      <div className="flex flex-1">
+        <div className="flex flex-col flex-1 w-full h-full">
+          <DashboardNavbar />
+          <DashboardHeader />
+          <DashboardContent />
         </div>
-      </SidebarProvider>
+      </div>
     </div>
   );
 };
