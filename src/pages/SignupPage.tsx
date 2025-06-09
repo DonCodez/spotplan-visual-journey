@@ -1,10 +1,10 @@
 
 import React from "react";
-import TravelConnectSignin from "@/components/ui/travel-connect-signin-1";
+import TravelConnectSignup from "@/components/ui/travel-connect-signup";
 import { X } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const LoginPage = () => {
+const SignupPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50/20 to-blue-100/10">
       {/* Close Button */}
@@ -17,10 +17,10 @@ const LoginPage = () => {
       </div>
       
       <div className="pt-0">
-        <TravelConnectSignin />
+        <TravelConnectSignup />
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default SignupPage;

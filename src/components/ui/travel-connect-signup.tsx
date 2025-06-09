@@ -66,47 +66,38 @@ const DotMap = () => {
     {
       start: { x: 100, y: 150, delay: 0 },
       end: { x: 200, y: 80, delay: 2 },
-      color: "#2563eb", // Blue theming
+      color: "#2563eb",
     },
     {
       start: { x: 200, y: 80, delay: 2 },
       end: { x: 260, y: 120, delay: 4 },
-      color: "#3b82f6", // Blue theming
+      color: "#3b82f6",
     },
     {
       start: { x: 50, y: 50, delay: 1 },
       end: { x: 150, y: 180, delay: 3 },
-      color: "#1d4ed8", // Blue theming
+      color: "#1d4ed8",
     },
     {
       start: { x: 280, y: 60, delay: 0.5 },
       end: { x: 180, y: 180, delay: 2.5 },
-      color: "#1e40af", // Blue theming
+      color: "#1e40af",
     },
   ];
 
-  // Create dots for the world map
   const generateDots = (width: number, height: number) => {
     const dots = [];
     const gap = 12;
     const dotRadius = 1;
 
-    // Create a dot grid pattern with random opacity
     for (let x = 0; x < width; x += gap) {
       for (let y = 0; y < height; y += gap) {
-        // Shape the dots to form a world map silhouette
         const isInMapShape =
-          // North America
           ((x < width * 0.25 && x > width * 0.05) && (y < height * 0.4 && y > height * 0.1)) ||
-          // South America
           ((x < width * 0.25 && x > width * 0.15) && (y < height * 0.8 && y > height * 0.4)) ||
-          // Europe
           ((x < width * 0.45 && x > width * 0.3) && (y < height * 0.35 && y > height * 0.15)) ||
-          // Africa
           ((x < width * 0.5 && x > width * 0.35) && (y < height * 0.65 && y > height * 0.35)) ||
-          // Asia
           ((x < width * 0.7 && x > width * 0.45) && (y < height * 0.5 && y > height * 0.1)) ||
-          // Australia
           ((x < width * 0.8 && x > width * 0.65) && (y < height * 0.8 && y > height * 0.6));
 
         if (isInMapShape && Math.random() > 0.3) {
@@ -150,34 +141,30 @@ const DotMap = () => {
     let animationFrameId: number;
     let startTime = Date.now();
 
-    // Draw background dots
     function drawDots() {
       ctx.clearRect(0, 0, dimensions.width, dimensions.height);
       
-      // Draw the dots
       dots.forEach(dot => {
         ctx.beginPath();
         ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(37, 99, 235, ${dot.opacity})`; // Blue dots
+        ctx.fillStyle = `rgba(37, 99, 235, ${dot.opacity})`;
         ctx.fill();
       });
     }
 
-    // Draw animated routes
     function drawRoutes() {
-      const currentTime = (Date.now() - startTime) / 1000; // Time in seconds
+      const currentTime = (Date.now() - startTime) / 1000;
       
       routes.forEach(route => {
         const elapsed = currentTime - route.start.delay;
         if (elapsed <= 0) return;
         
-        const duration = 3; // Animation duration in seconds
+        const duration = 3;
         const progress = Math.min(elapsed / duration, 1);
         
         const x = route.start.x + (route.end.x - route.start.x) * progress;
         const y = route.start.y + (route.end.y - route.start.y) * progress;
         
-        // Draw the route line
         ctx.beginPath();
         ctx.moveTo(route.start.x, route.start.y);
         ctx.lineTo(x, y);
@@ -185,25 +172,21 @@ const DotMap = () => {
         ctx.lineWidth = 1.5;
         ctx.stroke();
         
-        // Draw the start point
         ctx.beginPath();
         ctx.arc(route.start.x, route.start.y, 3, 0, Math.PI * 2);
         ctx.fillStyle = route.color;
         ctx.fill();
         
-        // Draw the moving point
         ctx.beginPath();
         ctx.arc(x, y, 3, 0, Math.PI * 2);
         ctx.fillStyle = "#3b82f6";
         ctx.fill();
         
-        // Add glow effect to the moving point
         ctx.beginPath();
         ctx.arc(x, y, 6, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(59, 130, 246, 0.4)";
         ctx.fill();
         
-        // If the route is complete, draw the end point
         if (progress === 1) {
           ctx.beginPath();
           ctx.arc(route.end.x, route.end.y, 3, 0, Math.PI * 2);
@@ -213,14 +196,12 @@ const DotMap = () => {
       });
     }
     
-    // Animation loop
     function animate() {
       drawDots();
       drawRoutes();
       
-      // If all routes are complete, restart the animation
       const currentTime = (Date.now() - startTime) / 1000;
-      if (currentTime > 15) { // Reset after 15 seconds
+      if (currentTime > 15) {
         startTime = Date.now();
       }
       
@@ -239,10 +220,13 @@ const DotMap = () => {
   );
 };
 
-const SignInCard = () => {
+const SignUpCard = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isHovered, setIsHovered] = useState(false);
   
   return (
@@ -254,7 +238,7 @@ const SignInCard = () => {
         className="w-full max-w-4xl overflow-hidden rounded-2xl flex bg-white shadow-xl"
       >
         {/* Left side - Map */}
-        <div className="hidden md:block w-1/2 h-[600px] relative overflow-hidden border-r border-gray-100">
+        <div className="hidden md:block w-1/2 h-[700px] relative overflow-hidden border-r border-gray-100">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 to-blue-100/20">
             <DotMap />
             
@@ -284,26 +268,26 @@ const SignInCard = () => {
                 transition={{ delay: 0.8, duration: 0.5 }}
                 className="text-sm text-center text-gray-600 max-w-xs"
               >
-                Sign in to access your personalized travel planning dashboard and create unforgettable journeys
+                Join thousands of travelers who plan their perfect trips with SpotPlan
               </motion.p>
             </div>
           </div>
         </div>
         
-        {/* Right side - Sign In Form */}
+        {/* Right side - Sign Up Form */}
         <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center bg-white">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-2xl md:text-3xl font-bold mb-1 text-gray-800">Welcome back</h1>
-            <p className="text-gray-500 mb-8">Sign in to your SpotPlan account</p>
+            <h1 className="text-2xl md:text-3xl font-bold mb-1 text-gray-800">Create your account</h1>
+            <p className="text-gray-500 mb-8">Start planning your perfect trip today</p>
             
             <div className="mb-6">
               <button 
                 className="w-full flex items-center justify-center gap-2 bg-gray-50 border border-gray-200 rounded-lg p-3 hover:bg-gray-100 transition-all duration-300 text-gray-700 shadow-sm"
-                onClick={() => console.log("Google sign-in")}
+                onClick={() => console.log("Google sign-up")}
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path
@@ -325,7 +309,7 @@ const SignInCard = () => {
                   />
                   <path fill="#EA4335" d="M1 1h22v22H1z" fillOpacity="0" />
                 </svg>
-                <span>Continue with Google</span>
+                <span>Sign up with Google</span>
               </button>
             </div>
             
@@ -338,7 +322,22 @@ const SignInCard = () => {
               </div>
             </div>
             
-            <form className="space-y-5">
+            <form className="space-y-4">
+              <div>
+                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+                  Full Name <span className="text-blue-600">*</span>
+                </label>
+                <Input
+                  id="fullName"
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Enter your full name"
+                  required
+                  className="bg-gray-50 border-gray-200 placeholder:text-gray-400 text-gray-800 w-full focus:border-blue-500 focus:ring-blue-500"
+                />
+              </div>
+
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                   Email <span className="text-blue-600">*</span>
@@ -364,7 +363,7 @@ const SignInCard = () => {
                     type={isPasswordVisible ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
+                    placeholder="Create a password"
                     required
                     className="bg-gray-50 border-gray-200 placeholder:text-gray-400 text-gray-800 w-full pr-10 focus:border-blue-500 focus:ring-blue-500"
                   />
@@ -374,6 +373,30 @@ const SignInCard = () => {
                     onClick={() => setIsPasswordVisible(!isPasswordVisible)}
                   >
                     {isPasswordVisible ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirm Password <span className="text-blue-600">*</span>
+                </label>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={isConfirmPasswordVisible ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm your password"
+                    required
+                    className="bg-gray-50 border-gray-200 placeholder:text-gray-400 text-gray-800 w-full pr-10 focus:border-blue-500 focus:ring-blue-500"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                    onClick={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
+                  >
+                    {isConfirmPasswordVisible ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
@@ -393,11 +416,11 @@ const SignInCard = () => {
                   )}
                   onClick={(e) => {
                     e.preventDefault();
-                    console.log("Sign in attempt with:", { email, password });
+                    console.log("Sign up attempt with:", { fullName, email, password, confirmPassword });
                   }}
                 >
                   <span className="flex items-center justify-center">
-                    Sign in to SpotPlan
+                    Create SpotPlan Account
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </span>
                   {isHovered && (
@@ -412,17 +435,11 @@ const SignInCard = () => {
                 </Button>
               </motion.div>
               
-              <div className="text-center mt-6">
-                <a href="#" className="text-blue-600 hover:text-blue-700 text-sm transition-colors">
-                  Forgot password?
-                </a>
-              </div>
-              
               <div className="text-center mt-4">
                 <p className="text-gray-600 text-sm">
-                  Don't have an account?{" "}
-                  <a href="/signup" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
-                    Sign up for free
+                  Already have an account?{" "}
+                  <a href="/login" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
+                    Sign in here
                   </a>
                 </p>
               </div>
@@ -437,7 +454,7 @@ const SignInCard = () => {
 const Index = () => {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-50/20 to-blue-100/10 p-4">
-      <SignInCard />
+      <SignUpCard />
     </div>
   );
 };

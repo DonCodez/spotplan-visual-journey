@@ -9,6 +9,7 @@ import LandingPage from "./pages/LandingPage";
 import AboutPage from "./pages/AboutPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App: React.FC = () => {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
