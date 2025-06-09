@@ -1,6 +1,7 @@
+
 import React from "react";
 import { motion } from "framer-motion";
-import { Home, MapPin, Settings, LogOut, User } from "lucide-react";
+import { Home, MapPin, LogOut } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -12,14 +13,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import dashboardData from "@/data/dashboard.json";
 
 const iconMap = {
   home: Home,
   map: MapPin,
-  settings: Settings,
-  user: User,
 };
 
 const DashboardSidebar = () => {
@@ -30,15 +28,17 @@ const DashboardSidebar = () => {
 
   const isActive = (path: string) => currentPath === path || (path === "/dashboard" && currentPath === "/");
 
-  // Filter out settings from main navigation (we'll keep it in main nav as requested)
+  // Filter out profile and settings from main navigation
   const mainNavItems = dashboardData.navigation.filter(item => 
-    !['profile'].includes(item.icon)
+    !['user', 'settings'].includes(item.icon)
   );
 
+  const { user } = dashboardData;
+
   return (
-    <Sidebar className={collapsed ? "w-16" : "w-52"} collapsible="icon">
+    <Sidebar className={collapsed ? "w-16" : "w-48"} collapsible="icon">
       <SidebarContent className="bg-white border-r border-gray-100 flex flex-col h-full">
-        {/* Header with SpotPlan and Profile */}
+        {/* Header with SpotPlan and Profile Avatar */}
         <div className="p-4 border-b border-gray-100">
           <div className="flex items-center justify-between">
             {!collapsed && (
@@ -50,12 +50,12 @@ const DashboardSidebar = () => {
                 SpotPlan
               </motion.h1>
             )}
-            <Avatar className="h-8 w-8">
-              <AvatarImage src="/lovable-uploads/78296343-29d6-4141-a8ff-28b5730a0c66.png" alt="Profile" />
-              <AvatarFallback className="bg-spot-primary/10 text-spot-primary font-medium text-xs">
-                JD
-              </AvatarFallback>
-            </Avatar>
+            {/* Simple circle avatar with first letter */}
+            <div className="h-8 w-8 bg-spot-primary/10 text-spot-primary rounded-full flex items-center justify-center">
+              <span className="text-sm font-medium">
+                {user.name.charAt(0).toUpperCase()}
+              </span>
+            </div>
           </div>
         </div>
 
