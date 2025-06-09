@@ -1,7 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Home, MapPin, Settings, LogOut } from "lucide-react";
+import { Home, MapPin, Settings, LogOut, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -20,6 +20,7 @@ const iconMap = {
   home: Home,
   map: MapPin,
   settings: Settings,
+  user: User,
 };
 
 const DashboardSidebar = () => {
@@ -47,6 +48,12 @@ const DashboardSidebar = () => {
               {mainNavItems.map((item, index) => {
                 const IconComponent = iconMap[item.icon as keyof typeof iconMap];
                 const active = isActive(item.path);
+                
+                // Only render if we have a valid icon component
+                if (!IconComponent) {
+                  console.warn(`Icon "${item.icon}" not found in iconMap`);
+                  return null;
+                }
                 
                 return (
                   <motion.div
