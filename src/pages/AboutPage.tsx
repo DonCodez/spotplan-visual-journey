@@ -1,8 +1,9 @@
+
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
-import { Users, Target, Lightbulb, Heart } from "lucide-react";
+import { Users, Target, Lightbulb, Heart, Mail, Phone, MapPin } from "lucide-react";
 import { CountAnimation } from "@/components/ui/count-animation";
 import { ContainerScroll, CardSticky } from "@/components/ui/cards-stack";
 
@@ -131,6 +132,69 @@ const AboutPage = () => {
                 </ContainerScroll>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Information Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="bg-white rounded-2xl shadow-lg p-8 md:p-12"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-8 text-center">Get in Touch</h2>
+              <div className="grid md:grid-cols-3 gap-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                  viewport={{ once: true }}
+                  className="text-center"
+                >
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Mail className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-blue-900 mb-2">Email Us</h3>
+                  <p className="text-gray-600">hello@spotplan.com</p>
+                  <p className="text-gray-600">support@spotplan.com</p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  viewport={{ once: true }}
+                  className="text-center"
+                >
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Phone className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-blue-900 mb-2">Call Us</h3>
+                  <p className="text-gray-600">+1 (555) 123-4567</p>
+                  <p className="text-gray-600 text-sm">Mon-Fri 9AM-6PM PST</p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  viewport={{ once: true }}
+                  className="text-center"
+                >
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <MapPin className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-blue-900 mb-2">Visit Us</h3>
+                  <p className="text-gray-600">123 Innovation Drive</p>
+                  <p className="text-gray-600">San Francisco, CA 94105</p>
+                </motion.div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>

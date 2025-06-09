@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ExpandableTabs } from "@/components/ui/expandable-tabs";
-import { Home, User, FileText, Contact } from "lucide-react";
+import { Home, User, FileText } from "lucide-react";
 
 interface HeaderProps {
   theme?: "light" | "dark";
@@ -18,7 +18,6 @@ const Header = ({ theme = "light" }: HeaderProps) => {
     { title: "Home", icon: Home },
     { title: "About", icon: User },
     { title: "Privacy", icon: FileText },
-    { title: "Contact", icon: Contact },
   ];
 
   // Determine which tab should be active based on current route
@@ -30,8 +29,6 @@ const Header = ({ theme = "light" }: HeaderProps) => {
         return 1; // About
       case "/privacy-policy":
         return 2; // Privacy
-      case "/contact":
-        return 3; // Contact
       default:
         return null;
     }
@@ -48,10 +45,6 @@ const Header = ({ theme = "light" }: HeaderProps) => {
           break;
         case 2:
           navigate("/privacy-policy");
-          break;
-        case 3:
-          // Navigate to Contact page when it exists
-          console.log("Contact page coming soon");
           break;
       }
     }

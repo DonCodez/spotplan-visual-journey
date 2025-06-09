@@ -223,29 +223,9 @@ const Footer = ({ theme = "light" }: FooterProps) => {
                       transition={{ duration: 0.4, delay: 0.9 }}
                       viewport={{ once: true }}
                     >
-                      <a href="#" className="text-white/80 hover:text-spot-beige transition-colors hover:underline">
-                        Terms
-                      </a>
-                    </motion.li>
-                    <motion.li 
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: 1.0 }}
-                      viewport={{ once: true }}
-                    >
                       <Link to="/privacy-policy" className="text-white/80 hover:text-spot-beige transition-colors hover:underline">
                         Privacy
                       </Link>
-                    </motion.li>
-                    <motion.li 
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: 1.1 }}
-                      viewport={{ once: true }}
-                    >
-                      <a href="#" className="text-white/80 hover:text-spot-beige transition-colors hover:underline">
-                        Contact
-                      </a>
                     </motion.li>
                   </ul>
                 </motion.div>
