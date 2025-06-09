@@ -41,30 +41,31 @@ const DashboardContent = () => {
 
       {/* Content with higher z-index */}
       <div className="relative z-10">
-        {/* Create New Trip Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mb-8"
-        >
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="icon"
-                  className="h-14 w-14 rounded-full bg-lime-500 hover:bg-lime-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                  id="create-trip-button"
-                >
-                  <Plus className="h-6 w-6" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="px-3 py-2">
-                Create new trip
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </motion.div>
+        {/* Create New Trip Button - Top Right */}
+        <div className="flex justify-end mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <TooltipProvider delayDuration={0}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="icon"
+                    className="h-14 w-14 rounded-full bg-lime-500 hover:bg-lime-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                    id="create-trip-button"
+                  >
+                    <Plus className="h-6 w-6" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="left" className="px-3 py-2">
+                  Create new trip
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </motion.div>
+        </div>
 
         {/* Trips Section */}
         <motion.div
