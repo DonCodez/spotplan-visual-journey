@@ -38,18 +38,9 @@ const DashboardSidebar = () => {
   return (
     <Sidebar className={collapsed ? "w-16" : "w-48"} collapsible="icon">
       <SidebarContent className="bg-white border-r border-gray-100 flex flex-col h-full">
-        {/* Header with SpotPlan and Profile Avatar */}
+        {/* Header with just Profile Avatar */}
         <div className="p-4 border-b border-gray-100">
-          <div className="flex items-center justify-between">
-            {!collapsed && (
-              <motion.h1 
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="text-lg font-bold text-spot-primary"
-              >
-                SpotPlan
-              </motion.h1>
-            )}
+          <div className="flex items-center justify-center">
             {/* Simple circle avatar with first letter */}
             <div className="h-8 w-8 bg-spot-primary/10 text-spot-primary rounded-full flex items-center justify-center">
               <span className="text-sm font-medium">
