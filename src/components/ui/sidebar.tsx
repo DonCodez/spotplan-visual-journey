@@ -93,9 +93,11 @@ export const DesktopSidebar = ({
         "h-full px-4 py-4 hidden md:flex md:flex-col bg-white border-r border-spot-primary/10 w-[250px] flex-shrink-0",
         className
       )}
+      initial={false}
       animate={{
-        width: animate ? (open ? "250px" : "60px") : "250px",
+        width: animate ? (open ? 250 : 60) : 250,
       }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
       {...props}
