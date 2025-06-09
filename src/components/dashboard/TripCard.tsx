@@ -76,9 +76,9 @@ const TripCard = ({ trip }: TripCardProps) => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-10 w-10 bg-white/80 hover:bg-white text-gray-700 backdrop-blur-sm"
+                  className="h-12 w-12 bg-white/80 hover:bg-white text-gray-700 backdrop-blur-sm"
                 >
-                  <MoreVertical className="h-5 w-5" />
+                  <MoreVertical className="h-6 w-6" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-white border border-gray-200 shadow-lg">
