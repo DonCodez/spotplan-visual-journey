@@ -2,8 +2,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Plus, MapPin } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Tiles } from "@/components/ui/tiles";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import TripCard from "@/components/dashboard/TripCard";
 import dashboardData from "@/data/dashboard.json";
 
@@ -45,22 +45,15 @@ const DashboardContent = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mb-8 group"
+          className="mb-8"
         >
-          <Button
-            className="h-14 bg-spot-primary hover:bg-spot-primary/90 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group-hover:px-8 px-4 overflow-hidden"
+          <InteractiveHoverButton
+            text="Create new trip"
+            className="h-14 w-14 group-hover:w-48 bg-spot-primary hover:bg-spot-primary/90 border-spot-primary text-white shadow-lg hover:shadow-xl transition-all duration-300"
             id="create-trip-button"
           >
-            <Plus className="h-6 w-6 flex-shrink-0" />
-            <motion.span
-              initial={{ width: 0, opacity: 0, marginLeft: 0 }}
-              whileHover={{ width: "auto", opacity: 1, marginLeft: 12 }}
-              transition={{ duration: 0.3 }}
-              className="text-lg font-semibold whitespace-nowrap overflow-hidden"
-            >
-              Create New Trip
-            </motion.span>
-          </Button>
+            <Plus className="h-6 w-6" />
+          </InteractiveHoverButton>
         </motion.div>
 
         {/* Trips Section */}
