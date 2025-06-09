@@ -1,6 +1,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface HeaderProps {
   theme?: "light" | "dark";
@@ -24,9 +25,9 @@ const Header = ({ theme = "light" }: HeaderProps) => {
           transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           className="flex items-center"
         >
-          <span className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-blue-900'}`}>
+          <Link to="/" className={`text-2xl font-bold hover:opacity-80 transition-opacity ${isDark ? 'text-white' : 'text-blue-900'}`}>
             SPOTPLAN
-          </span>
+          </Link>
         </motion.div>
         
         {/* Login Button */}
