@@ -38,12 +38,8 @@ const Header = ({ theme = "light" }: HeaderProps) => {
           className="flex items-center gap-4"
         >
           <Button 
-            variant="ghost" 
-            className={`font-medium ${
-              isDark 
-                ? 'text-white hover:bg-white/10' 
-                : 'text-blue-900 hover:bg-blue-50'
-            }`}
+            className="font-medium text-white hover:opacity-90 transition-opacity"
+            style={{ backgroundColor: '#2563eb' }}
           >
             Log in
           </Button>
