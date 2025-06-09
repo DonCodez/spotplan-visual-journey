@@ -129,9 +129,9 @@ const PremadeTripCard = ({ trip }: PremadeTripCardProps) => {
             </div>
           </div>
 
-          {/* Book Button */}
+          {/* See More Button */}
           <Button className="w-full bg-spot-primary hover:bg-spot-primary/90">
-            Book This Trip
+            See More
           </Button>
         </CardContent>
       </Card>
