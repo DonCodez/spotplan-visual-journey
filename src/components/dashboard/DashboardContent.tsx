@@ -53,10 +53,10 @@ const DashboardContent = () => {
                 <TooltipTrigger asChild>
                   <Button
                     size="icon"
-                    className="h-14 w-14 rounded-full bg-lime-500 hover:bg-lime-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="h-16 w-16 rounded-full bg-lime-500 hover:bg-lime-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                     id="create-trip-button"
                   >
-                    <Plus className="h-6 w-6" />
+                    <Plus className="h-7 w-7" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="left" className="px-3 py-2">
