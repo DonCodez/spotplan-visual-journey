@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -44,8 +43,7 @@ const Header = ({ theme = "light" }: HeaderProps) => {
           navigate("/");
           break;
         case 1:
-          // Navigate to About page when it exists
-          console.log("About page coming soon");
+          navigate("/about");
           break;
         case 2:
           navigate("/privacy-policy");

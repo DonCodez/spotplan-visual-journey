@@ -213,9 +213,9 @@ const Footer = ({ theme = "light" }: FooterProps) => {
                       transition={{ duration: 0.4, delay: 0.8 }}
                       viewport={{ once: true }}
                     >
-                      <a href="#" className="text-white/80 hover:text-spot-beige transition-colors hover:underline">
+                      <Link to="/about" className="text-white/80 hover:text-spot-beige transition-colors hover:underline">
                         About
-                      </a>
+                      </Link>
                     </motion.li>
                     <motion.li 
                       initial={{ opacity: 0, x: -10 }}
