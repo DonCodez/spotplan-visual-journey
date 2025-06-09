@@ -2,54 +2,98 @@
 {
   "user": {
     "name": "Sarah",
-    "avatar": "/images/dashboard/user-avatar.jpg"
+    "email": "sarah@example.com",
+    "avatar": "/placeholder.svg",
+    "initials": "SK"
   },
   "welcome": {
     "greeting": "Welcome back",
     "subtitle": "Ready to plan your next adventure?"
   },
-  "trips": [
+  "navigation": [
     {
-      "id": "trip-1",
-      "destination": "Bali, Indonesia",
-      "dates": "Mar 15 - Mar 22, 2025",
-      "status": "Upcoming",
-      "image": "/images/landingpage/bali.jpg",
-      "members": [
-        { "name": "Sarah", "avatar": "/images/dashboard/avatar-1.jpg", "initials": "S" },
-        { "name": "John", "avatar": "/images/dashboard/avatar-2.jpg", "initials": "J" },
-        { "name": "Emma", "avatar": "/images/dashboard/avatar-3.jpg", "initials": "E" }
-      ]
+      "label": "Dashboard",
+      "path": "/dashboard",
+      "icon": "home"
     },
     {
-      "id": "trip-2", 
-      "destination": "Rome, Italy",
-      "dates": "Jun 10 - Jun 17, 2025",
-      "status": "In Progress",
-      "image": "/images/landingpage/rome.jpg",
-      "members": [
-        { "name": "Sarah", "avatar": "/images/dashboard/avatar-1.jpg", "initials": "S" },
-        { "name": "Mike", "avatar": "/images/dashboard/avatar-4.jpg", "initials": "M" }
-      ]
-    },
-    {
-      "id": "trip-3",
-      "destination": "Swiss Alps",
-      "dates": "Dec 20 - Dec 27, 2024",
-      "status": "Completed",
-      "image": "/images/landingpage/alps.jpg",
-      "members": [
-        { "name": "Sarah", "avatar": "/images/dashboard/avatar-1.jpg", "initials": "S" },
-        { "name": "Alex", "avatar": "/images/dashboard/avatar-5.jpg", "initials": "A" },
-        { "name": "Lisa", "avatar": "/images/dashboard/avatar-6.jpg", "initials": "L" },
-        { "name": "Tom", "avatar": "/images/dashboard/avatar-7.jpg", "initials": "T" }
-      ]
+      "label": "Browse Trips",
+      "path": "/trips",
+      "icon": "map"
     }
   ],
-  "navigation": [
-    { "label": "Dashboard", "path": "/dashboard", "icon": "home", "active": true },
-    { "label": "Trips", "path": "/trips", "icon": "map", "active": false },
-    { "label": "Profile", "path": "/profile", "icon": "user", "active": false },
-    { "label": "Settings", "path": "/settings", "icon": "settings", "active": false }
+  "trips": [
+    {
+      "id": "1",
+      "destination": "Paris, France",
+      "dates": "Mar 15-22, 2024",
+      "status": "Upcoming",
+      "image": "https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=500&q=80",
+      "members": [
+        {
+          "name": "Sarah Kim",
+          "avatar": "/placeholder.svg",
+          "initials": "SK"
+        },
+        {
+          "name": "John Doe",
+          "avatar": "/placeholder.svg",
+          "initials": "JD"
+        },
+        {
+          "name": "Emma Wilson",
+          "avatar": "/placeholder.svg",
+          "initials": "EW"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "destination": "Tokyo, Japan",
+      "dates": "Jun 8-18, 2024",
+      "status": "In Progress",
+      "image": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=500&q=80",
+      "members": [
+        {
+          "name": "Sarah Kim",
+          "avatar": "/placeholder.svg",
+          "initials": "SK"
+        },
+        {
+          "name": "Mike Chen",
+          "avatar": "/placeholder.svg",
+          "initials": "MC"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "destination": "Bali, Indonesia",
+      "dates": "Aug 12-19, 2023",
+      "status": "Completed",
+      "image": "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=500&q=80",
+      "members": [
+        {
+          "name": "Sarah Kim",
+          "avatar": "/placeholder.svg",
+          "initials": "SK"
+        },
+        {
+          "name": "Lisa Park",
+          "avatar": "/placeholder.svg",
+          "initials": "LP"
+        },
+        {
+          "name": "Alex Johnson",
+          "avatar": "/placeholder.svg",
+          "initials": "AJ"
+        },
+        {
+          "name": "Maria Garcia",
+          "avatar": "/placeholder.svg",
+          "initials": "MG"
+        }
+      ]
+    }
   ]
 }
