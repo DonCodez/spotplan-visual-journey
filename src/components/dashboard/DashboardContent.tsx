@@ -6,8 +6,24 @@ import { Button } from "@/components/ui/button";
 import TripCard from "@/components/dashboard/TripCard";
 import dashboardData from "@/data/dashboard.json";
 
+interface Trip {
+  id: string;
+  destination: string;
+  dates: string;
+  status: "Upcoming" | "In Progress" | "Completed";
+  image: string;
+  members: Array<{
+    name: string;
+    avatar: string;
+    initials: string;
+  }>;
+}
+
 const DashboardContent = () => {
   const { trips } = dashboardData;
+  
+  // Type assertion to ensure status values match the expected union type
+  const typedTrips = trips as Trip[];
 
   return (
     <div className="flex-1 px-6 py-8" id="dashboard-main-content">
@@ -36,7 +52,7 @@ const DashboardContent = () => {
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Trips</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {trips.map((trip, index) => (
+          {typedTrips.map((trip, index) => (
             <motion.div
               key={trip.id}
               initial={{ opacity: 0, y: 20 }}
@@ -50,7 +66,7 @@ const DashboardContent = () => {
       </motion.div>
 
       {/* Empty state if no trips */}
-      {trips.length === 0 && (
+      {typedTrips.length === 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
