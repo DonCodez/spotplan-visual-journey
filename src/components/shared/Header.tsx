@@ -60,35 +60,37 @@ const Header = ({ theme = "light" }: HeaderProps) => {
           </Link>
         </motion.div>
 
-        {/* Menubar */}
-        <motion.div 
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-          className="hidden md:flex"
-        >
-          <ExpandableTabs 
-            tabs={tabs} 
-            onChange={handleTabChange}
-            activeColor={isDark ? "text-white" : "text-blue-600"}
-            className={isDark ? "border-white/20 bg-black/50" : "border-gray-200 bg-white/80"}
-          />
-        </motion.div>
-        
-        {/* Login Button */}
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-          className="flex items-center gap-4"
-        >
-          <Button 
-            className="font-medium text-white hover:opacity-90 transition-opacity"
-            style={{ backgroundColor: '#2563eb' }}
+        {/* Right side with Menubar and Login Button */}
+        <div className="flex items-center gap-4">
+          {/* Menubar */}
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+            className="hidden md:flex"
           >
-            Log in
-          </Button>
-        </motion.div>
+            <ExpandableTabs 
+              tabs={tabs} 
+              onChange={handleTabChange}
+              activeColor={isDark ? "text-white" : "text-blue-600"}
+              className={isDark ? "border-white/20 bg-black/50" : "border-gray-200 bg-white/80"}
+            />
+          </motion.div>
+          
+          {/* Login Button */}
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+          >
+            <Button 
+              className="font-medium text-white hover:opacity-90 transition-opacity"
+              style={{ backgroundColor: '#2563eb' }}
+            >
+              Log in
+            </Button>
+          </motion.div>
+        </div>
       </div>
     </motion.div>
   );
