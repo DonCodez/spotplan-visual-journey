@@ -45,14 +45,21 @@ const DashboardContent = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mb-8"
+          className="mb-8 group"
         >
           <Button
-            className="h-14 px-8 text-lg font-semibold bg-spot-primary hover:bg-spot-primary/90 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+            className="h-14 bg-spot-primary hover:bg-spot-primary/90 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group-hover:px-8 px-4 overflow-hidden"
             id="create-trip-button"
           >
-            <Plus className="h-6 w-6 mr-3" />
-            Create New Trip
+            <Plus className="h-6 w-6 flex-shrink-0" />
+            <motion.span
+              initial={{ width: 0, opacity: 0, marginLeft: 0 }}
+              whileHover={{ width: "auto", opacity: 1, marginLeft: 12 }}
+              transition={{ duration: 0.3 }}
+              className="text-lg font-semibold whitespace-nowrap overflow-hidden"
+            >
+              Create New Trip
+            </motion.span>
           </Button>
         </motion.div>
 

@@ -94,12 +94,11 @@ export const DesktopSidebar = ({
         className
       )}
       animate={{
-        width: animate ? (open ? 200 : 60) : 200,
+        width: animate ? (open ? 180 : 60) : 180,
       }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
-      {...props}
     >
       {children}
     </motion.div>
@@ -118,7 +117,6 @@ export const MobileSidebar = ({
         className={cn(
           "h-10 px-4 py-4 flex flex-row md:hidden items-center justify-between bg-white border-b border-spot-primary/10 w-full"
         )}
-        {...props}
       >
         <div className="flex justify-end z-20 w-full">
           <Menu
