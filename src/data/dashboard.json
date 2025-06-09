@@ -1,0 +1,55 @@
+
+{
+  "user": {
+    "name": "Sarah",
+    "avatar": "/images/dashboard/user-avatar.jpg"
+  },
+  "welcome": {
+    "greeting": "Welcome back",
+    "subtitle": "Ready to plan your next adventure?"
+  },
+  "trips": [
+    {
+      "id": "trip-1",
+      "destination": "Bali, Indonesia",
+      "dates": "Mar 15 - Mar 22, 2025",
+      "status": "Upcoming",
+      "image": "/images/landingpage/bali.jpg",
+      "members": [
+        { "name": "Sarah", "avatar": "/images/dashboard/avatar-1.jpg", "initials": "S" },
+        { "name": "John", "avatar": "/images/dashboard/avatar-2.jpg", "initials": "J" },
+        { "name": "Emma", "avatar": "/images/dashboard/avatar-3.jpg", "initials": "E" }
+      ]
+    },
+    {
+      "id": "trip-2", 
+      "destination": "Rome, Italy",
+      "dates": "Jun 10 - Jun 17, 2025",
+      "status": "In Progress",
+      "image": "/images/landingpage/rome.jpg",
+      "members": [
+        { "name": "Sarah", "avatar": "/images/dashboard/avatar-1.jpg", "initials": "S" },
+        { "name": "Mike", "avatar": "/images/dashboard/avatar-4.jpg", "initials": "M" }
+      ]
+    },
+    {
+      "id": "trip-3",
+      "destination": "Swiss Alps",
+      "dates": "Dec 20 - Dec 27, 2024",
+      "status": "Completed",
+      "image": "/images/landingpage/alps.jpg",
+      "members": [
+        { "name": "Sarah", "avatar": "/images/dashboard/avatar-1.jpg", "initials": "S" },
+        { "name": "Alex", "avatar": "/images/dashboard/avatar-5.jpg", "initials": "A" },
+        { "name": "Lisa", "avatar": "/images/dashboard/avatar-6.jpg", "initials": "L" },
+        { "name": "Tom", "avatar": "/images/dashboard/avatar-7.jpg", "initials": "T" }
+      ]
+    }
+  ],
+  "navigation": [
+    { "label": "Dashboard", "path": "/dashboard", "icon": "home", "active": true },
+    { "label": "Trips", "path": "/trips", "icon": "map", "active": false },
+    { "label": "Profile", "path": "/profile", "icon": "user", "active": false },
+    { "label": "Settings", "path": "/settings", "icon": "settings", "active": false }
+  ]
+}
