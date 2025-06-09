@@ -168,17 +168,17 @@ export const SidebarLink = ({
     <Link
       to={link.href}
       className={cn(
-        "flex items-center gap-3 group/sidebar py-3 px-2 rounded-md hover:bg-spot-primary/10 transition-colors min-h-[48px] mb-2",
+        "flex items-center gap-2 group/sidebar py-1 px-0 rounded-md hover:bg-spot-primary/10 transition-colors min-h-[32px]",
         className
       )}
       {...props}
     >
-      <div className="flex-shrink-0 flex items-center justify-center w-8 h-8">
+      <div className="flex-shrink-0 flex items-center justify-center w-6 h-6">
         {link.icon}
       </div>
       <span
         className={cn(
-          "text-spot-primary text-base group-hover/sidebar:translate-x-1 transition duration-150 whitespace-nowrap flex-1 font-medium",
+          "text-spot-primary text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-nowrap flex-1",
           animate && !open && "opacity-0 w-0 overflow-hidden"
         )}
       >
