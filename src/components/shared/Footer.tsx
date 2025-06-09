@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { Twitter, Instagram, Facebook, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
@@ -207,6 +206,16 @@ const Footer = ({ theme = "light" }: FooterProps) => {
                 >
                   <h4 className="text-lg font-semibold mb-4 text-spot-beige">Company</h4>
                   <ul className="space-y-2">
+                    <motion.li 
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: 0.8 }}
+                      viewport={{ once: true }}
+                    >
+                      <Link to="/" className="text-white/80 hover:text-spot-beige transition-colors hover:underline">
+                        Home
+                      </Link>
+                    </motion.li>
                     <motion.li 
                       initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
