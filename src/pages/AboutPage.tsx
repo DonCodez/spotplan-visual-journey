@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/shared/Header";
@@ -91,19 +90,6 @@ const AboutPage = () => {
             </motion.div>
 
             {/* Values Section with Cards Stack */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-4">What Drives Us</h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Our core values shape everything we do, from product development to customer support.
-              </p>
-            </motion.div>
-
             <div className="container min-h-[400vh] place-content-center px-6">
               <div className="grid md:grid-cols-2 md:gap-8 xl:gap-12">
                 <div className="left-0 top-0 md:sticky md:h-svh md:py-12">
