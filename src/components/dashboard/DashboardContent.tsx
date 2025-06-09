@@ -1,7 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Plus } from "lucide-react";
+import { Plus, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TripCard from "@/components/dashboard/TripCard";
 import dashboardData from "@/data/dashboard.json";
@@ -58,7 +58,7 @@ const DashboardContent = () => {
           className="text-center py-16"
         >
           <div className="text-gray-400 mb-4">
-            <Map className="h-16 w-16 mx-auto" />
+            <MapPin className="h-16 w-16 mx-auto" />
           </div>
           <h3 className="text-xl font-semibold text-gray-600 mb-2">No trips yet</h3>
           <p className="text-gray-500 mb-6">Start planning your first adventure!</p>

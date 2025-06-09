@@ -1,7 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Home, Map, User, Settings, LogOut } from "lucide-react";
+import { Home, MapPin, User, Settings, LogOut } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -17,20 +17,21 @@ import dashboardData from "@/data/dashboard.json";
 
 const iconMap = {
   home: Home,
-  map: Map,
+  map: MapPin,
   user: User,
   settings: Settings,
 };
 
 const DashboardSidebar = () => {
-  const { collapsed } = useSidebar();
+  const { state } = useSidebar();
   const location = useLocation();
   const currentPath = location.pathname;
+  const collapsed = state === "collapsed";
 
   const isActive = (path: string) => currentPath === path || (path === "/dashboard" && currentPath === "/");
 
   return (
-    <Sidebar className={collapsed ? "w-16" : "w-64"} collapsible>
+    <Sidebar className={collapsed ? "w-16" : "w-64"} collapsible="icon">
       <SidebarContent className="bg-white border-r border-gray-200">
         <SidebarGroup className="pt-8">
           <SidebarGroupContent>
