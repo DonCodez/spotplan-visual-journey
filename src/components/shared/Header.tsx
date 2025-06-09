@@ -2,6 +2,8 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { ExpandableTabs } from "@/components/ui/expandable-tabs";
+import { Home, User, FileText, Contact } from "lucide-react";
 
 interface HeaderProps {
   theme?: "light" | "dark";
@@ -9,6 +11,34 @@ interface HeaderProps {
 
 const Header = ({ theme = "light" }: HeaderProps) => {
   const isDark = theme === "dark";
+  
+  const tabs = [
+    { title: "Home", icon: Home },
+    { title: "About", icon: User },
+    { title: "Privacy", icon: FileText },
+    { title: "Contact", icon: Contact },
+  ];
+
+  const handleTabChange = (index: number | null) => {
+    if (index !== null) {
+      switch (index) {
+        case 0:
+          window.location.href = "/";
+          break;
+        case 1:
+          // Navigate to About page when it exists
+          console.log("About page coming soon");
+          break;
+        case 2:
+          window.location.href = "/privacy-policy";
+          break;
+        case 3:
+          // Navigate to Contact page when it exists
+          console.log("Contact page coming soon");
+          break;
+      }
+    }
+  };
   
   return (
     <motion.div 
@@ -28,6 +58,21 @@ const Header = ({ theme = "light" }: HeaderProps) => {
           <Link to="/" className={`text-2xl font-bold hover:opacity-80 transition-opacity ${isDark ? 'text-white' : 'text-blue-900'}`}>
             SPOTPLAN
           </Link>
+        </motion.div>
+
+        {/* Menubar */}
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+          className="hidden md:flex"
+        >
+          <ExpandableTabs 
+            tabs={tabs} 
+            onChange={handleTabChange}
+            activeColor={isDark ? "text-white" : "text-blue-600"}
+            className={isDark ? "border-white/20 bg-black/50" : "border-gray-200 bg-white/80"}
+          />
         </motion.div>
         
         {/* Login Button */}
