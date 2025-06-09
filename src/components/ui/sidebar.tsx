@@ -10,7 +10,7 @@ import { Menu, X } from "lucide-react";
 interface Links {
   label: string;
   href: string;
-  icon: React.ReactElement;
+  icon: React.JSX.Element | React.ReactNode;
 }
 
 interface SidebarContextProps {
@@ -76,7 +76,7 @@ export const SidebarBody = (props: React.ComponentProps<typeof motion.div>) => {
   return (
     <>
       <DesktopSidebar {...props} />
-      <MobileSidebar {...props} />
+      <MobileSidebar {...(props as React.ComponentProps<"div">)} />
     </>
   );
 };
@@ -90,14 +90,12 @@ export const DesktopSidebar = ({
   return (
     <motion.div
       className={cn(
-        "h-full px-4 py-4 hidden md:flex md:flex-col bg-white border-r border-spot-primary/10 w-[250px] flex-shrink-0",
+        "h-full px-4 py-4 hidden md:flex md:flex-col bg-white border-r border-spot-primary/10 w-[300px] flex-shrink-0",
         className
       )}
-      initial={false}
       animate={{
-        width: animate ? (open ? 250 : 60) : 250,
+        width: animate ? (open ? "300px" : "60px") : "300px",
       }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
       {...props}
@@ -111,7 +109,7 @@ export const MobileSidebar = ({
   className,
   children,
   ...props
-}: React.ComponentProps<typeof motion.div>) => {
+}: React.ComponentProps<"div">) => {
   const { open, setOpen } = useSidebar();
   return (
     <>
@@ -119,6 +117,7 @@ export const MobileSidebar = ({
         className={cn(
           "h-10 px-4 py-4 flex flex-row md:hidden items-center justify-between bg-white border-b border-spot-primary/10 w-full"
         )}
+        {...props}
       >
         <div className="flex justify-end z-20 w-full">
           <Menu
@@ -176,15 +175,15 @@ export const SidebarLink = ({
       {...props}
     >
       {link.icon}
-      <span
-        className={cn(
-          "text-spot-primary text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0",
-          animate && !open && "hidden opacity-0",
-          animate && open && "inline-block opacity-100"
-        )}
+      <motion.span
+        animate={{
+          display: animate ? (open ? "inline-block" : "none") : "inline-block",
+          opacity: animate ? (open ? 1 : 0) : 1,
+        }}
+        className="text-spot-primary text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
       >
         {link.label}
-      </span>
+      </motion.span>
     </Link>
   );
 };

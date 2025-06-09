@@ -1,6 +1,6 @@
-
 import React from "react";
 import { motion } from "framer-motion";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
 
 const DashboardNavbar = () => {
