@@ -5,7 +5,6 @@ import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardNavbar from "@/components/dashboard/DashboardNavbar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardContent from "@/components/dashboard/DashboardContent";
-import Footer from "@/components/shared/Footer";
 
 const DashboardPage = () => {
   return (
@@ -18,7 +17,6 @@ const DashboardPage = () => {
             <DashboardNavbar />
             <DashboardHeader />
             <DashboardContent />
-            <Footer theme="light" />
           </div>
         </div>
       </SidebarProvider>

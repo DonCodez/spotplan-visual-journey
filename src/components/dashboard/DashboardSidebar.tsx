@@ -30,13 +30,23 @@ const DashboardSidebar = () => {
 
   const isActive = (path: string) => currentPath === path || (path === "/dashboard" && currentPath === "/");
 
+  // Split navigation into main items and bottom items
+  const mainNavItems = dashboardData.navigation.filter(item => 
+    !['profile', 'settings'].includes(item.icon)
+  );
+  
+  const bottomNavItems = dashboardData.navigation.filter(item => 
+    ['profile', 'settings'].includes(item.icon)
+  );
+
   return (
     <Sidebar className={collapsed ? "w-16" : "w-64"} collapsible="icon">
-      <SidebarContent className="bg-white border-r border-gray-200">
-        <SidebarGroup className="pt-8">
+      <SidebarContent className="bg-white border-r border-gray-100 flex flex-col h-full">
+        {/* Main Navigation */}
+        <SidebarGroup className="pt-6 flex-1">
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-2">
-              {dashboardData.navigation.map((item, index) => {
+            <SidebarMenu className="space-y-1">
+              {mainNavItems.map((item, index) => {
                 const IconComponent = iconMap[item.icon as keyof typeof iconMap];
                 const active = isActive(item.path);
                 
@@ -45,24 +55,69 @@ const DashboardSidebar = () => {
                     key={item.path}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
                   >
                     <SidebarMenuItem>
                       <SidebarMenuButton
                         asChild
                         className={`
-                          w-full h-12 px-4 rounded-lg transition-all duration-200
+                          w-full h-11 px-3 rounded-lg transition-all duration-200 group
                           ${active 
-                            ? "bg-blue-50 text-blue-700 border-l-4 border-blue-700" 
+                            ? "bg-spot-primary/10 text-spot-primary shadow-sm" 
                             : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                           }
                         `}
                         id={`sidebar-nav-${item.label.toLowerCase()}`}
                       >
                         <Link to={item.path} className="flex items-center w-full">
-                          <IconComponent className={`h-5 w-5 ${collapsed ? "" : "mr-3"}`} />
+                          <IconComponent className={`h-5 w-5 ${collapsed ? "" : "mr-3"} transition-colors`} />
                           {!collapsed && (
-                            <span className="font-medium">{item.label}</span>
+                            <span className="font-medium text-sm">{item.label}</span>
+                          )}
+                          {active && !collapsed && (
+                            <div className="ml-auto w-1 h-1 bg-spot-primary rounded-full" />
+                          )}
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </motion.div>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Bottom Navigation */}
+        <SidebarGroup className="pb-6 mt-auto">
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {bottomNavItems.map((item, index) => {
+                const IconComponent = iconMap[item.icon as keyof typeof iconMap];
+                const active = isActive(item.path);
+                
+                return (
+                  <motion.div
+                    key={item.path}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
+                  >
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        asChild
+                        className={`
+                          w-full h-11 px-3 rounded-lg transition-all duration-200
+                          ${active 
+                            ? "bg-spot-primary/10 text-spot-primary shadow-sm" 
+                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                          }
+                        `}
+                        id={`sidebar-nav-${item.label.toLowerCase()}`}
+                      >
+                        <Link to={item.path} className="flex items-center w-full">
+                          <IconComponent className={`h-5 w-5 ${collapsed ? "" : "mr-3"} transition-colors`} />
+                          {!collapsed && (
+                            <span className="font-medium text-sm">{item.label}</span>
                           )}
                         </Link>
                       </SidebarMenuButton>
@@ -75,16 +130,16 @@ const DashboardSidebar = () => {
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.5 }}
-                className="pt-8"
+                transition={{ duration: 0.3, delay: 0.6 }}
+                className="pt-2 border-t border-gray-100"
               >
                 <SidebarMenuItem>
                   <SidebarMenuButton
-                    className="w-full h-12 px-4 rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200"
+                    className="w-full h-11 px-3 rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group"
                     id="sidebar-nav-logout"
                   >
-                    <LogOut className={`h-5 w-5 ${collapsed ? "" : "mr-3"}`} />
-                    {!collapsed && <span className="font-medium">Logout</span>}
+                    <LogOut className={`h-5 w-5 ${collapsed ? "" : "mr-3"} transition-colors`} />
+                    {!collapsed && <span className="font-medium text-sm">Logout</span>}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </motion.div>
