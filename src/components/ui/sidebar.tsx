@@ -94,7 +94,7 @@ export const DesktopSidebar = ({
         className
       )}
       animate={{
-        width: animate ? (open ? 300 : 60) : 300,
+        width: animate ? (open ? 240 : 60) : 240,
       }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
@@ -169,7 +169,7 @@ export const SidebarLink = ({
     <Link
       to={link.href}
       className={cn(
-        "flex items-center gap-2 group/sidebar py-1 px-0 rounded-md hover:bg-spot-primary/10 transition-colors min-h-[48px]",
+        "flex items-center gap-2 group/sidebar py-1 px-0 rounded-md hover:bg-spot-primary/10 transition-colors min-h-[36px]",
         className
       )}
       {...props}
