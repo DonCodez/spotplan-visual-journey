@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Twitter, Instagram, Facebook, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
 import socialData from "@/data/social.json";
+import { Link } from "react-router-dom";
 
 const iconMap = {
   twitter: Twitter,
@@ -206,19 +207,46 @@ const Footer = ({ theme = "light" }: FooterProps) => {
                 >
                   <h4 className="text-lg font-semibold mb-4 text-spot-beige">Company</h4>
                   <ul className="space-y-2">
-                    {["About", "Terms", "Privacy", "Contact"].map((link, index) => (
-                      <motion.li 
-                        key={link}
-                        initial={{ opacity: 0, x: -10 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.4, delay: 0.8 + index * 0.1 }}
-                        viewport={{ once: true }}
-                      >
-                        <a href="#" className="text-white/80 hover:text-spot-beige transition-colors hover:underline">
-                          {link}
-                        </a>
-                      </motion.li>
-                    ))}
+                    <motion.li 
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: 0.8 }}
+                      viewport={{ once: true }}
+                    >
+                      <a href="#" className="text-white/80 hover:text-spot-beige transition-colors hover:underline">
+                        About
+                      </a>
+                    </motion.li>
+                    <motion.li 
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: 0.9 }}
+                      viewport={{ once: true }}
+                    >
+                      <a href="#" className="text-white/80 hover:text-spot-beige transition-colors hover:underline">
+                        Terms
+                      </a>
+                    </motion.li>
+                    <motion.li 
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: 1.0 }}
+                      viewport={{ once: true }}
+                    >
+                      <Link to="/privacy-policy" className="text-white/80 hover:text-spot-beige transition-colors hover:underline">
+                        Privacy
+                      </Link>
+                    </motion.li>
+                    <motion.li 
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: 1.1 }}
+                      viewport={{ once: true }}
+                    >
+                      <a href="#" className="text-white/80 hover:text-spot-beige transition-colors hover:underline">
+                        Contact
+                      </a>
+                    </motion.li>
                   </ul>
                 </motion.div>
               </motion.div>
