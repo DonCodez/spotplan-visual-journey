@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/shared/Header";
 import Footer from "@/components/shared/Footer";
 import { Users, Target, Lightbulb, Heart } from "lucide-react";
+import { CountAnimation } from "@/components/ui/count-animation";
 
 const AboutPage = () => {
   const values = [
@@ -80,10 +81,12 @@ const AboutPage = () => {
                   </p>
                 </div>
                 <div className="bg-gradient-to-br from-blue-100 to-sky-100 rounded-xl p-8 text-center">
-                  <div className="text-4xl font-bold text-blue-600 mb-2">2024</div>
+                  <CountAnimation number={2025} className="text-4xl font-bold text-blue-600 mb-2" />
                   <div className="text-gray-600">Founded with a vision</div>
-                  <div className="text-4xl font-bold text-blue-600 mb-2 mt-6">10K+</div>
-                  <div className="text-gray-600">Happy travelers</div>
+                  <CountAnimation number={195} className="text-4xl font-bold text-blue-600 mb-2 mt-6" />
+                  <div className="text-gray-600">Countries covered</div>
+                  <CountAnimation number={50} className="text-4xl font-bold text-blue-600 mb-2 mt-6" />
+                  <div className="text-gray-600">AI recommendations per second</div>
                 </div>
               </div>
             </motion.div>
