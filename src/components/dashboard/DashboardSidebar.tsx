@@ -33,7 +33,7 @@ const DashboardSidebar = () => {
   const { user } = dashboardData;
 
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={10}>
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">

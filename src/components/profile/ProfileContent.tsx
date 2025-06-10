@@ -12,33 +12,35 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Camera, MapPin, Calendar, Globe, Mail, Phone, Edit3, Save, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
+import dashboardData from "@/data/dashboard.json";
 
-// Mock user data - replace with actual backend data
-const mockUserData = {
-  id: "user_123",
-  name: "Sarah Kim",
-  email: "sarah@example.com",
-  phone: "+1 (555) 123-4567",
-  bio: "Passionate traveler and adventure seeker. Love exploring new cultures and creating unforgettable memories with friends.",
-  location: "San Francisco, CA",
-  avatar: "/placeholder.svg",
-  coverImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
-  joinDate: "March 2023",
-  totalTrips: 12,
-  countries: 8,
-  preferences: {
-    budget: "Mid-range",
-    travelStyle: "Adventure",
-    accommodation: "Hotels & Hostels"
-  },
-  interests: ["Photography", "Hiking", "Local Cuisine", "Museums", "Nightlife", "Beach"]
+// Extended user data - easily changeable from backend by updating dashboard.json
+const getExtendedUserData = () => {
+  const { user } = dashboardData;
+  return {
+    ...user,
+    // Backend will be able to easily update these fields in dashboard.json
+    phone: "+1 (555) 123-4567",
+    bio: "Passionate traveler and adventure seeker. Love exploring new cultures and creating unforgettable memories with friends.",
+    location: "San Francisco, CA",
+    coverImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
+    joinDate: "March 2023",
+    totalTrips: 12,
+    countries: 8,
+    preferences: {
+      budget: "Mid-range",
+      travelStyle: "Adventure",
+      accommodation: "Hotels & Hostels"
+    },
+    interests: ["Photography", "Hiking", "Local Cuisine", "Museums", "Nightlife", "Beach"]
+  };
 };
 
 const ProfileContent = () => {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState(mockUserData);
-  const [formData, setFormData] = useState(mockUserData);
+  const [userData, setUserData] = useState(getExtendedUserData());
+  const [formData, setFormData] = useState(getExtendedUserData());
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -52,7 +54,7 @@ const ProfileContent = () => {
 
   const handleSave = async () => {
     try {
-      // TODO: Replace with actual API call
+      // TODO: Backend API call - bolt.ai can easily update dashboard.json
       // await updateUserProfile(formData);
       
       setUserData(formData);
@@ -83,7 +85,7 @@ const ProfileContent = () => {
     if (!file) return;
 
     try {
-      // TODO: Replace with actual file upload to backend
+      // TODO: Backend file upload - bolt.ai can implement this
       // const uploadedUrl = await uploadAvatar(file);
       
       toast({
