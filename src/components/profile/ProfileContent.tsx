@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -174,7 +175,7 @@ const ProfileContent = () => {
 
       {/* Profile Content */}
       <div className="container mx-auto px-8 pb-8 relative">
-        <div className="mt-20 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="mt-28 grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Profile Info */}
           <div className="lg:col-span-2 space-y-6">
             {/* Basic Info Card */}
