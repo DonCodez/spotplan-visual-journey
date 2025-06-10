@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -117,30 +116,6 @@ const ProfileContent = () => {
           numSquares={30}
         />
         
-        {/* Profile Avatar with highest z-index */}
-        <div className="absolute -bottom-16 left-8 z-50">
-          <div className="relative">
-            <Avatar className="w-32 h-32 border-4 border-white shadow-lg bg-white">
-              <AvatarImage src={userData.avatar} alt={userData.name} />
-              <AvatarFallback className="text-2xl bg-spot-primary text-white">
-                {userData.name.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-            
-            {isEditing && (
-              <label className="absolute bottom-2 right-2 bg-white rounded-full p-2 shadow-lg cursor-pointer hover:bg-gray-50 transition-colors z-50">
-                <Camera className="w-4 h-4 text-gray-600" />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarUpload}
-                  className="hidden"
-                />
-              </label>
-            )}
-          </div>
-        </div>
-
         {/* Edit Button */}
         <div className="absolute top-4 right-4 z-10">
           {!isEditing ? (
@@ -173,217 +148,243 @@ const ProfileContent = () => {
         </div>
       </div>
 
-      {/* Profile Content */}
-      <div className="container mx-auto px-8 pb-8 relative">
-        <div className="mt-28 grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Profile Info */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Basic Info Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card className="shadow-lg border-0">
-                <CardHeader>
-                  <CardTitle className="text-2xl text-gray-800">Profile Information</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-                        Full Name
-                      </Label>
-                      {isEditing ? (
-                        <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
-                          className="focus:ring-2 focus:ring-spot-primary"
-                        />
-                      ) : (
-                        <div className="text-lg font-semibold text-gray-900">{userData.name}</div>
-                      )}
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-                        Email Address
-                      </Label>
-                      {isEditing ? (
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
-                          className="focus:ring-2 focus:ring-spot-primary"
-                        />
-                      ) : (
-                        <div className="flex items-center text-gray-700">
-                          <Mail className="w-4 h-4 mr-2" />
-                          {userData.email}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
-                        Phone Number
-                      </Label>
-                      {isEditing ? (
-                        <Input
-                          id="phone"
-                          value={formData.phone}
-                          onChange={(e) => handleInputChange('phone', e.target.value)}
-                          className="focus:ring-2 focus:ring-spot-primary"
-                        />
-                      ) : (
-                        <div className="flex items-center text-gray-700">
-                          <Phone className="w-4 h-4 mr-2" />
-                          {userData.phone}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="location" className="text-sm font-medium text-gray-700">
-                        Location
-                      </Label>
-                      {isEditing ? (
-                        <Input
-                          id="location"
-                          value={formData.location}
-                          onChange={(e) => handleInputChange('location', e.target.value)}
-                          className="focus:ring-2 focus:ring-spot-primary"
-                        />
-                      ) : (
-                        <div className="flex items-center text-gray-700">
-                          <MapPin className="w-4 h-4 mr-2" />
-                          {userData.location}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="bio" className="text-sm font-medium text-gray-700">
-                      Bio
-                    </Label>
-                    {isEditing ? (
-                      <Textarea
-                        id="bio"
-                        value={formData.bio}
-                        onChange={(e) => handleInputChange('bio', e.target.value)}
-                        rows={3}
-                        className="focus:ring-2 focus:ring-spot-primary"
-                      />
-                    ) : (
-                      <p className="text-gray-600 leading-relaxed">{userData.bio}</p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Travel Interests */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <Card className="shadow-lg border-0">
-                <CardHeader>
-                  <CardTitle className="text-xl text-gray-800">Travel Interests</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {userData.interests.map((interest, index) => (
-                      <Badge
-                        key={index}
-                        variant="secondary"
-                        className="bg-spot-primary/10 text-spot-primary hover:bg-spot-primary/20"
-                      >
-                        {interest}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+      {/* Profile Avatar - positioned to float above content */}
+      <div className="relative">
+        <div className="absolute -top-16 left-8 z-50">
+          <div className="relative">
+            <Avatar className="w-32 h-32 border-4 border-white shadow-lg bg-white">
+              <AvatarImage src={userData.avatar} alt={userData.name} />
+              <AvatarFallback className="text-2xl bg-spot-primary text-white">
+                {userData.name.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            
+            {isEditing && (
+              <label className="absolute bottom-2 right-2 bg-white rounded-full p-2 shadow-lg cursor-pointer hover:bg-gray-50 transition-colors z-50">
+                <Camera className="w-4 h-4 text-gray-600" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarUpload}
+                  className="hidden"
+                />
+              </label>
+            )}
           </div>
+        </div>
 
-          {/* Sidebar Stats */}
-          <div className="space-y-6">
-            {/* Travel Stats */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <Card className="shadow-lg border-0">
-                <CardHeader>
-                  <CardTitle className="text-xl text-gray-800">Travel Stats</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <Globe className="w-5 h-5 text-spot-primary mr-2" />
-                      <span className="text-gray-600">Total Trips</span>
-                    </div>
-                    <span className="text-2xl font-bold text-spot-primary">{userData.totalTrips}</span>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <MapPin className="w-5 h-5 text-spot-primary mr-2" />
-                      <span className="text-gray-600">Countries Visited</span>
-                    </div>
-                    <span className="text-2xl font-bold text-spot-primary">{userData.countries}</span>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <Calendar className="w-5 h-5 text-spot-primary mr-2" />
-                      <span className="text-gray-600">Member Since</span>
-                    </div>
-                    <span className="text-sm font-medium text-gray-700">{userData.joinDate}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+        {/* Profile Content */}
+        <div className="container mx-auto px-8 pb-8">
+          <div className="mt-28 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Main Profile Info */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Basic Info Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Card className="shadow-lg border-0">
+                  <CardHeader>
+                    <CardTitle className="text-2xl text-gray-800">Profile Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+                          Full Name
+                        </Label>
+                        {isEditing ? (
+                          <Input
+                            id="name"
+                            value={formData.name}
+                            onChange={(e) => handleInputChange('name', e.target.value)}
+                            className="focus:ring-2 focus:ring-spot-primary"
+                          />
+                        ) : (
+                          <div className="text-lg font-semibold text-gray-900">{userData.name}</div>
+                        )}
+                      </div>
 
-            {/* Travel Preferences */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <Card className="shadow-lg border-0">
-                <CardHeader>
-                  <CardTitle className="text-xl text-gray-800">Travel Preferences</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div>
-                    <Label className="text-sm text-gray-600">Budget Range</Label>
-                    <div className="text-lg font-semibold text-gray-900">{userData.preferences.budget}</div>
-                  </div>
-                  
-                  <div>
-                    <Label className="text-sm text-gray-600">Travel Style</Label>
-                    <div className="text-lg font-semibold text-gray-900">{userData.preferences.travelStyle}</div>
-                  </div>
-                  
-                  <div>
-                    <Label className="text-sm text-gray-600">Accommodation</Label>
-                    <div className="text-lg font-semibold text-gray-900">{userData.preferences.accommodation}</div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                          Email Address
+                        </Label>
+                        {isEditing ? (
+                          <Input
+                            id="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => handleInputChange('email', e.target.value)}
+                            className="focus:ring-2 focus:ring-spot-primary"
+                          />
+                        ) : (
+                          <div className="flex items-center text-gray-700">
+                            <Mail className="w-4 h-4 mr-2" />
+                            {userData.email}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                          Phone Number
+                        </Label>
+                        {isEditing ? (
+                          <Input
+                            id="phone"
+                            value={formData.phone}
+                            onChange={(e) => handleInputChange('phone', e.target.value)}
+                            className="focus:ring-2 focus:ring-spot-primary"
+                          />
+                        ) : (
+                          <div className="flex items-center text-gray-700">
+                            <Phone className="w-4 h-4 mr-2" />
+                            {userData.phone}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="location" className="text-sm font-medium text-gray-700">
+                          Location
+                        </Label>
+                        {isEditing ? (
+                          <Input
+                            id="location"
+                            value={formData.location}
+                            onChange={(e) => handleInputChange('location', e.target.value)}
+                            className="focus:ring-2 focus:ring-spot-primary"
+                          />
+                        ) : (
+                          <div className="flex items-center text-gray-700">
+                            <MapPin className="w-4 h-4 mr-2" />
+                            {userData.location}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="bio" className="text-sm font-medium text-gray-700">
+                        Bio
+                      </Label>
+                      {isEditing ? (
+                        <Textarea
+                          id="bio"
+                          value={formData.bio}
+                          onChange={(e) => handleInputChange('bio', e.target.value)}
+                          rows={3}
+                          className="focus:ring-2 focus:ring-spot-primary"
+                        />
+                      ) : (
+                        <p className="text-gray-600 leading-relaxed">{userData.bio}</p>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* Travel Interests */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                <Card className="shadow-lg border-0">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-gray-800">Travel Interests</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {userData.interests.map((interest, index) => (
+                        <Badge
+                          key={index}
+                          variant="secondary"
+                          className="bg-spot-primary/10 text-spot-primary hover:bg-spot-primary/20"
+                        >
+                          {interest}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </div>
+
+            {/* Sidebar Stats */}
+            <div className="space-y-6">
+              {/* Travel Stats */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <Card className="shadow-lg border-0">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-gray-800">Travel Stats</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <Globe className="w-5 h-5 text-spot-primary mr-2" />
+                        <span className="text-gray-600">Total Trips</span>
+                      </div>
+                      <span className="text-2xl font-bold text-spot-primary">{userData.totalTrips}</span>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <MapPin className="w-5 h-5 text-spot-primary mr-2" />
+                        <span className="text-gray-600">Countries Visited</span>
+                      </div>
+                      <span className="text-2xl font-bold text-spot-primary">{userData.countries}</span>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <Calendar className="w-5 h-5 text-spot-primary mr-2" />
+                        <span className="text-gray-600">Member Since</span>
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">{userData.joinDate}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* Travel Preferences */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                <Card className="shadow-lg border-0">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-gray-800">Travel Preferences</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div>
+                      <Label className="text-sm text-gray-600">Budget Range</Label>
+                      <div className="text-lg font-semibold text-gray-900">{userData.preferences.budget}</div>
+                    </div>
+                    
+                    <div>
+                      <Label className="text-sm text-gray-600">Travel Style</Label>
+                      <div className="text-lg font-semibold text-gray-900">{userData.preferences.travelStyle}</div>
+                    </div>
+                    
+                    <div>
+                      <Label className="text-sm text-gray-600">Accommodation</Label>
+                      <div className="text-lg font-semibold text-gray-900">{userData.preferences.accommodation}</div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
