@@ -1,7 +1,6 @@
-
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink, useSidebar } from "@/components/ui/sidebar";
-import { Home, MapPin, LogOut, User } from "lucide-react";
+import { Home, MapPin, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -43,14 +42,6 @@ const DashboardSidebar = () => {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          {/* Profile Link */}
-          <SidebarLink 
-            link={{
-              label: "Profile",
-              href: "/profile",
-              icon: <User className="text-spot-primary h-5 w-5 flex-shrink-0" />
-            }}
-          />
           <UserProfileWithLogout open={open} user={user} />
         </div>
       </SidebarBody>
@@ -61,23 +52,28 @@ const DashboardSidebar = () => {
 const UserProfileWithLogout = ({ open, user }: { open: boolean; user: any }) => {
   return (
     <div className="flex items-center gap-2 py-1 px-0 min-h-[48px]">
-      <div className="h-7 w-7 bg-spot-primary/10 text-spot-primary rounded-full flex items-center justify-center flex-shrink-0">
-        <span className="text-sm font-medium">
-          {user.name.charAt(0).toUpperCase()}
-        </span>
-      </div>
-      {open && (
-        <>
-          <span className="text-spot-primary text-sm whitespace-nowrap flex-1">
+      <Link 
+        to="/profile"
+        className="flex items-center gap-2 flex-1 hover:bg-spot-primary/10 rounded transition-colors py-1"
+      >
+        <div className="h-7 w-7 bg-spot-primary/10 text-spot-primary rounded-full flex items-center justify-center flex-shrink-0">
+          <span className="text-sm font-medium">
+            {user.name.charAt(0).toUpperCase()}
+          </span>
+        </div>
+        {open && (
+          <span className="text-spot-primary text-sm whitespace-nowrap">
             {user.name}
           </span>
-          <Link
-            to="/login"
-            className="flex items-center justify-center w-6 h-6 hover:bg-red-100 rounded transition-colors"
-          >
-            <LogOut className="text-red-600 h-4 w-4 flex-shrink-0" />
-          </Link>
-        </>
+        )}
+      </Link>
+      {open && (
+        <Link
+          to="/login"
+          className="flex items-center justify-center w-6 h-6 hover:bg-red-100 rounded transition-colors"
+        >
+          <LogOut className="text-red-600 h-4 w-4 flex-shrink-0" />
+        </Link>
       )}
     </div>
   );
