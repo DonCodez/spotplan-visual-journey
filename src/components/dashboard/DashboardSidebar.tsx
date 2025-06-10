@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink, useSidebar } from "@/components/ui/sidebar";
-import { Home, MapPin, LogOut } from "lucide-react";
+import { Home, MapPin, LogOut, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -42,7 +42,15 @@ const DashboardSidebar = () => {
             ))}
           </div>
         </div>
-        <div>
+        <div className="flex flex-col gap-2">
+          {/* Profile Link */}
+          <SidebarLink 
+            link={{
+              label: "Profile",
+              href: "/profile",
+              icon: <User className="text-spot-primary h-5 w-5 flex-shrink-0" />
+            }}
+          />
           <UserProfileWithLogout open={open} user={user} />
         </div>
       </SidebarBody>
