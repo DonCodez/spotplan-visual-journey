@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink, useSidebar } from "@/components/ui/sidebar";
 import { Home, MapPin, LogOut } from "lucide-react";
@@ -6,6 +5,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import dashboardData from "@/data/dashboard.json";
 
 const iconMap = {
@@ -62,11 +62,12 @@ const UserProfileWithLogout = ({ open, user }: { open: boolean; user: any }) => 
             to="/profile"
             className="flex items-center gap-2 flex-1 hover:bg-spot-primary/10 rounded transition-colors py-1"
           >
-            <div className="h-7 w-7 bg-spot-primary/10 text-spot-primary rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-sm font-medium">
+            <Avatar className="h-8 w-8 flex-shrink-0">
+              <AvatarImage src={user.avatar} alt={user.name} />
+              <AvatarFallback className="bg-spot-primary/10 text-spot-primary text-sm font-medium">
                 {user.name.charAt(0).toUpperCase()}
-              </span>
-            </div>
+              </AvatarFallback>
+            </Avatar>
             {open && (
               <span className="text-spot-primary text-sm whitespace-nowrap">
                 {user.name}

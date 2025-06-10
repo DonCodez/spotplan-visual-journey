@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,6 +38,7 @@ const getExtendedUserData = () => {
     interests: ["Photography", "Hiking", "Local Cuisine", "Museums", "Nightlife", "Beach"]
   };
 };
+
 const ProfileContent = () => {
   const {
     toast
@@ -44,14 +46,17 @@ const ProfileContent = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState(getExtendedUserData());
   const [formData, setFormData] = useState(getExtendedUserData());
+
   const handleEdit = () => {
     setIsEditing(true);
     setFormData(userData);
   };
+
   const handleCancel = () => {
     setIsEditing(false);
     setFormData(userData);
   };
+
   const handleSave = async () => {
     try {
       // TODO: Backend API call - bolt.ai can easily update dashboard.json
@@ -71,22 +76,55 @@ const ProfileContent = () => {
       });
     }
   };
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
+
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid File",
+        description: "Please select an image file.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File Too Large",
+        description: "Please select an image smaller than 5MB.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     try {
+      // Create a preview URL for immediate display
+      const previewUrl = URL.createObjectURL(file);
+      
+      // Update both form data and user data for immediate feedback
+      const updatedData = { ...formData, avatar: previewUrl };
+      setFormData(updatedData);
+      setUserData(updatedData);
+
       // TODO: Backend file upload - bolt.ai can implement this
       // const uploadedUrl = await uploadAvatar(file);
+      // setFormData(prev => ({ ...prev, avatar: uploadedUrl }));
+      // setUserData(prev => ({ ...prev, avatar: uploadedUrl }));
 
       toast({
-        title: "Avatar Upload",
-        description: "Avatar upload functionality will be connected to backend."
+        title: "Avatar Updated",
+        description: "Your profile avatar has been updated successfully."
       });
     } catch (error) {
       toast({
@@ -96,26 +134,32 @@ const ProfileContent = () => {
       });
     }
   };
+
   return <div className="flex-1 overflow-y-auto bg-gray-50">
       {/* Hero Section with Cover Image */}
       <div className="relative h-64 bg-gradient-to-r from-blue-600 to-purple-600 overflow-hidden">
         <img src={userData.coverImage} alt="Cover" className="w-full h-full object-cover opacity-80" />
         <AnimatedGridPattern className="absolute inset-0 opacity-20" strokeDasharray={5} numSquares={30} />
         
-        {/* Profile Avatar - positioned in top left */}
-        <div className="absolute top-4 left-4 z-50">
-          <div className="relative rounded-md">
-            <Avatar className="w-20 h-20 border-4 border-white shadow-lg bg-white">
-              <AvatarImage src={userData.avatar} alt={userData.name} />
-              <AvatarFallback className="text-lg bg-spot-primary text-white">
+        {/* Profile Avatar - positioned in top left, bigger and more prominent */}
+        <div className="absolute top-6 left-6 z-50">
+          <div className="relative">
+            <Avatar className="w-32 h-32 border-4 border-white shadow-xl bg-white ring-4 ring-white/20">
+              <AvatarImage src={userData.avatar} alt={userData.name} className="object-cover" />
+              <AvatarFallback className="text-3xl bg-spot-primary text-white font-bold">
                 {userData.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
             
-            {isEditing && <label className="absolute bottom-0 right-0 bg-white rounded-full p-1.5 shadow-lg cursor-pointer hover:bg-gray-50 transition-colors z-50">
-                <Camera className="w-3 h-3 text-gray-600" />
-                <input type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
-              </label>}
+            <label className="absolute bottom-2 right-2 bg-spot-primary hover:bg-spot-primary/90 rounded-full p-2 shadow-lg cursor-pointer transition-colors z-50 ring-4 ring-white">
+              <Camera className="w-4 h-4 text-white" />
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={handleAvatarUpload} 
+                className="hidden" 
+              />
+            </label>
           </div>
         </div>
         
@@ -138,7 +182,7 @@ const ProfileContent = () => {
       </div>
 
       {/* Profile Content */}
-      <div className="container mx-auto px-8 py-8">
+      <div className="container mx-auto px-8 py-8 mt-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Profile Info */}
           <div className="lg:col-span-2 space-y-6">
@@ -319,4 +363,5 @@ const ProfileContent = () => {
       </div>
     </div>;
 };
+
 export default ProfileContent;
