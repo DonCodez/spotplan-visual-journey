@@ -15,7 +15,9 @@ import dashboardData from "@/data/dashboard.json";
 
 // Extended user data - easily changeable from backend by updating dashboard.json
 const getExtendedUserData = () => {
-  const { user } = dashboardData;
+  const {
+    user
+  } = dashboardData;
   return {
     ...user,
     // Backend will be able to easily update these fields in dashboard.json
@@ -35,90 +37,74 @@ const getExtendedUserData = () => {
     interests: ["Photography", "Hiking", "Local Cuisine", "Museums", "Nightlife", "Beach"]
   };
 };
-
 const ProfileContent = () => {
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState(getExtendedUserData());
   const [formData, setFormData] = useState(getExtendedUserData());
-
   const handleEdit = () => {
     setIsEditing(true);
     setFormData(userData);
   };
-
   const handleCancel = () => {
     setIsEditing(false);
     setFormData(userData);
   };
-
   const handleSave = async () => {
     try {
       // TODO: Backend API call - bolt.ai can easily update dashboard.json
       // await updateUserProfile(formData);
-      
+
       setUserData(formData);
       setIsEditing(false);
-      
       toast({
         title: "Profile Updated",
-        description: "Your profile has been successfully updated.",
+        description: "Your profile has been successfully updated."
       });
     } catch (error) {
       toast({
         title: "Update Failed",
         description: "There was an error updating your profile. Please try again.",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
-
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
-
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
     try {
       // TODO: Backend file upload - bolt.ai can implement this
       // const uploadedUrl = await uploadAvatar(file);
-      
+
       toast({
         title: "Avatar Upload",
-        description: "Avatar upload functionality will be connected to backend.",
+        description: "Avatar upload functionality will be connected to backend."
       });
     } catch (error) {
       toast({
         title: "Upload Failed",
         description: "There was an error uploading your avatar.",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
-
-  return (
-    <div className="flex-1 overflow-y-auto bg-gray-50">
+  return <div className="flex-1 overflow-y-auto bg-gray-50">
       {/* Hero Section with Cover Image */}
       <div className="relative h-64 bg-gradient-to-r from-blue-600 to-purple-600 overflow-hidden">
-        <img
-          src={userData.coverImage}
-          alt="Cover"
-          className="w-full h-full object-cover opacity-80"
-        />
-        <AnimatedGridPattern
-          className="absolute inset-0 opacity-20"
-          strokeDasharray={5}
-          numSquares={30}
-        />
+        <img src={userData.coverImage} alt="Cover" className="w-full h-full object-cover opacity-80" />
+        <AnimatedGridPattern className="absolute inset-0 opacity-20" strokeDasharray={5} numSquares={30} />
         
         {/* Profile Avatar - positioned in top left */}
         <div className="absolute top-4 left-4 z-50">
-          <div className="relative">
+          <div className="relative rounded-md">
             <Avatar className="w-20 h-20 border-4 border-white shadow-lg bg-white">
               <AvatarImage src={userData.avatar} alt={userData.name} />
               <AvatarFallback className="text-lg bg-spot-primary text-white">
@@ -126,49 +112,28 @@ const ProfileContent = () => {
               </AvatarFallback>
             </Avatar>
             
-            {isEditing && (
-              <label className="absolute bottom-0 right-0 bg-white rounded-full p-1.5 shadow-lg cursor-pointer hover:bg-gray-50 transition-colors z-50">
+            {isEditing && <label className="absolute bottom-0 right-0 bg-white rounded-full p-1.5 shadow-lg cursor-pointer hover:bg-gray-50 transition-colors z-50">
                 <Camera className="w-3 h-3 text-gray-600" />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarUpload}
-                  className="hidden"
-                />
-              </label>
-            )}
+                <input type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
+              </label>}
           </div>
         </div>
         
         {/* Edit Button */}
         <div className="absolute top-4 right-4 z-10">
-          {!isEditing ? (
-            <Button
-              onClick={handleEdit}
-              className="bg-white/90 text-gray-800 hover:bg-white"
-            >
+          {!isEditing ? <Button onClick={handleEdit} className="bg-white/90 text-gray-800 hover:bg-white">
               <Edit3 className="w-4 h-4 mr-2" />
               Edit Profile
-            </Button>
-          ) : (
-            <div className="flex gap-2">
-              <Button
-                onClick={handleSave}
-                className="bg-green-600 hover:bg-green-700 text-white"
-              >
+            </Button> : <div className="flex gap-2">
+              <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700 text-white">
                 <Save className="w-4 h-4 mr-2" />
                 Save
               </Button>
-              <Button
-                onClick={handleCancel}
-                variant="outline"
-                className="bg-white/90 text-gray-800 hover:bg-white"
-              >
+              <Button onClick={handleCancel} variant="outline" className="bg-white/90 text-gray-800 hover:bg-white">
                 <X className="w-4 h-4 mr-2" />
                 Cancel
               </Button>
-            </div>
-          )}
+            </div>}
         </div>
       </div>
 
@@ -178,11 +143,15 @@ const ProfileContent = () => {
           {/* Main Profile Info */}
           <div className="lg:col-span-2 space-y-6">
             {/* Basic Info Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.5
+          }}>
               <Card className="shadow-lg border-0">
                 <CardHeader>
                   <CardTitle className="text-2xl text-gray-800">Profile Information</CardTitle>
@@ -193,74 +162,37 @@ const ProfileContent = () => {
                       <Label htmlFor="name" className="text-sm font-medium text-gray-700">
                         Full Name
                       </Label>
-                      {isEditing ? (
-                        <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
-                          className="focus:ring-2 focus:ring-spot-primary"
-                        />
-                      ) : (
-                        <div className="text-lg font-semibold text-gray-900">{userData.name}</div>
-                      )}
+                      {isEditing ? <Input id="name" value={formData.name} onChange={e => handleInputChange('name', e.target.value)} className="focus:ring-2 focus:ring-spot-primary" /> : <div className="text-lg font-semibold text-gray-900">{userData.name}</div>}
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-sm font-medium text-gray-700">
                         Email Address
                       </Label>
-                      {isEditing ? (
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
-                          className="focus:ring-2 focus:ring-spot-primary"
-                        />
-                      ) : (
-                        <div className="flex items-center text-gray-700">
+                      {isEditing ? <Input id="email" type="email" value={formData.email} onChange={e => handleInputChange('email', e.target.value)} className="focus:ring-2 focus:ring-spot-primary" /> : <div className="flex items-center text-gray-700">
                           <Mail className="w-4 h-4 mr-2" />
                           {userData.email}
-                        </div>
-                      )}
+                        </div>}
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
                         Phone Number
                       </Label>
-                      {isEditing ? (
-                        <Input
-                          id="phone"
-                          value={formData.phone}
-                          onChange={(e) => handleInputChange('phone', e.target.value)}
-                          className="focus:ring-2 focus:ring-spot-primary"
-                        />
-                      ) : (
-                        <div className="flex items-center text-gray-700">
+                      {isEditing ? <Input id="phone" value={formData.phone} onChange={e => handleInputChange('phone', e.target.value)} className="focus:ring-2 focus:ring-spot-primary" /> : <div className="flex items-center text-gray-700">
                           <Phone className="w-4 h-4 mr-2" />
                           {userData.phone}
-                        </div>
-                      )}
+                        </div>}
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="location" className="text-sm font-medium text-gray-700">
                         Location
                       </Label>
-                      {isEditing ? (
-                        <Input
-                          id="location"
-                          value={formData.location}
-                          onChange={(e) => handleInputChange('location', e.target.value)}
-                          className="focus:ring-2 focus:ring-spot-primary"
-                        />
-                      ) : (
-                        <div className="flex items-center text-gray-700">
+                      {isEditing ? <Input id="location" value={formData.location} onChange={e => handleInputChange('location', e.target.value)} className="focus:ring-2 focus:ring-spot-primary" /> : <div className="flex items-center text-gray-700">
                           <MapPin className="w-4 h-4 mr-2" />
                           {userData.location}
-                        </div>
-                      )}
+                        </div>}
                     </div>
                   </div>
 
@@ -268,43 +200,32 @@ const ProfileContent = () => {
                     <Label htmlFor="bio" className="text-sm font-medium text-gray-700">
                       Bio
                     </Label>
-                    {isEditing ? (
-                      <Textarea
-                        id="bio"
-                        value={formData.bio}
-                        onChange={(e) => handleInputChange('bio', e.target.value)}
-                        rows={3}
-                        className="focus:ring-2 focus:ring-spot-primary"
-                      />
-                    ) : (
-                      <p className="text-gray-600 leading-relaxed">{userData.bio}</p>
-                    )}
+                    {isEditing ? <Textarea id="bio" value={formData.bio} onChange={e => handleInputChange('bio', e.target.value)} rows={3} className="focus:ring-2 focus:ring-spot-primary" /> : <p className="text-gray-600 leading-relaxed">{userData.bio}</p>}
                   </div>
                 </CardContent>
               </Card>
             </motion.div>
 
             {/* Travel Interests */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.5,
+            delay: 0.1
+          }}>
               <Card className="shadow-lg border-0">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-800">Travel Interests</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {userData.interests.map((interest, index) => (
-                      <Badge
-                        key={index}
-                        variant="secondary"
-                        className="bg-spot-primary/10 text-spot-primary hover:bg-spot-primary/20"
-                      >
+                    {userData.interests.map((interest, index) => <Badge key={index} variant="secondary" className="bg-spot-primary/10 text-spot-primary hover:bg-spot-primary/20">
                         {interest}
-                      </Badge>
-                    ))}
+                      </Badge>)}
                   </div>
                 </CardContent>
               </Card>
@@ -314,11 +235,16 @@ const ProfileContent = () => {
           {/* Sidebar Stats */}
           <div className="space-y-6">
             {/* Travel Stats */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
+            <motion.div initial={{
+            opacity: 0,
+            x: 20
+          }} animate={{
+            opacity: 1,
+            x: 0
+          }} transition={{
+            duration: 0.5,
+            delay: 0.2
+          }}>
               <Card className="shadow-lg border-0">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-800">Travel Stats</CardTitle>
@@ -356,11 +282,16 @@ const ProfileContent = () => {
             </motion.div>
 
             {/* Travel Preferences */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
+            <motion.div initial={{
+            opacity: 0,
+            x: 20
+          }} animate={{
+            opacity: 1,
+            x: 0
+          }} transition={{
+            duration: 0.5,
+            delay: 0.3
+          }}>
               <Card className="shadow-lg border-0">
                 <CardHeader>
                   <CardTitle className="text-xl text-gray-800">Travel Preferences</CardTitle>
@@ -386,8 +317,6 @@ const ProfileContent = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default ProfileContent;
