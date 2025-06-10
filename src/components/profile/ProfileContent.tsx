@@ -23,6 +23,7 @@ const getExtendedUserData = () => {
     phone: "+1 (555) 123-4567",
     bio: "Passionate traveler and adventure seeker. Love exploring new cultures and creating unforgettable memories with friends.",
     location: "San Francisco, CA",
+    avatar: "https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=400&q=80",
     coverImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
     joinDate: "March 2023",
     totalTrips: 12,
@@ -116,10 +117,10 @@ const ProfileContent = () => {
           numSquares={30}
         />
         
-        {/* Profile Avatar */}
-        <div className="absolute -bottom-16 left-8">
+        {/* Profile Avatar with proper z-index */}
+        <div className="absolute -bottom-16 left-8 z-10">
           <div className="relative">
-            <Avatar className="w-32 h-32 border-4 border-white shadow-lg">
+            <Avatar className="w-32 h-32 border-4 border-white shadow-lg bg-white">
               <AvatarImage src={userData.avatar} alt={userData.name} />
               <AvatarFallback className="text-2xl bg-spot-primary text-white">
                 {userData.name.charAt(0)}
@@ -127,7 +128,7 @@ const ProfileContent = () => {
             </Avatar>
             
             {isEditing && (
-              <label className="absolute bottom-2 right-2 bg-white rounded-full p-2 shadow-lg cursor-pointer hover:bg-gray-50 transition-colors">
+              <label className="absolute bottom-2 right-2 bg-white rounded-full p-2 shadow-lg cursor-pointer hover:bg-gray-50 transition-colors z-20">
                 <Camera className="w-4 h-4 text-gray-600" />
                 <input
                   type="file"
@@ -141,7 +142,7 @@ const ProfileContent = () => {
         </div>
 
         {/* Edit Button */}
-        <div className="absolute top-4 right-4">
+        <div className="absolute top-4 right-4 z-10">
           {!isEditing ? (
             <Button
               onClick={handleEdit}
@@ -173,7 +174,7 @@ const ProfileContent = () => {
       </div>
 
       {/* Profile Content */}
-      <div className="container mx-auto px-8 pb-8">
+      <div className="container mx-auto px-8 pb-8 relative z-0">
         <div className="mt-20 grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Profile Info */}
           <div className="lg:col-span-2 space-y-6">

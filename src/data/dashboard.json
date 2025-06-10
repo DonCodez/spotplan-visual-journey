@@ -3,7 +3,7 @@
   "user": {
     "name": "Sarah",
     "email": "sarah@example.com",
-    "avatar": "/placeholder.svg",
+    "avatar": "https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=400&q=80",
     "initials": "SK"
   },
   "welcome": {
