@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink, useSidebar } from "@/components/ui/sidebar";
 import { Home, MapPin, LogOut } from "lucide-react";
@@ -62,9 +63,9 @@ const UserProfileWithLogout = ({ open, user }: { open: boolean; user: any }) => 
             to="/profile"
             className="flex items-center gap-2 flex-1 hover:bg-spot-primary/10 rounded transition-colors py-1"
           >
-            <Avatar className="h-8 w-8 flex-shrink-0">
+            <Avatar className="h-6 w-6 flex-shrink-0">
               <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback className="bg-spot-primary/10 text-spot-primary text-sm font-medium">
+              <AvatarFallback className="bg-spot-primary/10 text-spot-primary text-xs font-medium">
                 {user.name.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
