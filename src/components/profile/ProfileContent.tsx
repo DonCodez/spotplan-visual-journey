@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -141,18 +140,18 @@ const ProfileContent = () => {
         <img src={userData.coverImage} alt="Cover" className="w-full h-full object-cover opacity-80" />
         <AnimatedGridPattern className="absolute inset-0 opacity-20" strokeDasharray={5} numSquares={30} />
         
-        {/* Profile Avatar - positioned in top left, bigger and more prominent */}
-        <div className="absolute top-6 left-6 z-50">
+        {/* Profile Avatar - aligned with sidebar logo */}
+        <div className="absolute top-6 left-4 z-50">
           <div className="relative">
-            <Avatar className="w-32 h-32 border-4 border-white shadow-xl bg-white ring-4 ring-white/20">
+            <Avatar className="w-40 h-40 border-4 border-white shadow-xl bg-white ring-4 ring-white/20">
               <AvatarImage src={userData.avatar} alt={userData.name} className="object-cover" />
-              <AvatarFallback className="text-3xl bg-spot-primary text-white font-bold">
+              <AvatarFallback className="text-4xl bg-spot-primary text-white font-bold">
                 {userData.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
             
-            <label className="absolute bottom-2 right-2 bg-spot-primary hover:bg-spot-primary/90 rounded-full p-2 shadow-lg cursor-pointer transition-colors z-50 ring-4 ring-white">
-              <Camera className="w-4 h-4 text-white" />
+            <label className="absolute bottom-2 right-2 bg-spot-primary hover:bg-spot-primary/90 rounded-full p-3 shadow-lg cursor-pointer transition-colors z-50 ring-4 ring-white">
+              <Camera className="w-5 h-5 text-white" />
               <input 
                 type="file" 
                 accept="image/*" 
@@ -182,7 +181,7 @@ const ProfileContent = () => {
       </div>
 
       {/* Profile Content */}
-      <div className="container mx-auto px-8 py-8 mt-16">
+      <div className="container mx-auto px-8 py-8 mt-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Profile Info */}
           <div className="lg:col-span-2 space-y-6">
