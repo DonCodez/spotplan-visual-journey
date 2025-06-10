@@ -1,9 +1,11 @@
+
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink, useSidebar } from "@/components/ui/sidebar";
 import { Home, MapPin, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import dashboardData from "@/data/dashboard.json";
 
 const iconMap = {
@@ -31,42 +33,51 @@ const DashboardSidebar = () => {
   const { user } = dashboardData;
 
   return (
-    <Sidebar open={open} setOpen={setOpen}>
-      <SidebarBody className="justify-between gap-10">
-        <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-          {open ? <Logo /> : <LogoIcon />}
-          <div className="mt-8 flex flex-col gap-0.5">
-            {links.map((link, idx) => (
-              <SidebarLink key={idx} link={link} />
-            ))}
+    <TooltipProvider>
+      <Sidebar open={open} setOpen={setOpen}>
+        <SidebarBody className="justify-between gap-10">
+          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+            {open ? <Logo /> : <LogoIcon />}
+            <div className="mt-8 flex flex-col gap-0.5">
+              {links.map((link, idx) => (
+                <SidebarLink key={idx} link={link} />
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <UserProfileWithLogout open={open} user={user} />
-        </div>
-      </SidebarBody>
-    </Sidebar>
+          <div className="flex flex-col gap-2">
+            <UserProfileWithLogout open={open} user={user} />
+          </div>
+        </SidebarBody>
+      </Sidebar>
+    </TooltipProvider>
   );
 };
 
 const UserProfileWithLogout = ({ open, user }: { open: boolean; user: any }) => {
   return (
     <div className="flex items-center gap-2 py-1 px-0 min-h-[48px]">
-      <Link 
-        to="/profile"
-        className="flex items-center gap-2 flex-1 hover:bg-spot-primary/10 rounded transition-colors py-1"
-      >
-        <div className="h-7 w-7 bg-spot-primary/10 text-spot-primary rounded-full flex items-center justify-center flex-shrink-0">
-          <span className="text-sm font-medium">
-            {user.name.charAt(0).toUpperCase()}
-          </span>
-        </div>
-        {open && (
-          <span className="text-spot-primary text-sm whitespace-nowrap">
-            {user.name}
-          </span>
-        )}
-      </Link>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Link 
+            to="/profile"
+            className="flex items-center gap-2 flex-1 hover:bg-spot-primary/10 rounded transition-colors py-1"
+          >
+            <div className="h-7 w-7 bg-spot-primary/10 text-spot-primary rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-sm font-medium">
+                {user.name.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            {open && (
+              <span className="text-spot-primary text-sm whitespace-nowrap">
+                {user.name}
+              </span>
+            )}
+          </Link>
+        </TooltipTrigger>
+        <TooltipContent side="top">
+          <p>Your Profile</p>
+        </TooltipContent>
+      </Tooltip>
       {open && (
         <Link
           to="/login"
