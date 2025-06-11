@@ -10,7 +10,7 @@ const GroupSizeSelector = () => {
     dispatch({ type: 'SET_GROUP_SIZE', payload: size });
   };
 
-  if (state.destinationType !== 'domestic' || state.tripType !== 'group') {
+  if (state.tripType !== 'group') {
     return null;
   }
 
