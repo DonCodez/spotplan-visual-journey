@@ -37,6 +37,7 @@ export interface TripCreationState {
   selectedDay: string | null;
   activeMealSlot: string | null;
   accommodations: Hotel[];
+  isAccommodationModalOpen: boolean;
   
   // Backend Integration: Add these fields when implementing API
   // isLoading?: boolean;
@@ -60,6 +61,9 @@ type TripCreationAction =
   | { type: 'SET_ACTIVE_MEAL_SLOT'; payload: string | null }
   | { type: 'UPDATE_TIME_SLOT'; payload: { date: string; slotId: string; item: any } }
   | { type: 'ADD_ACCOMMODATION'; payload: Hotel }
+  | { type: 'OPEN_ACCOMMODATION_MODAL' }
+  | { type: 'CLOSE_ACCOMMODATION_MODAL' }
+  | { type: 'ADD_ITEM_TO_SCHEDULE'; payload: { dayKey: string; timeSlotId: string; item: any; startTime: string; endTime: string } }
   | { type: 'RESET' };
   // Backend Integration: Add these actions when implementing API
   // | { type: 'SET_LOADING'; payload: boolean }
@@ -114,6 +118,7 @@ const initialState: TripCreationState = {
   selectedDay: null,
   activeMealSlot: null,
   accommodations: [],
+  isAccommodationModalOpen: false,
 };
 
 const tripCreationReducer = (state: TripCreationState, action: TripCreationAction): TripCreationState => {
@@ -167,6 +172,38 @@ const tripCreationReducer = (state: TripCreationState, action: TripCreationActio
       return { ...state, dailySchedules: updatedSchedules };
     case 'ADD_ACCOMMODATION':
       return { ...state, accommodations: [...state.accommodations, action.payload] };
+    case 'OPEN_ACCOMMODATION_MODAL':
+      return { ...state, isAccommodationModalOpen: true };
+    case 'CLOSE_ACCOMMODATION_MODAL':
+      return { ...state, isAccommodationModalOpen: false };
+    case 'ADD_ITEM_TO_SCHEDULE':
+      const { dayKey, timeSlotId, item: scheduleItem, startTime, endTime } = action.payload;
+      const updatedDailySchedules = { ...state.dailySchedules };
+      const targetDaySchedule = updatedDailySchedules[dayKey];
+      if (targetDaySchedule) {
+        // Find existing slot or create new one
+        const existingSlotIndex = targetDaySchedule.timeSlots.findIndex(slot => slot.id === timeSlotId);
+        if (existingSlotIndex >= 0) {
+          targetDaySchedule.timeSlots[existingSlotIndex] = {
+            ...targetDaySchedule.timeSlots[existingSlotIndex],
+            item: scheduleItem,
+            startTime,
+            endTime,
+            type: scheduleItem.type || 'activity'
+          };
+        } else {
+          // Create new slot
+          targetDaySchedule.timeSlots.push({
+            id: timeSlotId,
+            startTime,
+            endTime,
+            type: scheduleItem.type || 'activity',
+            item: scheduleItem,
+            isEditable: true
+          });
+        }
+      }
+      return { ...state, dailySchedules: updatedDailySchedules };
     case 'RESET':
       return initialState;
     default:

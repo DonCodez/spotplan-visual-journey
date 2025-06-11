@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { TripCreationProvider, useTripCreation } from '@/contexts/TripCreationContext';
+import { useTripCreation } from '@/contexts/TripCreationContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import TripCreationCloseButton from '@/components/trip-creation/TripCreationCloseButton';
@@ -14,7 +14,7 @@ import PlacesSuggestionPanel from '@/components/trip-creation/PlacesSuggestionPa
 import ScheduleCanvas from '@/components/trip-creation/ScheduleCanvas';
 import AccommodationModal from '@/components/trip-creation/AccommodationModal';
 
-const CreateTripScheduleContent = () => {
+const CreateTripSchedulePage = () => {
   const { state, dispatch } = useTripCreation();
   const navigate = useNavigate();
 
@@ -29,6 +29,7 @@ const CreateTripScheduleContent = () => {
   // Redirect to destination page if no dates are selected
   useEffect(() => {
     if (state.tripDates.length === 0) {
+      console.log('No trip dates found, redirecting to destination page');
       navigate('/create-trip/destination');
     }
   }, [state.tripDates.length, navigate]);
@@ -104,14 +105,6 @@ const CreateTripScheduleContent = () => {
         </motion.div>
       </div>
     </div>
-  );
-};
-
-const CreateTripSchedulePage = () => {
-  return (
-    <TripCreationProvider>
-      <CreateTripScheduleContent />
-    </TripCreationProvider>
   );
 };
 

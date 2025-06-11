@@ -3,7 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { TripCreationProvider, useTripCreation } from '@/contexts/TripCreationContext';
+import { useTripCreation } from '@/contexts/TripCreationContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import DestinationHeader from '@/components/trip-creation/DestinationHeader';
@@ -11,7 +11,7 @@ import DestinationInputPanel from '@/components/trip-creation/DestinationInputPa
 import DestinationMapPanel from '@/components/trip-creation/DestinationMapPanel';
 import TripCreationCloseButton from '@/components/trip-creation/TripCreationCloseButton';
 
-const CreateTripDestinationContent = () => {
+const CreateTripDestinationPage = () => {
   const { state } = useTripCreation();
   const navigate = useNavigate();
 
@@ -84,14 +84,6 @@ const CreateTripDestinationContent = () => {
         </motion.div>
       </div>
     </div>
-  );
-};
-
-const CreateTripDestinationPage = () => {
-  return (
-    <TripCreationProvider>
-      <CreateTripDestinationContent />
-    </TripCreationProvider>
   );
 };
 
