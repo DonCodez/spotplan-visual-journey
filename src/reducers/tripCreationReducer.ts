@@ -1,6 +1,6 @@
 
 import { TripCreationState, TripCreationAction } from '@/types/tripCreation';
-import { DaySchedule } from '@/types/schedule';
+import { DaySchedule, TimeSlot } from '@/types/schedule';
 import { generateTimeSlots } from '@/utils/scheduleUtils';
 
 export const initialState: TripCreationState = {
@@ -81,12 +81,13 @@ export const tripCreationReducer = (state: TripCreationState, action: TripCreati
         // Remove any existing slot with the same ID
         targetDaySchedule.timeSlots = targetDaySchedule.timeSlots.filter(slot => slot.id !== timeSlotId);
         
-        // Add new slot
-        const newSlot = {
+        // Add new slot with proper type
+        const slotType: TimeSlot['type'] = scheduleItem?.type === 'restaurant' ? 'meal' : 'activity';
+        const newSlot: TimeSlot = {
           id: timeSlotId,
           startTime,
           endTime,
-          type: scheduleItem?.type === 'restaurant' ? 'meal' : 'activity',
+          type: slotType,
           item: scheduleItem,
           isEditable: true,
           duration: scheduleItem?.duration || 60
