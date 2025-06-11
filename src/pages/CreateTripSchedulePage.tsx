@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -68,19 +67,6 @@ const CreateTripSchedulePage = () => {
       <div className="container mx-auto px-6 py-8">
         <ScheduleHeader />
         
-        {/* Add Accommodation Button */}
-        <div className="mb-6 flex justify-center">
-          <Button
-            id="add-accommodation-button"
-            onClick={handleAddAccommodation}
-            variant="outline"
-            className="bg-white hover:bg-gray-50 border-gray-300 text-gray-700 px-6 py-3 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
-          >
-            <Hotel className="h-5 w-5 mr-2" />
-            Add Accommodation
-          </Button>
-        </div>
-        
         <DragDropProvider>
           <DayNavigation />
           
@@ -95,6 +81,24 @@ const CreateTripSchedulePage = () => {
         </DragDropProvider>
 
         <AccommodationModal />
+
+        {/* Floating Add Accommodation Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="fixed bottom-6 left-6 z-20"
+        >
+          <Button
+            id="add-accommodation-button"
+            onClick={handleAddAccommodation}
+            size="default"
+            className="h-12 px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-white hover:bg-gray-50 text-green-600 border border-green-200 hover:border-green-300"
+          >
+            <Hotel className="h-5 w-5 mr-2" />
+            Add Accommodation
+          </Button>
+        </motion.div>
 
         {/* Sticky CTA Button */}
         <motion.div
