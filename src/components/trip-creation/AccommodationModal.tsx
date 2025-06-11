@@ -1,183 +1,452 @@
 
 import React, { useState } from 'react';
+import { X, Star, MapPin, Wifi, Car, Coffee, Utensils, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Hotel, Star, MapPin } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Hotel as HotelType } from '@/types/schedule';
 import { useTripCreation } from '@/contexts/TripCreationContext';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Checkbox } from '@/components/ui/checkbox';
+import { cn } from '@/lib/utils';
+
+interface Hotel {
+  id: string;
+  name: string;
+  rating: number;
+  location: string;
+  pricePerNight: number;
+  amenities: string[];
+  images: string[];
+  description: string;
+  bookingUrl: string;
+}
+
+interface StayDetails {
+  hotelId: string;
+  selectedDays: string[];
+  checkinTime: string;
+  checkoutTime: string;
+  hasBreakfast: boolean;
+  breakfastTimeStart: string;
+  breakfastTimeEnd: string;
+}
 
 const AccommodationModal = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { dispatch } = useTripCreation();
+  const { state, dispatch } = useTripCreation();
+  const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
+  const [visitedBookingPages, setVisitedBookingPages] = useState<Set<string>>(new Set());
+  const [showStayDetailsModal, setShowStayDetailsModal] = useState(false);
+  const [stayDetails, setStayDetails] = useState<StayDetails>({
+    hotelId: '',
+    selectedDays: [],
+    checkinTime: '15:00',
+    checkoutTime: '11:00',
+    hasBreakfast: false,
+    breakfastTimeStart: '08:00',
+    breakfastTimeEnd: '09:00'
+  });
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   // Backend Integration: Mock hotel data - replace with actual API
-  const mockHotels: HotelType[] = [
+  const mockHotels: Hotel[] = [
     {
       id: 'hotel-1',
-      title: 'The Plaza Hotel',
-      type: 'hotel',
+      name: 'Grand Plaza Hotel',
       rating: 4.5,
-      stars: 5,
-      thumbnail: '/placeholder.svg',
-      location: 'Central Park South',
-      description: 'Luxury hotel overlooking Central Park'
+      location: 'City Center',
+      pricePerNight: 180,
+      amenities: ['Wifi', 'Parking', 'Breakfast', 'Pool'],
+      images: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80'],
+      description: 'Luxury hotel in the heart of the city with modern amenities.',
+      bookingUrl: 'https://booking.com/hotel/grand-plaza'
     },
     {
       id: 'hotel-2',
-      title: 'Pod Hotel Brooklyn',
-      type: 'hotel',
+      name: 'Boutique Garden Inn',
       rating: 4.2,
-      stars: 3,
-      thumbnail: '/placeholder.svg',
-      location: 'Williamsburg',
-      description: 'Modern boutique hotel in trendy neighborhood'
-    },
-    {
-      id: 'hotel-3',
-      title: 'The High Line Hotel',
-      type: 'hotel',
-      rating: 4.3,
-      stars: 4,
-      thumbnail: '/placeholder.svg',
-      location: 'Chelsea',
-      description: 'Historic hotel near the High Line park'
+      location: 'Historic District',
+      pricePerNight: 150,
+      amenities: ['Wifi', 'Restaurant', 'Garden'],
+      images: ['https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&q=80'],
+      description: 'Charming boutique hotel with beautiful garden views.',
+      bookingUrl: 'https://booking.com/hotel/boutique-garden'
     }
   ];
 
-  const handleAddHotel = (hotel: HotelType) => {
-    dispatch({ type: 'ADD_ACCOMMODATION', payload: hotel });
-    setIsOpen(false);
+  // Backend Integration: This will be replaced with actual hotel search API
+  // GET /api/hotels?destination={destination}&checkin={date}&checkout={date}
+  const hotels = mockHotels;
+
+  const amenityIcons = {
+    'Wifi': Wifi,
+    'Parking': Car,
+    'Breakfast': Coffee,
+    'Restaurant': Utensils,
+    'Pool': '🏊‍♀️',
+    'Garden': '🌿'
   };
+
+  const handleVisitBookingPage = (hotel: Hotel) => {
+    // Backend Integration: Track booking page visits
+    // POST /api/hotels/{hotel.id}/track-visit
+    window.open(hotel.bookingUrl, '_blank');
+    setVisitedBookingPages(prev => new Set([...prev, hotel.id]));
+  };
+
+  const handleAddToSchedule = (hotel: Hotel) => {
+    setSelectedHotel(hotel);
+    setStayDetails(prev => ({ ...prev, hotelId: hotel.id, selectedDays: [] }));
+    setShowStayDetailsModal(true);
+  };
+
+  const handleStayDetailsSubmit = () => {
+    if (!selectedHotel || stayDetails.selectedDays.length === 0) return;
+
+    // Backend Integration: Save accommodation to user's trip
+    // POST /api/trips/{tripId}/accommodations
+    // Body: { hotelId, checkinDate, checkoutDate, checkinTime, checkoutTime, hasBreakfast, breakfastDetails }
+
+    // Add accommodation to schedule for selected days
+    const accommodationItem = {
+      id: `accommodation-${selectedHotel.id}-${Date.now()}`,
+      title: selectedHotel.name,
+      type: 'hotel' as const,
+      rating: selectedHotel.rating,
+      thumbnail: selectedHotel.images[0],
+      description: selectedHotel.description,
+    };
+
+    // Add accommodation to each selected day
+    stayDetails.selectedDays.forEach(dayKey => {
+      // Add check-in on first day, check-out on last day, and accommodation for all days
+      const isFirstDay = dayKey === stayDetails.selectedDays[0];
+      const isLastDay = dayKey === stayDetails.selectedDays[stayDetails.selectedDays.length - 1];
+
+      // Add check-in time slot on first day
+      if (isFirstDay) {
+        dispatch({
+          type: 'ADD_ITEM_TO_SCHEDULE',
+          payload: {
+            dayKey,
+            timeSlotId: `checkin-${selectedHotel.id}-${dayKey}`,
+            item: {
+              ...accommodationItem,
+              id: `checkin-${selectedHotel.id}-${dayKey}`,
+              title: `Check-in: ${selectedHotel.name}`,
+            },
+            startTime: stayDetails.checkinTime,
+            endTime: stayDetails.checkinTime,
+          },
+        });
+      }
+
+      // Add check-out time slot on last day
+      if (isLastDay) {
+        dispatch({
+          type: 'ADD_ITEM_TO_SCHEDULE',
+          payload: {
+            dayKey,
+            timeSlotId: `checkout-${selectedHotel.id}-${dayKey}`,
+            item: {
+              ...accommodationItem,
+              id: `checkout-${selectedHotel.id}-${dayKey}`,
+              title: `Check-out: ${selectedHotel.name}`,
+            },
+            startTime: stayDetails.checkoutTime,
+            endTime: stayDetails.checkoutTime,
+          },
+        });
+      }
+
+      // Add breakfast if enabled
+      if (stayDetails.hasBreakfast) {
+        dispatch({
+          type: 'ADD_ITEM_TO_SCHEDULE',
+          payload: {
+            dayKey,
+            timeSlotId: `breakfast-${selectedHotel.id}-${dayKey}`,
+            item: {
+              id: `breakfast-${selectedHotel.id}-${dayKey}`,
+              title: `Breakfast at ${selectedHotel.name}`,
+              type: 'restaurant' as const,
+              rating: selectedHotel.rating,
+              thumbnail: selectedHotel.images[0],
+            },
+            startTime: stayDetails.breakfastTimeStart,
+            endTime: stayDetails.breakfastTimeEnd,
+          },
+        });
+      }
+    });
+
+    // Show success message
+    setShowSuccessMessage(true);
+    setTimeout(() => setShowSuccessMessage(false), 3000);
+
+    // Close modals
+    setShowStayDetailsModal(false);
+    dispatch({ type: 'CLOSE_ACCOMMODATION_MODAL' });
+  };
+
+  const formatDayLabel = (dateKey: string) => {
+    const date = new Date(dateKey);
+    const dayNumber = state.tripDates.findIndex(tripDate => 
+      tripDate.toISOString().split('T')[0] === dateKey
+    ) + 1;
+    return `Day ${dayNumber} - ${date.toLocaleDateString('en-US', { 
+      weekday: 'short', 
+      month: 'short', 
+      day: 'numeric' 
+    })}`;
+  };
+
+  if (!state.isAccommodationModalOpen) return null;
 
   return (
     <>
-      {/* Trigger Button */}
-      <div className="fixed bottom-6 left-6 z-20">
-        <Button
-          id="open-hotel-popup-button"
-          onClick={() => setIsOpen(true)}
-          variant="outline"
-          size="lg"
-          className="h-14 px-6 rounded-full shadow-lg bg-white hover:bg-gray-50 border-2 border-gray-200"
-        >
-          <Hotel className="mr-2 h-5 w-5" />
-          + Add Accommodation
-        </Button>
-      </div>
+      <Dialog open={state.isAccommodationModalOpen} onOpenChange={() => dispatch({ type: 'CLOSE_ACCOMMODATION_MODAL' })}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold">Choose Your Accommodation</DialogTitle>
+          </DialogHeader>
 
-      {/* Modal */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center"
-          >
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-              onClick={() => setIsOpen(false)}
-            />
-            
-            {/* Modal Content */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden"
-            >
-              {/* Header */}
-              <div className="p-6 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Hotel className="h-6 w-6 text-spot-primary" />
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      Select Accommodation
-                    </h2>
-                  </div>
-                  <button
-                    onClick={() => setIsOpen(false)}
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    <X className="h-6 w-6" />
-                  </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+            {hotels.map((hotel) => (
+              <div key={hotel.id} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                <div className="relative h-48">
+                  <img
+                    src={hotel.images[0]}
+                    alt={hotel.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <p className="text-sm text-gray-600 mt-2">
-                  Choose a hotel for your trip
-                </p>
-              </div>
-
-              {/* Hotel List */}
-              <div className="p-6 space-y-4 max-h-[500px] overflow-y-auto">
-                {mockHotels.map((hotel) => (
-                  <div
-                    key={hotel.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:border-spot-primary/50 hover:shadow-md transition-all duration-200"
-                  >
-                    <div className="flex gap-4">
-                      {/* Hotel Image */}
-                      <div className="flex-shrink-0">
-                        <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden">
-                          <img
-                            src={hotel.thumbnail || '/placeholder.svg'}
-                            alt={hotel.title}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </div>
-                      
-                      {/* Hotel Info */}
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
-                          <h3 className="font-semibold text-gray-900">
-                            {hotel.title}
-                          </h3>
-                          <div className="flex items-center gap-1">
-                            {Array.from({ length: hotel.stars }, (_, i) => (
-                              <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                            ))}
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-4 mb-2">
-                          <div className="flex items-center gap-1">
-                            <Star className="h-4 w-4 text-orange-400 fill-current" />
-                            <span className="text-sm text-gray-600">{hotel.rating}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-4 w-4 text-gray-400" />
-                            <span className="text-sm text-gray-600">{hotel.location}</span>
-                          </div>
-                        </div>
-                        
-                        <p className="text-sm text-gray-500 mb-3">
-                          {hotel.description}
-                        </p>
-                        
-                        <Button
-                          onClick={() => handleAddHotel(hotel)}
-                          size="sm"
-                          className="bg-spot-primary hover:bg-spot-primary/90"
-                        >
-                          Add to Schedule
-                        </Button>
-                      </div>
+                
+                <div className="p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-lg font-semibold">{hotel.name}</h3>
+                    <div className="flex items-center gap-1">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span className="text-sm text-gray-600">{hotel.rating}</span>
                     </div>
                   </div>
-                ))}
+                  
+                  <div className="flex items-center gap-1 mb-2">
+                    <MapPin className="h-4 w-4 text-gray-400" />
+                    <span className="text-sm text-gray-600">{hotel.location}</span>
+                  </div>
+                  
+                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">{hotel.description}</p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {hotel.amenities.map((amenity) => {
+                      const IconComponent = amenityIcons[amenity as keyof typeof amenityIcons];
+                      return (
+                        <div key={amenity} className="flex items-center gap-1 text-xs bg-gray-100 px-2 py-1 rounded">
+                          {typeof IconComponent === 'string' ? (
+                            <span>{IconComponent}</span>
+                          ) : IconComponent ? (
+                            <IconComponent className="h-3 w-3" />
+                          ) : null}
+                          <span>{amenity}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-lg font-semibold">${hotel.pricePerNight}/night</span>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    {/* Primary CTA: Book Now */}
+                    <Button
+                      id={`visit-booking-${hotel.id}`}
+                      onClick={() => handleVisitBookingPage(hotel)}
+                      className="w-full bg-spot-primary hover:bg-spot-primary/90 text-white"
+                    >
+                      Book Now
+                    </Button>
+                    
+                    {/* Secondary CTA: Add to Schedule (conditional) */}
+                    <AnimatePresence>
+                      {visitedBookingPages.has(hotel.id) && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <Button
+                            id={`add-to-schedule-${hotel.id}`}
+                            onClick={() => handleAddToSchedule(hotel)}
+                            variant="outline"
+                            className="w-full border-spot-primary text-spot-primary hover:bg-spot-primary/10"
+                          >
+                            Add to Schedule
+                          </Button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Stay Details Modal (Nested) */}
+      <Dialog open={showStayDetailsModal} onOpenChange={setShowStayDetailsModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold">
+              Add {selectedHotel?.name} to Schedule
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-6 mt-4">
+            {/* Stay Duration Selector */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Select Stay Days
+              </label>
+              <div id="stay-days-selector" className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
+                {state.tripDates.map((date) => {
+                  const dateKey = date.toISOString().split('T')[0];
+                  const isSelected = stayDetails.selectedDays.includes(dateKey);
+                  
+                  return (
+                    <div
+                      key={dateKey}
+                      className={cn(
+                        "flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-colors",
+                        isSelected ? "border-spot-primary bg-spot-primary/10" : "border-gray-200 hover:border-gray-300"
+                      )}
+                      onClick={() => {
+                        setStayDetails(prev => ({
+                          ...prev,
+                          selectedDays: isSelected 
+                            ? prev.selectedDays.filter(d => d !== dateKey)
+                            : [...prev.selectedDays, dateKey].sort()
+                        }));
+                      }}
+                    >
+                      <Checkbox checked={isSelected} />
+                      <span className="text-sm">{formatDayLabel(dateKey)}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Check-in/Check-out Times */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Check-in Time
+                </label>
+                <input
+                  id="checkin-time-input"
+                  type="time"
+                  value={stayDetails.checkinTime}
+                  onChange={(e) => setStayDetails(prev => ({ ...prev, checkinTime: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spot-primary focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Check-out Time
+                </label>
+                <input
+                  id="checkout-time-input"
+                  type="time"
+                  value={stayDetails.checkoutTime}
+                  onChange={(e) => setStayDetails(prev => ({ ...prev, checkoutTime: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spot-primary focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            {/* Free Breakfast Toggle */}
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3">
+                <Checkbox
+                  checked={stayDetails.hasBreakfast}
+                  onCheckedChange={(checked) => setStayDetails(prev => ({ ...prev, hasBreakfast: !!checked }))}
+                />
+                <label className="text-sm font-medium text-gray-700">
+                  Does this hotel offer free breakfast?
+                </label>
               </div>
 
-              {/* Backend Integration Note */}
-              <div className="p-4 border-t border-gray-200 bg-gray-50">
-                <p className="text-xs text-gray-500 text-center">
-                  🔄 Hotel data will be fetched from booking APIs when backend is connected
-                </p>
-              </div>
-            </motion.div>
+              {/* Breakfast Time Range (conditional) */}
+              <AnimatePresence>
+                {stayDetails.hasBreakfast && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="grid grid-cols-2 gap-4 pl-6"
+                  >
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Breakfast Start
+                      </label>
+                      <input
+                        id="breakfast-time-range"
+                        type="time"
+                        value={stayDetails.breakfastTimeStart}
+                        onChange={(e) => setStayDetails(prev => ({ ...prev, breakfastTimeStart: e.target.value }))}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spot-primary focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Breakfast End
+                      </label>
+                      <input
+                        type="time"
+                        value={stayDetails.breakfastTimeEnd}
+                        onChange={(e) => setStayDetails(prev => ({ ...prev, breakfastTimeEnd: e.target.value }))}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spot-primary focus:border-transparent"
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex justify-end space-x-3 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setShowStayDetailsModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleStayDetailsSubmit}
+                disabled={stayDetails.selectedDays.length === 0}
+                className="bg-spot-primary hover:bg-spot-primary/90 text-white"
+              >
+                Add to Schedule
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Success Message */}
+      <AnimatePresence>
+        {showSuccessMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-6 right-6 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2"
+          >
+            <span>🏨</span>
+            <span>Added to Schedule</span>
           </motion.div>
         )}
       </AnimatePresence>
