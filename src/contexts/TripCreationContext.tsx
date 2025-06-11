@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 import { TimeSlot, DaySchedule, Place, Restaurant, Hotel } from '@/types/schedule';
 
@@ -100,6 +99,7 @@ const generateTimeSlots = (): TimeSlot[] => {
       endTime,
       type,
       isEditable,
+      duration: 60, // 1 hour default
     });
   }
   
@@ -181,27 +181,22 @@ const tripCreationReducer = (state: TripCreationState, action: TripCreationActio
       const updatedDailySchedules = { ...state.dailySchedules };
       const targetDaySchedule = updatedDailySchedules[dayKey];
       if (targetDaySchedule) {
-        // Find existing slot or create new one
-        const existingSlotIndex = targetDaySchedule.timeSlots.findIndex(slot => slot.id === timeSlotId);
-        if (existingSlotIndex >= 0) {
-          targetDaySchedule.timeSlots[existingSlotIndex] = {
-            ...targetDaySchedule.timeSlots[existingSlotIndex],
-            item: scheduleItem,
-            startTime,
-            endTime,
-            type: scheduleItem.type || 'activity'
-          };
-        } else {
-          // Create new slot
-          targetDaySchedule.timeSlots.push({
-            id: timeSlotId,
-            startTime,
-            endTime,
-            type: scheduleItem.type || 'activity',
-            item: scheduleItem,
-            isEditable: true
-          });
-        }
+        // Remove any existing slot with the same ID
+        targetDaySchedule.timeSlots = targetDaySchedule.timeSlots.filter(slot => slot.id !== timeSlotId);
+        
+        // Add new slot
+        const newSlot: TimeSlot = {
+          id: timeSlotId,
+          startTime,
+          endTime,
+          type: scheduleItem?.type === 'restaurant' ? 'meal' : 'activity',
+          item: scheduleItem,
+          isEditable: true,
+          duration: scheduleItem?.duration || 60
+        };
+        
+        targetDaySchedule.timeSlots.push(newSlot);
+        targetDaySchedule.timeSlots.sort((a, b) => a.startTime.localeCompare(b.startTime));
       }
       return { ...state, dailySchedules: updatedDailySchedules };
     case 'RESET':
@@ -285,4 +280,13 @@ export const useTripCreation = () => {
     throw new Error('useTripCreation must be used within a TripCreationProvider');
   }
   return context;
+};
+
+export default {
+  generateTimeSlots,
+  initialState,
+  tripCreationReducer,
+  TripCreationContext,
+  TripCreationProvider,
+  useTripCreation,
 };

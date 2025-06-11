@@ -2,10 +2,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useTripCreation } from '@/contexts/TripCreationContext';
-import DayColumn from './DayColumn';
+import TimeGrid from './TimeGrid';
 
 const ScheduleCanvas = () => {
-  const { state } = useTripCreation();
+  const { state, dispatch } = useTripCreation();
 
   if (state.tripDates.length === 0) {
     return (
@@ -37,30 +37,58 @@ const ScheduleCanvas = () => {
   ) + 1;
   const daySchedule = state.dailySchedules[state.selectedDay];
 
+  const handleUpdateTimeSlot = (slotId: string, item: any, startTime?: string, endTime?: string) => {
+    if (startTime && endTime) {
+      // Update existing slot with new times
+      dispatch({
+        type: 'ADD_ITEM_TO_SCHEDULE',
+        payload: {
+          dayKey: state.selectedDay!,
+          timeSlotId: slotId,
+          item,
+          startTime,
+          endTime,
+        },
+      });
+    } else {
+      // Remove item or update without time change
+      dispatch({
+        type: 'UPDATE_TIME_SLOT',
+        payload: {
+          date: state.selectedDay!,
+          slotId,
+          item,
+        },
+      });
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, delay: 0.4 }}
-      className="bg-white rounded-lg border border-gray-200 shadow-sm"
+      className="h-full"
     >
-      <div className="p-4 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900">Daily Schedule - Day {dayNumber}</h3>
-        <p className="text-sm text-gray-600">
-          {selectedDate.toLocaleDateString('en-US', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-          })}
-        </p>
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm mb-4">
+        <div className="p-4 border-b border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900">Daily Schedule - Day {dayNumber}</h3>
+          <p className="text-sm text-gray-600">
+            {selectedDate.toLocaleDateString('en-US', { 
+              weekday: 'long', 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}
+          </p>
+        </div>
       </div>
       
-      <div className="p-4">
-        <DayColumn
+      <div className="h-[600px] overflow-y-auto">
+        <TimeGrid
           date={state.selectedDay}
-          dayNumber={dayNumber}
-          schedule={daySchedule}
+          timeSlots={daySchedule?.timeSlots || []}
+          onUpdateTimeSlot={handleUpdateTimeSlot}
         />
       </div>
     </motion.div>

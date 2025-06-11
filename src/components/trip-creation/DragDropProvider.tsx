@@ -14,6 +14,7 @@ import {
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useTripCreation } from '@/contexts/TripCreationContext';
 import { ScheduleItem } from '@/types/schedule';
+import { positionToTime, snapToGrid, timeToPosition } from '@/utils/timeUtils';
 import PlaceCard from './PlaceCard';
 
 interface DragDropProviderProps {
@@ -53,7 +54,34 @@ const DragDropProvider = ({ children }: DragDropProviderProps) => {
       const item = active.data.current.item as ScheduleItem;
       const dropTarget = over.data.current;
       
-      if (dropTarget?.date && dropTarget?.slotId) {
+      // Handle drop on time grid
+      if (dropTarget?.type === 'time-grid' && dropTarget?.date) {
+        const rect = over.rect;
+        const y = event.delta.y + (active.rect.current.translated?.top || 0) - (rect?.top || 0);
+        const snappedPosition = snapToGrid(Math.max(0, y), 30); // Snap to 30-minute intervals
+        const startTime = positionToTime(snappedPosition, 6);
+        
+        // Default duration based on item type
+        const defaultDuration = item.duration || (item.type === 'restaurant' ? 90 : 120);
+        const [startHours, startMinutes] = startTime.split(':').map(Number);
+        const endMinutes = startHours * 60 + startMinutes + defaultDuration;
+        const endHours = Math.floor(endMinutes / 60);
+        const endMins = endMinutes % 60;
+        const endTime = `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`;
+        
+        dispatch({
+          type: 'ADD_ITEM_TO_SCHEDULE',
+          payload: {
+            dayKey: dropTarget.date,
+            timeSlotId: `slot-${Date.now()}`,
+            item,
+            startTime,
+            endTime,
+          },
+        });
+      }
+      // Handle drop on existing time slot (legacy support)
+      else if (dropTarget?.date && dropTarget?.slotId) {
         dispatch({
           type: 'UPDATE_TIME_SLOT',
           payload: {

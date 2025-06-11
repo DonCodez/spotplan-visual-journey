@@ -6,6 +6,7 @@ export interface TimeSlot {
   type: 'activity' | 'meal' | 'accommodation' | 'free';
   item?: ScheduleItem;
   isEditable: boolean;
+  duration?: number; // Duration in minutes
 }
 
 export interface ScheduleItem {
@@ -17,6 +18,7 @@ export interface ScheduleItem {
   distance?: string;
   priceLevel?: number;
   description?: string;
+  duration?: number; // Default duration in minutes
   // Backend Integration: Ready for Google Places API data
   // placeId?: string; // Google Places ID
   // coordinates?: { lat: number; lng: number };
