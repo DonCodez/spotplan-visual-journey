@@ -1,10 +1,21 @@
 
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 
+// Backend Integration Notes for bolt.new:
+// 1. This context manages trip creation state on the frontend
+// 2. When ready to connect backend, add API calls to:
+//    - POST /api/trips - to create new trip
+//    - POST /api/trips/{id}/members - to add group members
+//    - GET /api/countries - to fetch countries list
+// 3. Consider adding validation schema with Zod for API requests
+// 4. Add loading states and error handling for API calls
+
 export interface GroupMember {
   id: string;
   name: string;
   email: string;
+  // Backend Note: Add userId field when user authentication is implemented
+  // userId?: string;
 }
 
 export interface TripCreationState {
@@ -14,6 +25,10 @@ export interface TripCreationState {
   groupSize: number;
   groupMembers: GroupMember[];
   currentStep: number;
+  // Backend Integration: Add these fields when implementing API
+  // isLoading?: boolean;
+  // error?: string | null;
+  // tripId?: string; // Will be set when trip is created on backend
 }
 
 type TripCreationAction =
@@ -24,6 +39,10 @@ type TripCreationAction =
   | { type: 'SET_GROUP_MEMBERS'; payload: GroupMember[] }
   | { type: 'SET_CURRENT_STEP'; payload: number }
   | { type: 'RESET' };
+  // Backend Integration: Add these actions when implementing API
+  // | { type: 'SET_LOADING'; payload: boolean }
+  // | { type: 'SET_ERROR'; payload: string | null }
+  // | { type: 'SET_TRIP_ID'; payload: string }
 
 const initialState: TripCreationState = {
   tripType: null,
@@ -63,12 +82,40 @@ const tripCreationReducer = (state: TripCreationState, action: TripCreationActio
 interface TripCreationContextType {
   state: TripCreationState;
   dispatch: React.Dispatch<TripCreationAction>;
+  // Backend Integration: Add these methods when implementing API
+  // createTrip: () => Promise<void>;
+  // updateTrip: () => Promise<void>;
+  // saveGroupMembers: () => Promise<void>;
 }
 
 const TripCreationContext = createContext<TripCreationContextType | undefined>(undefined);
 
 export const TripCreationProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(tripCreationReducer, initialState);
+
+  // Backend Integration: Implement these functions when connecting to API
+  // const createTrip = async () => {
+  //   try {
+  //     dispatch({ type: 'SET_LOADING', payload: true });
+  //     const response = await fetch('/api/trips', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({
+  //         tripType: state.tripType,
+  //         destinationType: state.destinationType,
+  //         selectedCountry: state.selectedCountry,
+  //         groupSize: state.groupSize,
+  //         groupMembers: state.groupMembers
+  //       })
+  //     });
+  //     const data = await response.json();
+  //     dispatch({ type: 'SET_TRIP_ID', payload: data.id });
+  //   } catch (error) {
+  //     dispatch({ type: 'SET_ERROR', payload: error.message });
+  //   } finally {
+  //     dispatch({ type: 'SET_LOADING', payload: false });
+  //   }
+  // };
 
   return (
     <TripCreationContext.Provider value={{ state, dispatch }}>

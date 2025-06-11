@@ -15,6 +15,7 @@ const CreateTripDestinationContent = () => {
   const { state } = useTripCreation();
   const navigate = useNavigate();
 
+  // Backend Integration: Validation logic for proceeding to next step
   const canProceed = state.tripType && state.destinationType && (
     state.destinationType === 'domestic' || 
     (state.destinationType === 'international' && state.selectedCountry)
@@ -25,9 +26,19 @@ const CreateTripDestinationContent = () => {
     ))
   );
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (canProceed) {
-      // TODO: Navigate to schedule builder page
+      // Backend Integration: Save trip data before proceeding
+      // try {
+      //   await createTrip(); // This will call the API to create the trip
+      //   console.log('Trip created successfully with ID:', state.tripId);
+      //   navigate('/create-trip/schedule');
+      // } catch (error) {
+      //   console.error('Failed to create trip:', error);
+      //   // Show error toast or message to user
+      // }
+      
+      // For now, just proceed to next step (remove when backend is connected)
       console.log('Proceeding to schedule builder with state:', state);
       // navigate('/create-trip/schedule');
     }

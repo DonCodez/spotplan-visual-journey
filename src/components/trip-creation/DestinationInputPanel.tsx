@@ -2,10 +2,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import TripTypeToggle from './TripTypeToggle';
+import GroupSizeSelector from './GroupSizeSelector';
 import GroupMembersInput from './GroupMembersInput';
 import DestinationTypeToggle from './DestinationTypeToggle';
 import CountrySelector from './CountrySelector';
-import GroupSizeSelector from './GroupSizeSelector';
 import FlightReminder from './FlightReminder';
 
 const DestinationInputPanel = () => {
@@ -17,10 +17,10 @@ const DestinationInputPanel = () => {
       className="space-y-6 bg-white rounded-lg border border-gray-200 p-6 shadow-sm"
     >
       <TripTypeToggle />
+      <GroupSizeSelector />
       <GroupMembersInput />
       <DestinationTypeToggle />
       <CountrySelector />
-      <GroupSizeSelector />
       <FlightReminder />
     </motion.div>
   );
