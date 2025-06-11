@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -126,13 +125,45 @@ const DayNavigation = () => {
         <span className="text-sm text-gray-500">{state.tripDates.length} days total</span>
       </div>
       
-      {/* Horizontal scroll container with gradient shadows */}
+      {/* Horizontal scroll container with side arrows */}
       <div className="relative mb-4">
         {/* Left gradient shadow */}
         <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
         
         {/* Right gradient shadow */}
         <div className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
+        
+        {/* Left Arrow Button */}
+        {state.tripDates.length > 4 && (
+          <button
+            onClick={scrollLeft}
+            disabled={!canScrollLeft}
+            className={cn(
+              "absolute left-2 top-1/2 transform -translate-y-1/2 z-20 w-8 h-8 rounded-full transition-all duration-200 flex items-center justify-center",
+              canScrollLeft
+                ? "bg-white text-spot-primary hover:bg-spot-primary/10 border border-gray-200 hover:border-spot-primary shadow-sm cursor-pointer"
+                : "bg-gray-100 text-gray-300 cursor-not-allowed"
+            )}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+        )}
+        
+        {/* Right Arrow Button */}
+        {state.tripDates.length > 4 && (
+          <button
+            onClick={scrollRight}
+            disabled={!canScrollRight}
+            className={cn(
+              "absolute right-2 top-1/2 transform -translate-y-1/2 z-20 w-8 h-8 rounded-full transition-all duration-200 flex items-center justify-center",
+              canScrollRight
+                ? "bg-white text-spot-primary hover:bg-spot-primary/10 border border-gray-200 hover:border-spot-primary shadow-sm cursor-pointer"
+                : "bg-gray-100 text-gray-300 cursor-not-allowed"
+            )}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        )}
         
         {/* Scrollable container */}
         <div 
@@ -171,41 +202,6 @@ const DayNavigation = () => {
           })}
         </div>
       </div>
-
-      {/* Arrow Navigation Controls - Below the scroll container */}
-      {state.tripDates.length > 4 && (
-        <div className="flex items-center justify-center mb-3">
-          <div className="flex items-center gap-2 bg-gray-50 rounded-full p-2 border border-gray-200">
-            <button
-              onClick={scrollLeft}
-              disabled={!canScrollLeft}
-              className={cn(
-                "flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200",
-                canScrollLeft
-                  ? "bg-white text-spot-primary hover:bg-spot-primary/10 border border-gray-200 hover:border-spot-primary shadow-sm cursor-pointer"
-                  : "bg-gray-100 text-gray-300 cursor-not-allowed"
-              )}
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            
-            <span className="text-xs text-gray-500 px-2">Navigate</span>
-            
-            <button
-              onClick={scrollRight}
-              disabled={!canScrollRight}
-              className={cn(
-                "flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200",
-                canScrollRight
-                  ? "bg-white text-spot-primary hover:bg-spot-primary/10 border border-gray-200 hover:border-spot-primary shadow-sm cursor-pointer"
-                  : "bg-gray-100 text-gray-300 cursor-not-allowed"
-              )}
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-      )}
       
       {/* Scroll hint for users */}
       {state.tripDates.length > 7 && (
