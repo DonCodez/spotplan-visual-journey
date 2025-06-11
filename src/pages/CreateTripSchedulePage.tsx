@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Hotel } from 'lucide-react';
 import { useTripCreation } from '@/contexts/TripCreationContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -54,8 +54,11 @@ const CreateTripSchedulePage = () => {
       
       // For now, just proceed to next step (remove when backend is connected)
       console.log('Proceeding to expense estimator with schedule:', state.dailySchedules);
-      // navigate('/create-trip/expenses');
     }
+  };
+
+  const handleAddAccommodation = () => {
+    dispatch({ type: 'OPEN_ACCOMMODATION_MODAL' });
   };
 
   return (
@@ -64,6 +67,19 @@ const CreateTripSchedulePage = () => {
       
       <div className="container mx-auto px-6 py-8">
         <ScheduleHeader />
+        
+        {/* Add Accommodation Button */}
+        <div className="mb-6 flex justify-center">
+          <Button
+            id="add-accommodation-button"
+            onClick={handleAddAccommodation}
+            variant="outline"
+            className="bg-white hover:bg-gray-50 border-gray-300 text-gray-700 px-6 py-3 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
+          >
+            <Hotel className="h-5 w-5 mr-2" />
+            Add Accommodation
+          </Button>
+        </div>
         
         <DragDropProvider>
           <DayNavigation />
