@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import TripCreationCloseButton from '@/components/trip-creation/TripCreationCloseButton';
 import ScheduleHeader from '@/components/trip-creation/ScheduleHeader';
 import DragDropProvider from '@/components/trip-creation/DragDropProvider';
+import DayNavigation from '@/components/trip-creation/DayNavigation';
 import PlacesSuggestionPanel from '@/components/trip-creation/PlacesSuggestionPanel';
 import ScheduleCanvas from '@/components/trip-creation/ScheduleCanvas';
 import AccommodationModal from '@/components/trip-creation/AccommodationModal';
@@ -17,25 +18,25 @@ const CreateTripScheduleContent = () => {
   const { state, dispatch } = useTripCreation();
   const navigate = useNavigate();
 
-  // Initialize trip dates if coming from destination page
+  // Set the first day as selected when component mounts
+  useEffect(() => {
+    if (state.tripDates.length > 0 && !state.selectedDay) {
+      const firstDayKey = state.tripDates[0].toISOString().split('T')[0];
+      dispatch({ type: 'SET_SELECTED_DAY', payload: firstDayKey });
+    }
+  }, [state.tripDates, state.selectedDay, dispatch]);
+
+  // Redirect to destination page if no dates are selected
   useEffect(() => {
     if (state.tripDates.length === 0) {
-      // Generate sample dates for demonstration
-      // Backend Integration: Get actual trip dates from previous step
-      const today = new Date();
-      const tripDates = [
-        new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-        new Date(today.getTime() + 8 * 24 * 60 * 60 * 1000), // 8 days from now
-        new Date(today.getTime() + 9 * 24 * 60 * 60 * 1000), // 9 days from now
-      ];
-      dispatch({ type: 'SET_TRIP_DATES', payload: tripDates });
+      navigate('/create-trip/destination');
     }
-  }, [state.tripDates.length, dispatch]);
+  }, [state.tripDates.length, navigate]);
 
   // Backend Integration: Validation logic for proceeding to next step
   const canProceed = state.tripDates.length > 0 && 
     Object.values(state.dailySchedules).some(schedule => 
-      schedule.timeSlots.some(slot => slot.item)
+      schedule?.timeSlots?.some(slot => slot.item)
     );
 
   const handleNext = async () => {
@@ -64,6 +65,8 @@ const CreateTripScheduleContent = () => {
         <ScheduleHeader />
         
         <DragDropProvider>
+          <DayNavigation />
+          
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
             <div className="lg:col-span-4">
               <PlacesSuggestionPanel />

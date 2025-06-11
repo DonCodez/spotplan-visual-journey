@@ -16,15 +16,18 @@ const CreateTripDestinationContent = () => {
   const navigate = useNavigate();
 
   // Backend Integration: Validation logic for proceeding to next step
-  const canProceed = state.tripType && state.destinationType && (
-    state.destinationType === 'domestic' || 
-    (state.destinationType === 'international' && state.selectedCountry)
-  ) && (
-    state.tripType === 'personal' || 
-    (state.tripType === 'group' && state.groupMembers.every(member => 
-      member.name.trim() !== '' && member.email.trim() !== ''
-    ))
-  );
+  const canProceed = state.tripType && 
+    state.destinationType && 
+    state.tripDates.length > 0 &&
+    (
+      state.destinationType === 'domestic' || 
+      (state.destinationType === 'international' && state.selectedCountry)
+    ) && (
+      state.tripType === 'personal' || 
+      (state.tripType === 'group' && state.groupMembers.every(member => 
+        member.name.trim() !== '' && member.email.trim() !== ''
+      ))
+    );
 
   const handleNext = async () => {
     if (canProceed) {

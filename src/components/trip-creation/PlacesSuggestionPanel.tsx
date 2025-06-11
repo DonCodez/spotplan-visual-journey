@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, MapPin, UtensilsCrossed, Calendar } from 'lucide-react';
+import { Search, MapPin, UtensilsCrossed } from 'lucide-react';
 import { useTripCreation } from '@/contexts/TripCreationContext';
 import { cn } from '@/lib/utils';
 import PlaceCard from './PlaceCard';
@@ -89,12 +89,6 @@ const PlacesSuggestionPanel = () => {
     (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const handleDaySelect = (date: string) => {
-    dispatch({ type: 'SET_SELECTED_DAY', payload: date });
-    // Backend Integration: Fetch places/restaurants for selected day
-    // fetchPlaces(date); or fetchRestaurants(date, activeMealSlot);
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -106,31 +100,6 @@ const PlacesSuggestionPanel = () => {
       <div className="p-4 border-b border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Suggestions</h3>
         
-        {/* Day Selector */}
-        <div className="flex gap-2 mb-4 overflow-x-auto">
-          {state.tripDates.map((date, index) => {
-            const dateKey = date.toISOString().split('T')[0];
-            const isSelected = state.selectedDay === dateKey;
-            return (
-              <button
-                key={dateKey}
-                onClick={() => handleDaySelect(dateKey)}
-                className={cn(
-                  "flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all duration-200 whitespace-nowrap",
-                  isSelected
-                    ? "border-spot-primary bg-spot-primary/10 text-spot-primary"
-                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
-                )}
-              >
-                <Calendar className="h-4 w-4" />
-                <span className="text-sm font-medium">
-                  Day {index + 1}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
         {/* Tab Toggle */}
         <div className="grid grid-cols-2 gap-2 mb-4">
           <button

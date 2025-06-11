@@ -19,6 +19,24 @@ const ScheduleCanvas = () => {
     );
   }
 
+  if (!state.selectedDay) {
+    return (
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-8">
+        <div className="text-center text-gray-500">
+          <div className="text-4xl mb-4">👆</div>
+          <p className="text-lg font-medium mb-2">Select a day above</p>
+          <p className="text-sm">Choose a day to start building your schedule</p>
+        </div>
+      </div>
+    );
+  }
+
+  const selectedDate = new Date(state.selectedDay);
+  const dayNumber = state.tripDates.findIndex(date => 
+    date.toISOString().split('T')[0] === state.selectedDay
+  ) + 1;
+  const daySchedule = state.dailySchedules[state.selectedDay];
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -27,26 +45,23 @@ const ScheduleCanvas = () => {
       className="bg-white rounded-lg border border-gray-200 shadow-sm"
     >
       <div className="p-4 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900">Daily Schedule</h3>
-        <p className="text-sm text-gray-600">Drop places into time slots to build your itinerary</p>
+        <h3 className="text-lg font-semibold text-gray-900">Daily Schedule - Day {dayNumber}</h3>
+        <p className="text-sm text-gray-600">
+          {selectedDate.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          })}
+        </p>
       </div>
       
       <div className="p-4">
-        <div className="grid gap-6" style={{ gridTemplateColumns: `repeat(${state.tripDates.length}, 1fr)` }}>
-          {state.tripDates.map((date, index) => {
-            const dateKey = date.toISOString().split('T')[0];
-            const daySchedule = state.dailySchedules[dateKey];
-            
-            return (
-              <DayColumn
-                key={dateKey}
-                date={dateKey}
-                dayNumber={index + 1}
-                schedule={daySchedule}
-              />
-            );
-          })}
-        </div>
+        <DayColumn
+          date={state.selectedDay}
+          dayNumber={dayNumber}
+          schedule={daySchedule}
+        />
       </div>
     </motion.div>
   );
