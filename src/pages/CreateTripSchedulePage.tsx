@@ -79,20 +79,6 @@ const CreateTripScheduleContent = () => {
 
         <AccommodationModal />
 
-        {/* Add Accommodation Button */}
-        <div className="fixed bottom-6 left-6 z-20">
-          <Button
-            id="open-hotel-popup-button"
-            onClick={() => dispatch({ type: 'OPEN_ACCOMMODATION_MODAL' })}
-            variant="outline"
-            size="lg"
-            className="h-14 px-6 rounded-full shadow-lg bg-white hover:bg-gray-50 border-2 border-gray-200"
-          >
-            <span className="mr-2">🏨</span>
-            + Add Accommodation
-          </Button>
-        </div>
-
         {/* Sticky CTA Button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

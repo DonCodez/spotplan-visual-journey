@@ -38,9 +38,6 @@ export interface TripCreationState {
   activeMealSlot: string | null;
   accommodations: Hotel[];
   
-  // Accommodation Modal State
-  isAccommodationModalOpen: boolean;
-  
   // Backend Integration: Add these fields when implementing API
   // isLoading?: boolean;
   // error?: string | null;
@@ -63,9 +60,6 @@ type TripCreationAction =
   | { type: 'SET_ACTIVE_MEAL_SLOT'; payload: string | null }
   | { type: 'UPDATE_TIME_SLOT'; payload: { date: string; slotId: string; item: any } }
   | { type: 'ADD_ACCOMMODATION'; payload: Hotel }
-  | { type: 'OPEN_ACCOMMODATION_MODAL' }
-  | { type: 'CLOSE_ACCOMMODATION_MODAL' }
-  | { type: 'ADD_ITEM_TO_SCHEDULE'; payload: { dayKey: string; timeSlotId: string; item: any; startTime: string; endTime: string } }
   | { type: 'RESET' };
   // Backend Integration: Add these actions when implementing API
   // | { type: 'SET_LOADING'; payload: boolean }
@@ -120,7 +114,6 @@ const initialState: TripCreationState = {
   selectedDay: null,
   activeMealSlot: null,
   accommodations: [],
-  isAccommodationModalOpen: false,
 };
 
 const tripCreationReducer = (state: TripCreationState, action: TripCreationAction): TripCreationState => {
@@ -162,7 +155,7 @@ const tripCreationReducer = (state: TripCreationState, action: TripCreationActio
       return { ...state, selectedDay: action.payload };
     case 'SET_ACTIVE_MEAL_SLOT':
       return { ...state, activeMealSlot: action.payload };
-    case 'UPDATE_TIME_SLOT': {
+    case 'UPDATE_TIME_SLOT':
       const { date, slotId, item } = action.payload;
       const updatedSchedules = { ...state.dailySchedules };
       const daySchedule = updatedSchedules[date];
@@ -172,46 +165,8 @@ const tripCreationReducer = (state: TripCreationState, action: TripCreationActio
         );
       }
       return { ...state, dailySchedules: updatedSchedules };
-    }
     case 'ADD_ACCOMMODATION':
       return { ...state, accommodations: [...state.accommodations, action.payload] };
-    case 'OPEN_ACCOMMODATION_MODAL':
-      return { ...state, isAccommodationModalOpen: true };
-    case 'CLOSE_ACCOMMODATION_MODAL':
-      return { ...state, isAccommodationModalOpen: false };
-    case 'ADD_ITEM_TO_SCHEDULE': {
-      const { dayKey, timeSlotId, item, startTime, endTime } = action.payload;
-      const scheduleUpdates = { ...state.dailySchedules };
-      const targetDaySchedule = scheduleUpdates[dayKey];
-      if (targetDaySchedule) {
-        // Find or create time slot for the specific time
-        const existingSlotIndex = targetDaySchedule.timeSlots.findIndex(slot => 
-          slot.startTime === startTime && slot.endTime === endTime
-        );
-        
-        if (existingSlotIndex >= 0) {
-          // Update existing slot
-          targetDaySchedule.timeSlots[existingSlotIndex] = {
-            ...targetDaySchedule.timeSlots[existingSlotIndex],
-            item,
-            type: item ? 'activity' : 'free'
-          };
-        } else {
-          // Add new slot
-          targetDaySchedule.timeSlots.push({
-            id: timeSlotId,
-            startTime,
-            endTime,
-            type: 'activity',
-            item,
-            isEditable: true
-          });
-          // Sort slots by time
-          targetDaySchedule.timeSlots.sort((a, b) => a.startTime.localeCompare(b.startTime));
-        }
-      }
-      return { ...state, dailySchedules: scheduleUpdates };
-    }
     case 'RESET':
       return initialState;
     default:
@@ -293,9 +248,4 @@ export const useTripCreation = () => {
     throw new Error('useTripCreation must be used within a TripCreationProvider');
   }
   return context;
-};
-
-export default {
-  TripCreationProvider,
-  useTripCreation,
 };
