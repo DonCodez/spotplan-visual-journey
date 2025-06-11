@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { X, Star, MapPin, Wifi, Car, Coffee, Utensils, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -454,5 +455,3 @@ const AccommodationModal = () => {
 };
 
 export default AccommodationModal;
-
-}
