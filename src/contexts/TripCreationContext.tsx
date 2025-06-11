@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 import { TimeSlot, DaySchedule, Place, Restaurant, Hotel } from '@/types/schedule';
 
@@ -161,7 +162,7 @@ const tripCreationReducer = (state: TripCreationState, action: TripCreationActio
       return { ...state, selectedDay: action.payload };
     case 'SET_ACTIVE_MEAL_SLOT':
       return { ...state, activeMealSlot: action.payload };
-    case 'UPDATE_TIME_SLOT':
+    case 'UPDATE_TIME_SLOT': {
       const { date, slotId, item } = action.payload;
       const updatedSchedules = { ...state.dailySchedules };
       const daySchedule = updatedSchedules[date];
@@ -171,32 +172,33 @@ const tripCreationReducer = (state: TripCreationState, action: TripCreationActio
         );
       }
       return { ...state, dailySchedules: updatedSchedules };
+    }
     case 'ADD_ACCOMMODATION':
       return { ...state, accommodations: [...state.accommodations, action.payload] };
     case 'OPEN_ACCOMMODATION_MODAL':
       return { ...state, isAccommodationModalOpen: true };
     case 'CLOSE_ACCOMMODATION_MODAL':
       return { ...state, isAccommodationModalOpen: false };
-    case 'ADD_ITEM_TO_SCHEDULE':
+    case 'ADD_ITEM_TO_SCHEDULE': {
       const { dayKey, timeSlotId, item, startTime, endTime } = action.payload;
-      const updatedSchedules = { ...state.dailySchedules };
-      const daySchedule = updatedSchedules[dayKey];
-      if (daySchedule) {
+      const scheduleUpdates = { ...state.dailySchedules };
+      const targetDaySchedule = scheduleUpdates[dayKey];
+      if (targetDaySchedule) {
         // Find or create time slot for the specific time
-        const existingSlotIndex = daySchedule.timeSlots.findIndex(slot => 
+        const existingSlotIndex = targetDaySchedule.timeSlots.findIndex(slot => 
           slot.startTime === startTime && slot.endTime === endTime
         );
         
         if (existingSlotIndex >= 0) {
           // Update existing slot
-          daySchedule.timeSlots[existingSlotIndex] = {
-            ...daySchedule.timeSlots[existingSlotIndex],
+          targetDaySchedule.timeSlots[existingSlotIndex] = {
+            ...targetDaySchedule.timeSlots[existingSlotIndex],
             item,
             type: item ? 'activity' : 'free'
           };
         } else {
           // Add new slot
-          daySchedule.timeSlots.push({
+          targetDaySchedule.timeSlots.push({
             id: timeSlotId,
             startTime,
             endTime,
@@ -205,10 +207,11 @@ const tripCreationReducer = (state: TripCreationState, action: TripCreationActio
             isEditable: true
           });
           // Sort slots by time
-          daySchedule.timeSlots.sort((a, b) => a.startTime.localeCompare(b.startTime));
+          targetDaySchedule.timeSlots.sort((a, b) => a.startTime.localeCompare(b.startTime));
         }
       }
-      return { ...state, dailySchedules: updatedSchedules };
+      return { ...state, dailySchedules: scheduleUpdates };
+    }
     case 'RESET':
       return initialState;
     default:
