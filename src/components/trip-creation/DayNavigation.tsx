@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -142,7 +143,7 @@ const DayNavigation = () => {
               "absolute left-2 top-1/2 transform -translate-y-1/2 z-20 w-8 h-8 rounded-full transition-all duration-200 flex items-center justify-center",
               canScrollLeft
                 ? "bg-spot-primary text-white hover:bg-spot-primary/90 shadow-sm cursor-pointer"
-                : "bg-gray-100 text-gray-300 cursor-not-allowed"
+                : "bg-spot-primary/20 text-white/30 cursor-not-allowed"
             )}
           >
             <ChevronLeft className="h-4 w-4" />
@@ -158,7 +159,7 @@ const DayNavigation = () => {
               "absolute right-2 top-1/2 transform -translate-y-1/2 z-20 w-8 h-8 rounded-full transition-all duration-200 flex items-center justify-center",
               canScrollRight
                 ? "bg-spot-primary text-white hover:bg-spot-primary/90 shadow-sm cursor-pointer"
-                : "bg-gray-100 text-gray-300 cursor-not-allowed"
+                : "bg-spot-primary/20 text-white/30 cursor-not-allowed"
             )}
           >
             <ChevronRight className="h-4 w-4" />
