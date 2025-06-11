@@ -141,7 +141,7 @@ const DayNavigation = () => {
             className={cn(
               "absolute left-2 top-1/2 transform -translate-y-1/2 z-20 w-8 h-8 rounded-full transition-all duration-200 flex items-center justify-center",
               canScrollLeft
-                ? "bg-white text-spot-primary hover:bg-spot-primary/10 border border-gray-200 hover:border-spot-primary shadow-sm cursor-pointer"
+                ? "bg-spot-primary text-white hover:bg-spot-primary/90 shadow-sm cursor-pointer"
                 : "bg-gray-100 text-gray-300 cursor-not-allowed"
             )}
           >
@@ -157,7 +157,7 @@ const DayNavigation = () => {
             className={cn(
               "absolute right-2 top-1/2 transform -translate-y-1/2 z-20 w-8 h-8 rounded-full transition-all duration-200 flex items-center justify-center",
               canScrollRight
-                ? "bg-white text-spot-primary hover:bg-spot-primary/10 border border-gray-200 hover:border-spot-primary shadow-sm cursor-pointer"
+                ? "bg-spot-primary text-white hover:bg-spot-primary/90 shadow-sm cursor-pointer"
                 : "bg-gray-100 text-gray-300 cursor-not-allowed"
             )}
           >
