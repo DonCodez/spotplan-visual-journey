@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { X, Star, MapPin, Wifi, Car, Coffee, Utensils, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -113,8 +112,6 @@ const AccommodationModal = () => {
       rating: selectedHotel.rating,
       thumbnail: selectedHotel.images[0],
       description: selectedHotel.description,
-      location: selectedHotel.location,
-      stars: Math.floor(selectedHotel.rating),
     };
 
     // Add accommodation to each selected day
@@ -123,73 +120,61 @@ const AccommodationModal = () => {
       const isFirstDay = dayKey === stayDetails.selectedDays[0];
       const isLastDay = dayKey === stayDetails.selectedDays[stayDetails.selectedDays.length - 1];
 
-      const timeSlots = [];
-
       // Add check-in time slot on first day
       if (isFirstDay) {
-        timeSlots.push({
-          id: `checkin-${selectedHotel.id}-${dayKey}`,
-          startTime: stayDetails.checkinTime,
-          endTime: stayDetails.checkinTime,
-          type: 'accommodation' as const,
-          item: {
-            ...accommodationItem,
-            id: `checkin-${selectedHotel.id}-${dayKey}`,
-            title: `Check-in: ${selectedHotel.name}`,
+        dispatch({
+          type: 'ADD_ITEM_TO_SCHEDULE',
+          payload: {
+            dayKey,
+            timeSlotId: `checkin-${selectedHotel.id}-${dayKey}`,
+            item: {
+              ...accommodationItem,
+              id: `checkin-${selectedHotel.id}-${dayKey}`,
+              title: `Check-in: ${selectedHotel.name}`,
+            },
+            startTime: stayDetails.checkinTime,
+            endTime: stayDetails.checkinTime,
           },
-          isEditable: true,
         });
       }
 
       // Add check-out time slot on last day
       if (isLastDay) {
-        timeSlots.push({
-          id: `checkout-${selectedHotel.id}-${dayKey}`,
-          startTime: stayDetails.checkoutTime,
-          endTime: stayDetails.checkoutTime,
-          type: 'accommodation' as const,
-          item: {
-            ...accommodationItem,
-            id: `checkout-${selectedHotel.id}-${dayKey}`,
-            title: `Check-out: ${selectedHotel.name}`,
+        dispatch({
+          type: 'ADD_ITEM_TO_SCHEDULE',
+          payload: {
+            dayKey,
+            timeSlotId: `checkout-${selectedHotel.id}-${dayKey}`,
+            item: {
+              ...accommodationItem,
+              id: `checkout-${selectedHotel.id}-${dayKey}`,
+              title: `Check-out: ${selectedHotel.name}`,
+            },
+            startTime: stayDetails.checkoutTime,
+            endTime: stayDetails.checkoutTime,
           },
-          isEditable: true,
         });
       }
 
       // Add breakfast if enabled
       if (stayDetails.hasBreakfast) {
-        timeSlots.push({
-          id: `breakfast-${selectedHotel.id}-${dayKey}`,
-          startTime: stayDetails.breakfastTimeStart,
-          endTime: stayDetails.breakfastTimeEnd,
-          type: 'meal' as const,
-          item: {
-            id: `breakfast-${selectedHotel.id}-${dayKey}`,
-            title: `Breakfast at ${selectedHotel.name}`,
-            type: 'restaurant' as const,
-            rating: selectedHotel.rating,
-            thumbnail: selectedHotel.images[0],
-            cuisine: 'Hotel Breakfast',
-            priceLevel: 1,
-          },
-          isEditable: true,
-        });
-      }
-
-      // Update the schedule for this day
-      timeSlots.forEach(slot => {
         dispatch({
           type: 'ADD_ITEM_TO_SCHEDULE',
           payload: {
             dayKey,
-            timeSlotId: slot.id,
-            item: slot.item!,
-            startTime: slot.startTime,
-            endTime: slot.endTime,
+            timeSlotId: `breakfast-${selectedHotel.id}-${dayKey}`,
+            item: {
+              id: `breakfast-${selectedHotel.id}-${dayKey}`,
+              title: `Breakfast at ${selectedHotel.name}`,
+              type: 'restaurant' as const,
+              rating: selectedHotel.rating,
+              thumbnail: selectedHotel.images[0],
+            },
+            startTime: stayDetails.breakfastTimeStart,
+            endTime: stayDetails.breakfastTimeEnd,
           },
         });
-      });
+      }
     });
 
     // Show success message
@@ -344,7 +329,7 @@ const AccommodationModal = () => {
                         }));
                       }}
                     >
-                      <Checkbox checked={isSelected} readOnly />
+                      <Checkbox checked={isSelected} />
                       <span className="text-sm">{formatDayLabel(dateKey)}</span>
                     </div>
                   );
@@ -469,3 +454,5 @@ const AccommodationModal = () => {
 };
 
 export default AccommodationModal;
+
+}
