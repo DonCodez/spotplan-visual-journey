@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Plus, MapPin } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Tiles } from "@/components/ui/tiles";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -23,9 +24,14 @@ interface Trip {
 
 const DashboardContent = () => {
   const { trips, user, welcome } = dashboardData;
+  const navigate = useNavigate();
   
   // Type assertion to ensure status values match the expected union type
   const typedTrips = trips as Trip[];
+
+  const handleCreateTrip = () => {
+    navigate('/create-trip/destination');
+  };
 
   return (
     <div className="flex-1 relative overflow-hidden" id="dashboard-main-content">
@@ -50,6 +56,7 @@ const DashboardContent = () => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
+                  onClick={handleCreateTrip}
                   size="icon"
                   className="h-16 w-16 rounded-full bg-lime-500 hover:bg-lime-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                   id="create-trip-button"

@@ -13,6 +13,7 @@ import SignupPage from "./pages/SignupPage";
 import DashboardPage from "./pages/DashboardPage";
 import TripsPage from "./pages/TripsPage";
 import ProfilePage from "./pages/ProfilePage";
+import CreateTripDestinationPage from "./pages/CreateTripDestinationPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App: React.FC = () => {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/trips" element={<TripsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/create-trip/destination" element={<CreateTripDestinationPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/login" element={<LoginPage />} />
