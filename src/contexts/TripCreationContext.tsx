@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 import { TimeSlot, DaySchedule, Place, Restaurant, Hotel } from '@/types/schedule';
+import { calculateDuration } from '@/utils/timeUtils';
 
 // Backend Integration Notes for bolt.new:
 // 1. This context manages trip creation state on the frontend
@@ -75,35 +76,86 @@ type TripCreationAction =
 const generateTimeSlots = (): TimeSlot[] => {
   const slots: TimeSlot[] = [];
   
-  // Generate hourly slots from 6 AM to 11 PM
+  // Generate base time slots every 15 minutes from 6 AM to 11 PM
   for (let hour = 6; hour <= 23; hour++) {
-    const startTime = `${hour.toString().padStart(2, '0')}:00`;
-    const endTime = `${(hour + 1).toString().padStart(2, '0')}:00`;
-    
-    let type: 'activity' | 'meal' | 'accommodation' | 'free' = 'free';
-    let isEditable = true;
-    
-    // Pre-fill meal slots
-    if (hour === 8) {
-      type = 'meal';
-      // Can be edited to change meal times
-    } else if (hour === 13) {
-      type = 'meal';
-    } else if (hour === 20) {
-      type = 'meal';
+    for (let minute = 0; minute < 60; minute += 15) {
+      const startTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+      const endMinute = minute + 15;
+      const endHour = endMinute >= 60 ? hour + 1 : hour;
+      const endTime = `${endHour.toString().padStart(2, '0')}:${(endMinute % 60).toString().padStart(2, '0')}`;
+      
+      slots.push({
+        id: `slot-${hour}-${minute}`,
+        startTime,
+        endTime,
+        type: 'free',
+        isEditable: true,
+        duration: 15,
+      });
     }
-    
-    slots.push({
-      id: `slot-${hour}`,
-      startTime,
-      endTime,
-      type,
-      isEditable,
-      duration: 60, // 1 hour default
-    });
   }
   
   return slots;
+};
+
+const addDefaultMealSuggestions = (slots: TimeSlot[]): TimeSlot[] => {
+  const slotsWithMeals = [...slots];
+  
+  // Add default meal suggestions (these can be modified/removed by user)
+  const mealSuggestions = [
+    {
+      id: 'breakfast-suggestion',
+      startTime: '08:00',
+      endTime: '09:00',
+      type: 'meal' as const,
+      item: {
+        id: 'breakfast-default',
+        title: 'Breakfast',
+        type: 'restaurant' as const,
+        description: 'Start your day with a local breakfast',
+        duration: 60,
+      },
+      isEditable: true,
+      duration: 60,
+    },
+    {
+      id: 'lunch-suggestion',
+      startTime: '12:00',
+      endTime: '13:00',
+      type: 'meal' as const,
+      item: {
+        id: 'lunch-default',
+        title: 'Lunch',
+        type: 'restaurant' as const,
+        description: 'Midday meal break',
+        duration: 60,
+      },
+      isEditable: true,
+      duration: 60,
+    },
+    {
+      id: 'dinner-suggestion',
+      startTime: '20:00',
+      endTime: '21:00',
+      type: 'meal' as const,
+      item: {
+        id: 'dinner-default',
+        title: 'Dinner',
+        type: 'restaurant' as const,
+        description: 'Evening dining experience',
+        duration: 60,
+      },
+      isEditable: true,
+      duration: 60,
+    },
+  ];
+  
+  // Add meal suggestions to the slots
+  mealSuggestions.forEach(meal => {
+    slotsWithMeals.push(meal);
+  });
+  
+  return slotsWithMeals.sort((a, b) => a.startTime.localeCompare(b.startTime));
 };
 
 const initialState: TripCreationState = {
