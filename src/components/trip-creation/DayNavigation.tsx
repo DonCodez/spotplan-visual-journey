@@ -126,91 +126,95 @@ const DayNavigation = () => {
         <span className="text-sm text-gray-500">{state.tripDates.length} days total</span>
       </div>
       
-      {/* Navigation container with arrows */}
-      <div className="relative flex items-center">
-        {/* Left Arrow - Hidden on mobile */}
-        <button
-          onClick={scrollLeft}
-          disabled={!canScrollLeft}
-          className={cn(
-            "hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-white border border-gray-200 shadow-sm transition-all duration-200 mr-2 z-10",
-            canScrollLeft
-              ? "text-spot-primary hover:bg-spot-primary/10 hover:border-spot-primary cursor-pointer"
-              : "text-gray-300 cursor-not-allowed opacity-50"
-          )}
+      {/* Horizontal scroll container with gradient shadows */}
+      <div className="relative mb-4">
+        {/* Left gradient shadow */}
+        <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
+        
+        {/* Right gradient shadow */}
+        <div className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
+        
+        {/* Scrollable container */}
+        <div 
+          ref={scrollContainerRef}
+          className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 scroll-smooth"
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+          }}
         >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
+          {state.tripDates.map((date) => {
+            const dateKey = date.toISOString().split('T')[0];
+            const isSelected = state.selectedDay === dateKey;
+            const dayNumber = getDayNumber(date);
+            
+            return (
+              <motion.button
+                key={dateKey}
+                data-date={dateKey}
+                onClick={() => handleDaySelect(date)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className={cn(
+                  "flex flex-col items-center gap-1 p-3 rounded-lg border-2 transition-all duration-200 flex-shrink-0",
+                  "min-w-[85px] hover:shadow-md",
+                  isSelected
+                    ? "border-spot-primary bg-spot-primary/10 text-spot-primary shadow-md"
+                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50"
+                )}
+              >
+                <Calendar className="h-4 w-4" />
+                <span className="text-xs font-medium">Day {dayNumber}</span>
+                <span className="text-xs text-center leading-tight">{formatDate(date)}</span>
+              </motion.button>
+            );
+          })}
+        </div>
+      </div>
 
-        {/* Horizontal scroll container with gradient shadows */}
-        <div className="relative flex-1">
-          {/* Left gradient shadow */}
-          <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
-          
-          {/* Right gradient shadow */}
-          <div className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
-          
-          {/* Scrollable container */}
-          <div 
-            ref={scrollContainerRef}
-            className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 scroll-smooth"
-            style={{
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
-            }}
-          >
-            {state.tripDates.map((date) => {
-              const dateKey = date.toISOString().split('T')[0];
-              const isSelected = state.selectedDay === dateKey;
-              const dayNumber = getDayNumber(date);
-              
-              return (
-                <motion.button
-                  key={dateKey}
-                  data-date={dateKey}
-                  onClick={() => handleDaySelect(date)}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={cn(
-                    "flex flex-col items-center gap-1 p-3 rounded-lg border-2 transition-all duration-200 flex-shrink-0",
-                    "min-w-[85px] hover:shadow-md",
-                    isSelected
-                      ? "border-spot-primary bg-spot-primary/10 text-spot-primary shadow-md"
-                      : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50"
-                  )}
-                >
-                  <Calendar className="h-4 w-4" />
-                  <span className="text-xs font-medium">Day {dayNumber}</span>
-                  <span className="text-xs text-center leading-tight">{formatDate(date)}</span>
-                </motion.button>
-              );
-            })}
+      {/* Arrow Navigation Controls - Below the scroll container */}
+      {state.tripDates.length > 4 && (
+        <div className="flex items-center justify-center mb-3">
+          <div className="flex items-center gap-2 bg-gray-50 rounded-full p-2 border border-gray-200">
+            <button
+              onClick={scrollLeft}
+              disabled={!canScrollLeft}
+              className={cn(
+                "flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200",
+                canScrollLeft
+                  ? "bg-white text-spot-primary hover:bg-spot-primary/10 border border-gray-200 hover:border-spot-primary shadow-sm cursor-pointer"
+                  : "bg-gray-100 text-gray-300 cursor-not-allowed"
+              )}
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            
+            <span className="text-xs text-gray-500 px-2">Navigate</span>
+            
+            <button
+              onClick={scrollRight}
+              disabled={!canScrollRight}
+              className={cn(
+                "flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200",
+                canScrollRight
+                  ? "bg-white text-spot-primary hover:bg-spot-primary/10 border border-gray-200 hover:border-spot-primary shadow-sm cursor-pointer"
+                  : "bg-gray-100 text-gray-300 cursor-not-allowed"
+              )}
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
           </div>
         </div>
-
-        {/* Right Arrow - Hidden on mobile */}
-        <button
-          onClick={scrollRight}
-          disabled={!canScrollRight}
-          className={cn(
-            "hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-white border border-gray-200 shadow-sm transition-all duration-200 ml-2 z-10",
-            canScrollRight
-              ? "text-spot-primary hover:bg-spot-primary/10 hover:border-spot-primary cursor-pointer"
-              : "text-gray-300 cursor-not-allowed opacity-50"
-          )}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
-      </div>
+      )}
       
       {/* Scroll hint for users */}
       {state.tripDates.length > 7 && (
-        <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center justify-between">
           <p className="text-xs text-gray-400">
-            Scroll horizontally to see all days
+            Scroll horizontally or use arrows to navigate
           </p>
           <p className="text-xs text-gray-400 hidden md:block">
-            Use arrow keys or click arrows to navigate
+            Use arrow keys for keyboard navigation
           </p>
         </div>
       )}
