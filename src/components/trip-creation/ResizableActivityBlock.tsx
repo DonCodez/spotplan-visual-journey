@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useCallback } from 'react';
-import Moveable from 'moveable';
+import { Resizable } from 'react-resizable';
 import { useDraggable } from '@dnd-kit/core';
 import { MapPin, X, Clock, GripVertical } from 'lucide-react';
 import { ScheduleItem } from '@/types/schedule';
@@ -17,8 +17,9 @@ interface ResizableActivityBlockProps {
   onRemove: () => void;
 }
 
-const PIXELS_PER_MINUTE = 2;
-const SNAP_INTERVAL_MINUTES = 30;
+const PIXELS_PER_MINUTE = 2; // 2px = 1 minute for better granularity
+const SNAP_INTERVAL_MINUTES = 30; // 30-minute snapping
+const SNAP_INTERVAL_PIXELS = SNAP_INTERVAL_MINUTES * PIXELS_PER_MINUTE; // 60px
 const MIN_DURATION_MINUTES = 30;
 const MAX_DURATION_MINUTES = 480; // 8 hours
 
@@ -33,7 +34,7 @@ const ResizableActivityBlock = ({
 }: ResizableActivityBlockProps) => {
   const [isResizing, setIsResizing] = useState(false);
   const [previewEndTime, setPreviewEndTime] = useState<string | null>(null);
-  const targetRef = useRef<HTMLDivElement>(null);
+  const resizeTimeoutRef = useRef<NodeJS.Timeout>();
 
   const duration = calculateDuration(startTime, endTime);
   const height = Math.max(MIN_DURATION_MINUTES * PIXELS_PER_MINUTE, duration * PIXELS_PER_MINUTE);
@@ -59,18 +60,21 @@ const ResizableActivityBlock = ({
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
   } : undefined;
 
+  const snapToGrid = useCallback((value: number): number => {
+    return Math.round(value / SNAP_INTERVAL_PIXELS) * SNAP_INTERVAL_PIXELS;
+  }, []);
+
   const calculateNewEndTime = useCallback((newHeight: number): string => {
+    const snappedHeight = snapToGrid(newHeight);
     const constrainedHeight = Math.max(
       MIN_DURATION_MINUTES * PIXELS_PER_MINUTE,
-      Math.min(MAX_DURATION_MINUTES * PIXELS_PER_MINUTE, newHeight)
+      Math.min(MAX_DURATION_MINUTES * PIXELS_PER_MINUTE, snappedHeight)
     );
     
-    // Snap to 30-minute intervals
-    const snappedMinutes = Math.round((constrainedHeight / PIXELS_PER_MINUTE) / SNAP_INTERVAL_MINUTES) * SNAP_INTERVAL_MINUTES;
-    
+    const newDurationMinutes = constrainedHeight / PIXELS_PER_MINUTE;
     const [hours, minutes] = startTime.split(':').map(Number);
     const startMinutes = hours * 60 + minutes;
-    const endMinutes = startMinutes + snappedMinutes;
+    const endMinutes = startMinutes + newDurationMinutes;
     
     const newEndHours = Math.floor(endMinutes / 60);
     const newEndMins = endMinutes % 60;
@@ -81,20 +85,26 @@ const ResizableActivityBlock = ({
     }
     
     return `${newEndHours.toString().padStart(2, '0')}:${newEndMins.toString().padStart(2, '0')}`;
-  }, [startTime]);
+  }, [startTime, snapToGrid]);
 
-  const handleResizeStart = useCallback(() => {
+  const handleResize = useCallback((event: any, { size }: { size: { height: number } }) => {
+    const newEndTime = calculateNewEndTime(size.height);
+    setPreviewEndTime(newEndTime);
+
+    // Debounce the actual resize callback
+    if (resizeTimeoutRef.current) {
+      clearTimeout(resizeTimeoutRef.current);
+    }
+  }, [calculateNewEndTime]);
+
+  const handleResizeStart = useCallback((e: React.SyntheticEvent) => {
+    e.stopPropagation();
     setIsResizing(true);
     setPreviewEndTime(null);
   }, []);
 
-  const handleResize = useCallback((e: any) => {
-    const newHeight = e.height;
-    const newEndTime = calculateNewEndTime(newHeight);
-    setPreviewEndTime(newEndTime);
-  }, [calculateNewEndTime]);
-
-  const handleResizeEnd = useCallback((e: any) => {
+  const handleResizeStop = useCallback((e: React.SyntheticEvent) => {
+    e.stopPropagation();
     setIsResizing(false);
     
     if (previewEndTime) {
@@ -103,20 +113,53 @@ const ResizableActivityBlock = ({
     setPreviewEndTime(null);
   }, [previewEndTime, startTime, onResize]);
 
+  const handleResizeHandleMouseDown = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
+
+  const handleResizeHandlePointerDown = useCallback((e: React.PointerEvent) => {
+    e.stopPropagation();
+  }, []);
+
   const displayEndTime = previewEndTime || endTime;
   const displayHeight = previewEndTime ? 
     calculateDuration(startTime, previewEndTime) * PIXELS_PER_MINUTE : 
     height;
 
   return (
-    <>
+    <Resizable
+      height={displayHeight}
+      width={0}
+      onResize={handleResize}
+      onResizeStart={handleResizeStart}
+      onResizeStop={handleResizeStop}
+      resizeHandles={['s']}
+      minConstraints={[0, MIN_DURATION_MINUTES * PIXELS_PER_MINUTE]}
+      maxConstraints={[0, MAX_DURATION_MINUTES * PIXELS_PER_MINUTE]}
+      handle={
+        <div
+          className={cn(
+            "absolute bottom-0 left-0 right-0 h-6 cursor-ns-resize flex items-center justify-center z-30",
+            "bg-transparent hover:bg-gray-200/70 transition-colors group",
+            "border-t-2 border-transparent hover:border-spot-primary/30"
+          )}
+          onMouseDown={handleResizeHandleMouseDown}
+          onPointerDown={handleResizeHandlePointerDown}
+          style={{ pointerEvents: 'auto' }}
+        >
+          <div className={cn(
+            "w-16 h-1.5 bg-gray-400 rounded-full transition-all duration-200",
+            "group-hover:bg-spot-primary group-hover:h-2 shadow-sm"
+          )} />
+          {isResizing && previewEndTime && (
+            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg">
+              {formatTimeRange(startTime, previewEndTime)}
+            </div>
+          )}
+        </div>
+      }
+    >
       <div
-        ref={(node) => {
-          setNodeRef(node);
-          if (targetRef.current !== node) {
-            targetRef.current = node;
-          }
-        }}
         className={cn(
           "relative bg-white rounded-lg border-2 transition-all duration-200",
           isDragging ? "border-spot-primary/60 shadow-lg opacity-80 rotate-1" : "border-spot-primary shadow-sm",
@@ -126,16 +169,19 @@ const ResizableActivityBlock = ({
           ...style,
           height: `${displayHeight}px`,
           minHeight: `${MIN_DURATION_MINUTES * PIXELS_PER_MINUTE}px`,
+          pointerEvents: 'none'
         }}
       >
-        {/* Draggable Content Area */}
+        {/* Draggable Content Area - excluding bottom resize zone */}
         <div
+          ref={setNodeRef}
           className={cn(
             "cursor-move relative z-10 h-full rounded-lg",
             "hover:bg-gray-50/50 transition-colors duration-200"
           )}
           style={{ 
-            paddingBottom: '12px' // Space for resize area
+            pointerEvents: 'auto',
+            paddingBottom: '24px' // Space for resize handle
           }}
           {...listeners}
           {...attributes}
@@ -155,6 +201,7 @@ const ResizableActivityBlock = ({
                   onRemove();
                 }}
                 className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 ml-2 p-0.5 rounded hover:bg-red-50"
+                style={{ pointerEvents: 'auto' }}
               >
                 <X className="h-4 w-4" />
               </button>
@@ -183,50 +230,8 @@ const ResizableActivityBlock = ({
             )}
           </div>
         </div>
-
-        {/* Resize handle area */}
-        <div className="absolute bottom-0 left-0 right-0 h-3 cursor-ns-resize bg-transparent hover:bg-gray-200/70 transition-colors" />
       </div>
-
-      {/* Moveable component for resizing */}
-      <Moveable
-        target={targetRef.current}
-        resizable={true}
-        throttleResize={0}
-        renderDirections={['s']}
-        edge={false}
-        zoom={1}
-        origin={false}
-        padding={{ bottom: 0 }}
-        onResizeStart={handleResizeStart}
-        onResize={handleResize}
-        onResizeEnd={handleResizeEnd}
-        snappable={true}
-        snapThreshold={5}
-        verticalGuidelines={[]}
-        horizontalGuidelines={[]}
-        snapGridWidth={SNAP_INTERVAL_MINUTES * PIXELS_PER_MINUTE}
-        snapGridHeight={SNAP_INTERVAL_MINUTES * PIXELS_PER_MINUTE}
-        isDisplaySnapDigit={false}
-        isDisplayInnerSnapDigit={false}
-        keepRatio={false}
-        throttleDrag={0}
-        minHeight={MIN_DURATION_MINUTES * PIXELS_PER_MINUTE}
-        maxHeight={MAX_DURATION_MINUTES * PIXELS_PER_MINUTE}
-      />
-
-      {/* Preview tooltip during resize */}
-      {isResizing && previewEndTime && (
-        <div className="fixed z-50 bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg pointer-events-none"
-             style={{
-               left: '50%',
-               top: '50%',
-               transform: 'translate(-50%, -50%)'
-             }}>
-          {formatTimeRange(startTime, previewEndTime)}
-        </div>
-      )}
-    </>
+    </Resizable>
   );
 };
 
