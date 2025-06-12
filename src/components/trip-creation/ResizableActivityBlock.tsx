@@ -195,7 +195,7 @@ const ResizableActivityBlock = ({
         snapGridWidth={SNAP_INTERVAL_PIXELS}
         snapGridHeight={SNAP_INTERVAL_PIXELS}
         renderDirections={['s']}
-        resizeFormat={() => ''}
+        resizeFormat={(size: number[]) => size}
         onDragStart={() => setIsMoving(true)}
         onDrag={handleDrag}
         onDragEnd={handleDragEnd}
