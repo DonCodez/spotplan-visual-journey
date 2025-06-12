@@ -49,27 +49,38 @@ const ResizableActivityBlock = ({
     
     const newDurationMinutes = constrainedHeight / PIXELS_PER_MINUTE;
     const [hours, minutes] = startTime.split(':').map(Number);
+    
+    // Validate input time
+    if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+      console.warn('Invalid startTime:', startTime);
+      return '23:59';
+    }
+    
     const startMinutes = hours * 60 + minutes;
     const endMinutes = startMinutes + newDurationMinutes;
     
     const newEndHours = Math.floor(endMinutes / 60);
-    const newEndMins = endMinutes % 60;
+    const newEndMins = Math.round(endMinutes % 60);
     
+    // Ensure we don't go past 23:59
     if (newEndHours >= 24) {
       return '23:59';
     }
     
-    return `${newEndHours.toString().padStart(2, '0')}:${newEndMins.toString().padStart(2, '0')}`;
+    const constrainedHours = Math.min(23, Math.max(0, newEndHours));
+    const constrainedMinutes = Math.min(59, Math.max(0, newEndMins));
+    
+    return `${constrainedHours.toString().padStart(2, '0')}:${constrainedMinutes.toString().padStart(2, '0')}`;
   }, [startTime]);
 
   const calculateNewStartTime = useCallback((yPosition: number): string => {
     const startHour = 6; // Same as TimeGrid
-    const totalMinutes = Math.round(yPosition / PIXELS_PER_MINUTE);
+    const totalMinutes = Math.max(0, Math.round(yPosition / PIXELS_PER_MINUTE));
     const hours = Math.floor(totalMinutes / 60) + startHour;
     const minutes = totalMinutes % 60;
     
     const constrainedHours = Math.min(23, Math.max(startHour, hours));
-    const constrainedMinutes = constrainedHours === 23 && minutes > 59 ? 59 : minutes;
+    const constrainedMinutes = constrainedHours === 23 && minutes > 59 ? 59 : Math.max(0, Math.round(minutes));
     
     return `${constrainedHours.toString().padStart(2, '0')}:${constrainedMinutes.toString().padStart(2, '0')}`;
   }, []);
@@ -119,8 +130,9 @@ const ResizableActivityBlock = ({
     }
   }, [previewEndTime, startTime, onResize]);
 
-  const displayEndTime = previewEndTime || endTime;
-  const displayStartTime = previewStartTime || startTime;
+  // Safely get display times with fallbacks
+  const displayEndTime = previewEndTime && previewEndTime !== 'Invalid Date' ? previewEndTime : endTime;
+  const displayStartTime = previewStartTime && previewStartTime !== 'Invalid Date' ? previewStartTime : startTime;
 
   return (
     <div className="relative">
