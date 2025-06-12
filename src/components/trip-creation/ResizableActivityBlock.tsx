@@ -1,7 +1,6 @@
 
 import React, { useState, useRef, useCallback } from 'react';
-import { Resizable } from 'react-resizable';
-import { useDraggable } from '@dnd-kit/core';
+import Moveable from 'react-moveable';
 import { MapPin, X, Clock, GripVertical } from 'lucide-react';
 import { ScheduleItem } from '@/types/schedule';
 import { formatTimeRange, calculateDuration } from '@/utils/timeUtils';
@@ -15,13 +14,14 @@ interface ResizableActivityBlockProps {
   slotId: string;
   onResize: (newStartTime: string, newEndTime: string) => void;
   onRemove: () => void;
+  onDrag?: (newStartTime: string) => void;
 }
 
-const PIXELS_PER_MINUTE = 2; // 2px = 1 minute for better granularity
-const SNAP_INTERVAL_MINUTES = 30; // 30-minute snapping
-const SNAP_INTERVAL_PIXELS = SNAP_INTERVAL_MINUTES * PIXELS_PER_MINUTE; // 60px
+const PIXELS_PER_MINUTE = 2;
+const SNAP_INTERVAL_MINUTES = 30;
+const SNAP_INTERVAL_PIXELS = SNAP_INTERVAL_MINUTES * PIXELS_PER_MINUTE;
 const MIN_DURATION_MINUTES = 30;
-const MAX_DURATION_MINUTES = 480; // 8 hours
+const MAX_DURATION_MINUTES = 480;
 
 const ResizableActivityBlock = ({
   item,
@@ -31,44 +31,20 @@ const ResizableActivityBlock = ({
   slotId,
   onResize,
   onRemove,
+  onDrag,
 }: ResizableActivityBlockProps) => {
-  const [isResizing, setIsResizing] = useState(false);
+  const [isMoving, setIsMoving] = useState(false);
   const [previewEndTime, setPreviewEndTime] = useState<string | null>(null);
-  const resizeTimeoutRef = useRef<NodeJS.Timeout>();
+  const [previewStartTime, setPreviewStartTime] = useState<string | null>(null);
+  const targetRef = useRef<HTMLDivElement>(null);
 
   const duration = calculateDuration(startTime, endTime);
   const height = Math.max(MIN_DURATION_MINUTES * PIXELS_PER_MINUTE, duration * PIXELS_PER_MINUTE);
 
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    isDragging,
-  } = useDraggable({
-    id: `activity-${date}-${slotId}`,
-    data: {
-      item,
-      startTime,
-      endTime,
-      date,
-      slotId,
-    },
-  });
-
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined;
-
-  const snapToGrid = useCallback((value: number): number => {
-    return Math.round(value / SNAP_INTERVAL_PIXELS) * SNAP_INTERVAL_PIXELS;
-  }, []);
-
   const calculateNewEndTime = useCallback((newHeight: number): string => {
-    const snappedHeight = snapToGrid(newHeight);
     const constrainedHeight = Math.max(
       MIN_DURATION_MINUTES * PIXELS_PER_MINUTE,
-      Math.min(MAX_DURATION_MINUTES * PIXELS_PER_MINUTE, snappedHeight)
+      Math.min(MAX_DURATION_MINUTES * PIXELS_PER_MINUTE, newHeight)
     );
     
     const newDurationMinutes = constrainedHeight / PIXELS_PER_MINUTE;
@@ -79,159 +55,161 @@ const ResizableActivityBlock = ({
     const newEndHours = Math.floor(endMinutes / 60);
     const newEndMins = endMinutes % 60;
     
-    // Ensure we don't go past midnight
     if (newEndHours >= 24) {
       return '23:59';
     }
     
     return `${newEndHours.toString().padStart(2, '0')}:${newEndMins.toString().padStart(2, '0')}`;
-  }, [startTime, snapToGrid]);
+  }, [startTime]);
 
-  const handleResize = useCallback((event: any, { size }: { size: { height: number } }) => {
-    const newEndTime = calculateNewEndTime(size.height);
+  const calculateNewStartTime = useCallback((yPosition: number): string => {
+    const startHour = 6; // Same as TimeGrid
+    const totalMinutes = Math.round(yPosition / PIXELS_PER_MINUTE);
+    const hours = Math.floor(totalMinutes / 60) + startHour;
+    const minutes = totalMinutes % 60;
+    
+    const constrainedHours = Math.min(23, Math.max(startHour, hours));
+    const constrainedMinutes = constrainedHours === 23 && minutes > 59 ? 59 : minutes;
+    
+    return `${constrainedHours.toString().padStart(2, '0')}:${constrainedMinutes.toString().padStart(2, '0')}`;
+  }, []);
+
+  const handleDrag = useCallback(({ transform }: any) => {
+    const yPosition = Math.max(0, transform[1]);
+    const snappedY = Math.round(yPosition / SNAP_INTERVAL_PIXELS) * SNAP_INTERVAL_PIXELS;
+    const newStartTime = calculateNewStartTime(snappedY);
+    setPreviewStartTime(newStartTime);
+    
+    if (targetRef.current) {
+      targetRef.current.style.transform = `translateY(${snappedY}px)`;
+    }
+  }, [calculateNewStartTime]);
+
+  const handleDragEnd = useCallback(() => {
+    setIsMoving(false);
+    if (previewStartTime && onDrag) {
+      onDrag(previewStartTime);
+    }
+    setPreviewStartTime(null);
+    
+    if (targetRef.current) {
+      targetRef.current.style.transform = '';
+    }
+  }, [previewStartTime, onDrag]);
+
+  const handleResize = useCallback(({ width, height: newHeight }: any) => {
+    const snappedHeight = Math.round(newHeight / SNAP_INTERVAL_PIXELS) * SNAP_INTERVAL_PIXELS;
+    const newEndTime = calculateNewEndTime(snappedHeight);
     setPreviewEndTime(newEndTime);
-
-    // Debounce the actual resize callback
-    if (resizeTimeoutRef.current) {
-      clearTimeout(resizeTimeoutRef.current);
+    
+    if (targetRef.current) {
+      targetRef.current.style.height = `${snappedHeight}px`;
     }
   }, [calculateNewEndTime]);
 
-  const handleResizeStart = useCallback((e: React.SyntheticEvent) => {
-    e.stopPropagation();
-    setIsResizing(true);
-    setPreviewEndTime(null);
-  }, []);
-
-  const handleResizeStop = useCallback((e: React.SyntheticEvent) => {
-    e.stopPropagation();
-    setIsResizing(false);
-    
+  const handleResizeEnd = useCallback(() => {
+    setIsMoving(false);
     if (previewEndTime) {
       onResize(startTime, previewEndTime);
     }
     setPreviewEndTime(null);
+    
+    if (targetRef.current) {
+      targetRef.current.style.height = '';
+    }
   }, [previewEndTime, startTime, onResize]);
 
-  const handleResizeHandleMouseDown = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-  }, []);
-
-  const handleResizeHandlePointerDown = useCallback((e: React.PointerEvent) => {
-    e.stopPropagation();
-  }, []);
-
   const displayEndTime = previewEndTime || endTime;
-  const displayHeight = previewEndTime ? 
-    calculateDuration(startTime, previewEndTime) * PIXELS_PER_MINUTE : 
-    height;
+  const displayStartTime = previewStartTime || startTime;
 
   return (
-    <Resizable
-      height={displayHeight}
-      width={0}
-      onResize={handleResize}
-      onResizeStart={handleResizeStart}
-      onResizeStop={handleResizeStop}
-      resizeHandles={['s']}
-      minConstraints={[0, MIN_DURATION_MINUTES * PIXELS_PER_MINUTE]}
-      maxConstraints={[0, MAX_DURATION_MINUTES * PIXELS_PER_MINUTE]}
-      handle={
-        <div
-          className={cn(
-            "absolute bottom-0 left-0 right-0 h-6 cursor-ns-resize flex items-center justify-center z-30",
-            "bg-transparent hover:bg-gray-200/70 transition-colors group",
-            "border-t-2 border-transparent hover:border-spot-primary/30"
-          )}
-          onMouseDown={handleResizeHandleMouseDown}
-          onPointerDown={handleResizeHandlePointerDown}
-          style={{ pointerEvents: 'auto' }}
-        >
-          <div className={cn(
-            "w-16 h-1.5 bg-gray-400 rounded-full transition-all duration-200",
-            "group-hover:bg-spot-primary group-hover:h-2 shadow-sm"
-          )} />
-          {isResizing && previewEndTime && (
-            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg">
-              {formatTimeRange(startTime, previewEndTime)}
-            </div>
-          )}
-        </div>
-      }
-    >
+    <div className="relative">
       <div
+        ref={targetRef}
         className={cn(
           "relative bg-white rounded-lg border-2 transition-all duration-200",
-          isDragging ? "border-spot-primary/60 shadow-lg opacity-80 rotate-1" : "border-spot-primary shadow-sm",
-          isResizing && "border-spot-primary/80 shadow-md ring-2 ring-spot-primary/20",
+          isMoving ? "border-spot-primary/60 shadow-lg opacity-80" : "border-spot-primary shadow-sm",
         )}
         style={{ 
-          ...style,
-          height: `${displayHeight}px`,
+          height: `${height}px`,
           minHeight: `${MIN_DURATION_MINUTES * PIXELS_PER_MINUTE}px`,
-          pointerEvents: 'none'
         }}
       >
-        {/* Draggable Content Area - excluding bottom resize zone */}
-        <div
-          ref={setNodeRef}
-          className={cn(
-            "cursor-move relative z-10 h-full rounded-lg",
-            "hover:bg-gray-50/50 transition-colors duration-200"
-          )}
-          style={{ 
-            pointerEvents: 'auto',
-            paddingBottom: '24px' // Space for resize handle
-          }}
-          {...listeners}
-          {...attributes}
-        >
-          <div className="p-3 h-full flex flex-col">
-            <div className="flex items-start justify-between mb-2">
-              <div className="flex items-center gap-1 min-w-0 flex-1">
-                <GripVertical className="h-3 w-3 text-gray-400 flex-shrink-0" />
-                <MapPin className="h-3 w-3 text-spot-primary flex-shrink-0" />
-                <h4 className="text-sm font-medium text-gray-900 truncate">
-                  {item.title}
-                </h4>
-              </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRemove();
-                }}
-                className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 ml-2 p-0.5 rounded hover:bg-red-50"
-                style={{ pointerEvents: 'auto' }}
-              >
-                <X className="h-4 w-4" />
-              </button>
+        <div className="p-3 h-full flex flex-col">
+          <div className="flex items-start justify-between mb-2">
+            <div className="flex items-center gap-1 min-w-0 flex-1">
+              <GripVertical className="h-3 w-3 text-gray-400 flex-shrink-0" />
+              <MapPin className="h-3 w-3 text-spot-primary flex-shrink-0" />
+              <h4 className="text-sm font-medium text-gray-900 truncate">
+                {item.title}
+              </h4>
             </div>
-            
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-              <Clock className="h-3 w-3" />
-              <span className={cn(
-                "transition-colors duration-200",
-                isResizing && "text-spot-primary font-medium"
-              )}>
-                {formatTimeRange(startTime, displayEndTime)}
-              </span>
-            </div>
-            
-            {item.rating && (
-              <p className="text-xs text-gray-500 mt-1">
-                ⭐ {item.rating}
-              </p>
-            )}
-            
-            {displayHeight > 120 && (
-              <div className="mt-2 text-xs text-gray-400">
-                Duration: {Math.round(calculateDuration(startTime, displayEndTime) / 60 * 10) / 10}h
-              </div>
-            )}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemove();
+              }}
+              className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 ml-2 p-0.5 rounded hover:bg-red-50"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
+          
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <Clock className="h-3 w-3" />
+            <span className={cn(
+              "transition-colors duration-200",
+              isMoving && "text-spot-primary font-medium"
+            )}>
+              {formatTimeRange(displayStartTime, displayEndTime)}
+            </span>
+          </div>
+          
+          {item.rating && (
+            <p className="text-xs text-gray-500 mt-1">
+              ⭐ {item.rating}
+            </p>
+          )}
+          
+          {height > 120 && (
+            <div className="mt-2 text-xs text-gray-400">
+              Duration: {Math.round(calculateDuration(displayStartTime, displayEndTime) / 60 * 10) / 10}h
+            </div>
+          )}
         </div>
       </div>
-    </Resizable>
+
+      <Moveable
+        target={targetRef}
+        draggable={true}
+        resizable={true}
+        keepRatio={false}
+        throttleDrag={0}
+        throttleResize={0}
+        origin={false}
+        edge={false}
+        zoom={1}
+        bounds={{ left: 0, top: 0, right: 0, bottom: 2000 }}
+        snappable={true}
+        snapThreshold={5}
+        snapGridWidth={SNAP_INTERVAL_PIXELS}
+        snapGridHeight={SNAP_INTERVAL_PIXELS}
+        renderDirections={['s']}
+        resizeFormat={() => ''}
+        onDragStart={() => setIsMoving(true)}
+        onDrag={handleDrag}
+        onDragEnd={handleDragEnd}
+        onResizeStart={() => setIsMoving(true)}
+        onResize={handleResize}
+        onResizeEnd={handleResizeEnd}
+      />
+      
+      {isMoving && (previewEndTime || previewStartTime) && (
+        <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg z-50">
+          {formatTimeRange(displayStartTime, displayEndTime)}
+        </div>
+      )}
+    </div>
   );
 };
 
