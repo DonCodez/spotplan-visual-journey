@@ -15,6 +15,8 @@ interface TimeGridProps {
   endHour?: number;
 }
 
+const PIXELS_PER_MINUTE = 2; // Consistent with ResizableActivityBlock
+
 const TimeGrid = ({ 
   date, 
   timeSlots, 
@@ -22,7 +24,7 @@ const TimeGrid = ({
   startHour = 6, 
   endHour = 23 
 }: TimeGridProps) => {
-  const totalHeight = (endHour - startHour + 1) * 60; // 60px per hour
+  const totalHeight = (endHour - startHour + 1) * 60 * PIXELS_PER_MINUTE; // Consistent pixel ratio
   
   const { isOver, setNodeRef } = useDroppable({
     id: `time-grid-${date}`,
@@ -45,10 +47,10 @@ const TimeGrid = ({
       <TimeRuler startHour={startHour} endHour={endHour} />
       
       <div className="flex-1 relative" style={{ height: `${totalHeight}px` }}>
-        {/* Grid background */}
+        {/* Enhanced Grid background */}
         <div className="absolute inset-0">
           {Array.from({ length: (endHour - startHour + 1) * 4 }).map((_, index) => {
-            const position = index * 15; // 15-minute intervals
+            const position = index * 15 * PIXELS_PER_MINUTE; // 15-minute intervals
             const isHour = index % 4 === 0;
             const isHalfHour = index % 2 === 0;
             
@@ -65,19 +67,19 @@ const TimeGrid = ({
           })}
         </div>
         
-        {/* Drop zone */}
+        {/* Drop zone with improved visual feedback */}
         <div
           ref={setNodeRef}
           className={cn(
             "absolute inset-0 transition-colors duration-200",
-            isOver && "bg-spot-primary/5"
+            isOver && "bg-spot-primary/5 ring-2 ring-spot-primary/20 ring-inset"
           )}
         >
           {/* Activity blocks */}
           {timeSlots
             .filter(slot => slot.item)
             .map((slot) => {
-              const position = timeToPosition(slot.startTime, startHour);
+              const position = timeToPosition(slot.startTime, startHour, PIXELS_PER_MINUTE);
               
               return (
                 <div
@@ -100,16 +102,23 @@ const TimeGrid = ({
               );
             })}
           
-          {/* Drop zones for empty time slots */}
-          {Array.from({ length: Math.floor(totalHeight / 30) }).map((_, index) => {
-            const position = index * 30;
-            const time = positionToTime(position, startHour);
+          {/* Enhanced drop zones for empty time slots */}
+          {Array.from({ length: Math.floor(totalHeight / (30 * PIXELS_PER_MINUTE)) }).map((_, index) => {
+            const position = index * 30 * PIXELS_PER_MINUTE; // 30-minute intervals
+            const time = positionToTime(position, startHour, PIXELS_PER_MINUTE);
             
             return (
               <div
                 key={`drop-zone-${index}`}
-                className="absolute left-2 right-2 h-8 rounded border-2 border-dashed border-transparent hover:border-spot-primary/30 transition-colors duration-200"
-                style={{ top: `${position}px` }}
+                className={cn(
+                  "absolute left-2 right-2 rounded border-2 border-dashed transition-all duration-200",
+                  "border-transparent hover:border-spot-primary/30 hover:bg-spot-primary/5",
+                  isOver && "border-spot-primary/20"
+                )}
+                style={{ 
+                  top: `${position}px`,
+                  height: `${30 * PIXELS_PER_MINUTE}px` // 30-minute slots
+                }}
                 data-time={time}
               />
             );
@@ -120,15 +129,32 @@ const TimeGrid = ({
         {date === new Date().toISOString().split('T')[0] && (
           <div className="absolute left-0 right-0 z-20">
             <div 
-              className="h-0.5 bg-red-500"
+              className="h-0.5 bg-red-500 shadow-sm"
               style={{ 
                 top: `${timeToPosition(
                   new Date().toLocaleTimeString('en-US', { 
                     hour12: false, 
                     hour: '2-digit', 
                     minute: '2-digit' 
-                  })
+                  }),
+                  startHour,
+                  PIXELS_PER_MINUTE
                 )}px` 
+              }}
+            />
+            <div
+              className="absolute w-2 h-2 bg-red-500 rounded-full -translate-x-1 -translate-y-1"
+              style={{ 
+                top: `${timeToPosition(
+                  new Date().toLocaleTimeString('en-US', { 
+                    hour12: false, 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                  }),
+                  startHour,
+                  PIXELS_PER_MINUTE
+                )}px`,
+                left: '0px'
               }}
             />
           </div>
