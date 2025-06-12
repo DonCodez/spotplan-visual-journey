@@ -53,6 +53,30 @@ const ResizableActivityBlock = ({
 
   return (
     <div className="relative">
+      {/* Add CSS to hide Moveable's default styling */}
+      <style>
+        {`
+          .moveable-control-box {
+            display: none !important;
+          }
+          .moveable-line {
+            display: none !important;
+          }
+          .moveable-control {
+            display: none !important;
+          }
+          .moveable-origin {
+            display: none !important;
+          }
+          .moveable-area {
+            display: none !important;
+          }
+          .moveable-direction {
+            display: none !important;
+          }
+        `}
+      </style>
+
       <div
         ref={targetRef}
         className={cn(
@@ -94,7 +118,8 @@ const ResizableActivityBlock = ({
         snapThreshold={10}
         snapGridWidth={SNAP_INTERVAL_PIXELS}
         snapGridHeight={SNAP_INTERVAL_PIXELS}
-        renderDirections={['s']}
+        renderDirections={[]}
+        hideDefaultLines={true}
         resizeFormat={(size: number[]) => size}
         dragArea={true}
         onDragStart={() => setIsMoving(true)}
@@ -103,6 +128,7 @@ const ResizableActivityBlock = ({
         onResizeStart={() => setIsResizing(true)}
         onResize={handleResize}
         onResizeEnd={handleResizeEnd}
+        className="moveable-hidden"
       />
       
       <PreviewTooltip
