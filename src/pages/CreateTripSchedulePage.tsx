@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import TripCreationCloseButton from '@/components/trip-creation/TripCreationCloseButton';
 import ScheduleHeader from '@/components/trip-creation/ScheduleHeader';
-import MoveableProvider from '@/components/trip-creation/MoveableProvider';
+import DragDropProvider from '@/components/trip-creation/DragDropProvider';
 import DayNavigation from '@/components/trip-creation/DayNavigation';
 import PlacesSuggestionPanel from '@/components/trip-creation/PlacesSuggestionPanel';
 import ScheduleCanvas from '@/components/trip-creation/ScheduleCanvas';
@@ -67,7 +67,7 @@ const CreateTripSchedulePage = () => {
       <div className="container mx-auto px-6 py-8">
         <ScheduleHeader />
         
-        <MoveableProvider>
+        <DragDropProvider>
           <DayNavigation />
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
@@ -78,7 +78,7 @@ const CreateTripSchedulePage = () => {
               <ScheduleCanvas />
             </div>
           </div>
-        </MoveableProvider>
+        </DragDropProvider>
 
         <AccommodationModal />
 
