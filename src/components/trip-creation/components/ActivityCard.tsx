@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MapPin, X, Clock, GripVertical } from 'lucide-react';
+import { MapPin, X, Clock } from 'lucide-react';
 import { ScheduleItem } from '@/types/schedule';
 import { formatTimeRange, calculateDuration } from '@/utils/timeUtils';
 import { cn } from '@/lib/utils';
@@ -15,9 +15,6 @@ interface ActivityCardProps {
   onRemove: () => void;
 }
 
-const MIN_DURATION_MINUTES = 30;
-const PIXELS_PER_MINUTE = 2;
-
 const ActivityCard = ({
   item,
   startTime,
@@ -31,7 +28,6 @@ const ActivityCard = ({
     <div className="p-3 h-full flex flex-col cursor-move group-hover:bg-gray-50/50 transition-colors">
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-1 min-w-0 flex-1">
-          <GripVertical className="h-3 w-3 text-gray-400 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
           <MapPin className="h-3 w-3 text-spot-primary flex-shrink-0" />
           <h4 className="text-sm font-medium text-gray-900 truncate">
             {item.title}

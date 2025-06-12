@@ -56,23 +56,25 @@ const ResizableActivityBlock = ({
       <div
         ref={targetRef}
         className={cn(
-          "relative bg-white rounded-lg border-2 transition-all duration-200 group",
-          (isMoving || isResizing) ? "border-spot-primary/60 shadow-lg opacity-80" : "border-spot-primary shadow-sm hover:shadow-md",
+          "relative bg-white rounded-lg border-2 transition-all duration-200 group overflow-hidden",
+          (isMoving || isResizing) ? "border-spot-primary/60 shadow-lg opacity-90" : "border-spot-primary shadow-sm hover:shadow-md",
         )}
         style={{ 
           height: `${height}px`,
           minHeight: `${MIN_DURATION_MINUTES * PIXELS_PER_MINUTE}px`,
         }}
       >
-        <ActivityCard
-          item={item}
-          startTime={displayStartTime}
-          endTime={displayEndTime}
-          isMoving={isMoving}
-          isResizing={isResizing}
-          height={height}
-          onRemove={onRemove}
-        />
+        <div className="h-full" style={{ paddingBottom: '12px' }}>
+          <ActivityCard
+            item={item}
+            startTime={displayStartTime}
+            endTime={displayEndTime}
+            isMoving={isMoving}
+            isResizing={isResizing}
+            height={height}
+            onRemove={onRemove}
+          />
+        </div>
 
         <ResizeHandle />
       </div>
@@ -89,7 +91,7 @@ const ResizableActivityBlock = ({
         zoom={1}
         bounds={{ left: 0, top: 0, right: 0, bottom: 2000 }}
         snappable={true}
-        snapThreshold={5}
+        snapThreshold={10}
         snapGridWidth={SNAP_INTERVAL_PIXELS}
         snapGridHeight={SNAP_INTERVAL_PIXELS}
         renderDirections={['s']}

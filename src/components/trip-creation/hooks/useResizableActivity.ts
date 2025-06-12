@@ -29,7 +29,7 @@ export const useResizableActivity = (
       Math.min(MAX_DURATION_MINUTES * PIXELS_PER_MINUTE, newHeight)
     );
     
-    const newDurationMinutes = constrainedHeight / PIXELS_PER_MINUTE;
+    const newDurationMinutes = Math.round(constrainedHeight / PIXELS_PER_MINUTE / SNAP_INTERVAL_MINUTES) * SNAP_INTERVAL_MINUTES;
     const [hours, minutes] = startTime.split(':').map(Number);
     
     if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
@@ -41,7 +41,7 @@ export const useResizableActivity = (
     const endMinutes = startMinutes + newDurationMinutes;
     
     const newEndHours = Math.floor(endMinutes / 60);
-    const newEndMins = Math.round(endMinutes % 60);
+    const newEndMins = endMinutes % 60;
     
     if (newEndHours >= 24) {
       return '23:59';
@@ -55,12 +55,12 @@ export const useResizableActivity = (
 
   const calculateNewStartTime = useCallback((yPosition: number): string => {
     const startHour = 6;
-    const totalMinutes = Math.max(0, Math.round(yPosition / PIXELS_PER_MINUTE));
+    const totalMinutes = Math.max(0, Math.round(yPosition / PIXELS_PER_MINUTE / SNAP_INTERVAL_MINUTES) * SNAP_INTERVAL_MINUTES);
     const hours = Math.floor(totalMinutes / 60) + startHour;
     const minutes = totalMinutes % 60;
     
     const constrainedHours = Math.min(23, Math.max(startHour, hours));
-    const constrainedMinutes = constrainedHours === 23 && minutes > 59 ? 59 : Math.max(0, Math.round(minutes));
+    const constrainedMinutes = constrainedHours === 23 && minutes > 59 ? 59 : Math.max(0, minutes);
     
     return `${constrainedHours.toString().padStart(2, '0')}:${constrainedMinutes.toString().padStart(2, '0')}`;
   }, []);
@@ -89,7 +89,8 @@ export const useResizableActivity = (
   }, [previewStartTime, onDrag]);
 
   const handleResize = useCallback(({ width, height: newHeight }: any) => {
-    const snappedHeight = Math.round(newHeight / SNAP_INTERVAL_PIXELS) * SNAP_INTERVAL_PIXELS;
+    const constrainedHeight = Math.max(MIN_DURATION_MINUTES * PIXELS_PER_MINUTE, newHeight);
+    const snappedHeight = Math.round(constrainedHeight / SNAP_INTERVAL_PIXELS) * SNAP_INTERVAL_PIXELS;
     const newEndTime = calculateNewEndTime(snappedHeight);
     setPreviewEndTime(newEndTime);
     
