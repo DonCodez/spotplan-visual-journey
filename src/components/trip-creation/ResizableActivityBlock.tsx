@@ -52,8 +52,8 @@ const ResizableActivityBlock = ({
   } : undefined;
 
   const handleResize = (event: any, { size }: { size: { height: number } }) => {
-    // Snap to 15-minute intervals (15px = 15 minutes)
-    const snappedHeight = Math.max(60, Math.round(size.height / 15) * 15);
+    // Snap to 30-minute intervals (30px = 30 minutes)
+    const snappedHeight = Math.max(60, Math.round(size.height / 30) * 30);
     const newDuration = snappedHeight; // 1px = 1 minute
     
     const [hours, minutes] = startTime.split(':').map(Number);
@@ -97,31 +97,39 @@ const ResizableActivityBlock = ({
       maxConstraints={[0, 480]}
       handle={
         <div
-          className="absolute bottom-0 left-0 right-0 h-3 cursor-ns-resize flex items-center justify-center z-20 bg-transparent hover:bg-gray-100/50 transition-colors"
+          className="absolute bottom-0 left-0 right-0 h-4 cursor-ns-resize flex items-center justify-center z-20 bg-transparent hover:bg-gray-200/70 transition-colors group"
           onMouseDown={handleResizeHandleMouseDown}
           onPointerDown={handleResizeHandlePointerDown}
+          style={{ pointerEvents: 'auto' }}
         >
-          <div className="w-8 h-1 bg-gray-400 rounded-full hover:bg-gray-600 transition-colors" />
+          <div className="w-12 h-2 bg-gray-400 rounded-full group-hover:bg-gray-600 transition-colors shadow-sm" />
         </div>
       }
     >
       <div
         className={cn(
-          "relative bg-white rounded-lg border-2 border-spot-primary shadow-sm transition-all duration-200",
+          "relative bg-white rounded-lg border-2 border-spot-primary shadow-sm transition-all duration-200 pointer-events-none",
           isDragging && "opacity-50 rotate-2 shadow-lg",
-          isResizing && "border-spot-primary/60",
-          "h-full"
+          isResizing && "border-spot-primary/60 shadow-md",
         )}
-        style={style}
+        style={{ 
+          ...style,
+          height: `${height}px`,
+          minHeight: '60px'
+        }}
       >
-        {/* Draggable Content Area */}
+        {/* Draggable Content Area - excluding bottom resize zone */}
         <div
           ref={setNodeRef}
-          className="h-full cursor-move relative z-10"
+          className="cursor-move relative z-10 h-full"
+          style={{ 
+            pointerEvents: 'auto',
+            paddingBottom: '16px' // Space for resize handle
+          }}
           {...listeners}
           {...attributes}
         >
-          <div className="p-3 h-full flex flex-col pointer-events-auto">
+          <div className="p-3 h-full flex flex-col">
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-1 min-w-0 flex-1">
                 <GripVertical className="h-3 w-3 text-gray-400 flex-shrink-0" />
@@ -135,7 +143,8 @@ const ResizableActivityBlock = ({
                   e.stopPropagation();
                   onRemove();
                 }}
-                className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 ml-2 pointer-events-auto"
+                className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 ml-2"
+                style={{ pointerEvents: 'auto' }}
               >
                 <X className="h-4 w-4" />
               </button>
