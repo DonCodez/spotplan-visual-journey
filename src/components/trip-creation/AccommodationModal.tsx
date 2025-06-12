@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { X, Star, MapPin, Wifi, Car, Coffee, Utensils, Clock } from 'lucide-react';
+import { X, Star, MapPin, Wifi, Car, Coffee, Utensils, Clock, Calendar as CalendarIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTripCreation } from '@/contexts/TripCreationContext';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { DateRange } from 'react-day-picker';
 
 interface Hotel {
   id: string;
@@ -21,7 +25,7 @@ interface Hotel {
 
 interface StayDetails {
   hotelId: string;
-  selectedDays: string[];
+  hotelDateRange: DateRange | undefined;
   checkinTime: string;
   checkoutTime: string;
   hasBreakfast: boolean;
@@ -36,7 +40,7 @@ const AccommodationModal = () => {
   const [showStayDetailsModal, setShowStayDetailsModal] = useState(false);
   const [stayDetails, setStayDetails] = useState<StayDetails>({
     hotelId: '',
-    selectedDays: [],
+    hotelDateRange: undefined,
     checkinTime: '15:00',
     checkoutTime: '11:00',
     hasBreakfast: false,
@@ -44,6 +48,7 @@ const AccommodationModal = () => {
     breakfastTimeEnd: '09:00'
   });
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   // Mock hotel data with booking URLs
   const mockHotels: Hotel[] = [
@@ -71,8 +76,6 @@ const AccommodationModal = () => {
     }
   ];
 
-  // Backend Integration: This will be replaced with actual hotel search API
-  // GET /api/hotels?destination={destination}&checkin={date}&checkout={date}
   const hotels = mockHotels;
 
   const amenityIcons = {
@@ -85,24 +88,65 @@ const AccommodationModal = () => {
   };
 
   const handleVisitBookingPage = (hotel: Hotel) => {
-    // Backend Integration: Track booking page visits
-    // POST /api/hotels/{hotel.id}/track-visit
     window.open(hotel.bookingUrl, '_blank');
     setVisitedBookingPages(prev => new Set([...prev, hotel.id]));
   };
 
   const handleAddToSchedule = (hotel: Hotel) => {
     setSelectedHotel(hotel);
-    setStayDetails(prev => ({ ...prev, hotelId: hotel.id, selectedDays: [] }));
+    setStayDetails(prev => ({ ...prev, hotelId: hotel.id, hotelDateRange: undefined }));
     setShowStayDetailsModal(true);
   };
 
-  const handleStayDetailsSubmit = () => {
-    if (!selectedHotel || stayDetails.selectedDays.length === 0) return;
+  // Get trip date range for calendar restrictions
+  const getTripDateRange = () => {
+    if (state.tripDates.length === 0) return { from: undefined, to: undefined };
+    
+    const sortedDates = [...state.tripDates].sort((a, b) => a.getTime() - b.getTime());
+    return {
+      from: sortedDates[0],
+      to: sortedDates[sortedDates.length - 1]
+    };
+  };
 
-    // Backend Integration: Save accommodation to user's trip
-    // POST /api/trips/{tripId}/accommodations
-    // Body: { hotelId, checkinDate, checkoutDate, checkinTime, checkoutTime, hasBreakfast, breakfastDetails }
+  const tripDateRange = getTripDateRange();
+
+  // Check if date is within trip dates
+  const isDateWithinTrip = (date: Date) => {
+    if (!tripDateRange.from || !tripDateRange.to) return false;
+    return date >= tripDateRange.from && date <= tripDateRange.to;
+  };
+
+  // Convert date range to individual day keys for schedule processing
+  const convertDateRangeToSelectedDays = (dateRange: DateRange | undefined): string[] => {
+    if (!dateRange?.from || !dateRange?.to) return [];
+    
+    const dates = [];
+    const startDate = new Date(dateRange.from);
+    const endDate = new Date(dateRange.to);
+    
+    for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+      dates.push(date.toISOString().split('T')[0]);
+    }
+    
+    return dates;
+  };
+
+  const getDateDisplayText = () => {
+    if (stayDetails.hotelDateRange?.from) {
+      if (stayDetails.hotelDateRange.to) {
+        const nightCount = Math.ceil((stayDetails.hotelDateRange.to.getTime() - stayDetails.hotelDateRange.from.getTime()) / (1000 * 60 * 60 * 24));
+        return `${format(stayDetails.hotelDateRange.from, 'MMM dd')} - ${format(stayDetails.hotelDateRange.to, 'MMM dd, yyyy')} (${nightCount} night${nightCount > 1 ? 's' : ''})`;
+      }
+      return `${format(stayDetails.hotelDateRange.from, 'MMM dd, yyyy')} - ?`;
+    }
+    return 'Select hotel stay dates';
+  };
+
+  const handleStayDetailsSubmit = () => {
+    if (!selectedHotel || !stayDetails.hotelDateRange?.from || !stayDetails.hotelDateRange?.to) return;
+
+    const selectedDays = convertDateRangeToSelectedDays(stayDetails.hotelDateRange);
 
     // Add accommodation to schedule for selected days
     const accommodationItem = {
@@ -116,15 +160,12 @@ const AccommodationModal = () => {
       stars: Math.floor(selectedHotel.rating),
     };
 
-    // Add accommodation to each selected day
-    stayDetails.selectedDays.forEach(dayKey => {
-      // Add check-in on first day, check-out on last day, and accommodation for all days
-      const isFirstDay = dayKey === stayDetails.selectedDays[0];
-      const isLastDay = dayKey === stayDetails.selectedDays[stayDetails.selectedDays.length - 1];
+    selectedDays.forEach(dayKey => {
+      const isFirstDay = dayKey === selectedDays[0];
+      const isLastDay = dayKey === selectedDays[selectedDays.length - 1];
 
       const timeSlots = [];
 
-      // Add check-in time slot on first day
       if (isFirstDay) {
         timeSlots.push({
           id: `checkin-${selectedHotel.id}-${dayKey}`,
@@ -140,7 +181,6 @@ const AccommodationModal = () => {
         });
       }
 
-      // Add check-out time slot on last day
       if (isLastDay) {
         timeSlots.push({
           id: `checkout-${selectedHotel.id}-${dayKey}`,
@@ -156,7 +196,6 @@ const AccommodationModal = () => {
         });
       }
 
-      // Add breakfast if enabled
       if (stayDetails.hasBreakfast) {
         timeSlots.push({
           id: `breakfast-${selectedHotel.id}-${dayKey}`,
@@ -176,7 +215,6 @@ const AccommodationModal = () => {
         });
       }
 
-      // Update the schedule for this day
       timeSlots.forEach(slot => {
         dispatch({
           type: 'ADD_ITEM_TO_SCHEDULE',
@@ -191,25 +229,11 @@ const AccommodationModal = () => {
       });
     });
 
-    // Show success message
     setShowSuccessMessage(true);
     setTimeout(() => setShowSuccessMessage(false), 3000);
 
-    // Close modals
     setShowStayDetailsModal(false);
     dispatch({ type: 'CLOSE_ACCOMMODATION_MODAL' });
-  };
-
-  const formatDayLabel = (dateKey: string) => {
-    const date = new Date(dateKey);
-    const dayNumber = state.tripDates.findIndex(tripDate => 
-      tripDate.toISOString().split('T')[0] === dateKey
-    ) + 1;
-    return `Day ${dayNumber} - ${date.toLocaleDateString('en-US', { 
-      weekday: 'short', 
-      month: 'short', 
-      day: 'numeric' 
-    })}`;
   };
 
   if (!state.isAccommodationModalOpen) return null;
@@ -270,7 +294,6 @@ const AccommodationModal = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    {/* Primary CTA: Book Now */}
                     <Button
                       id={`visit-booking-${hotel.id}`}
                       onClick={() => handleVisitBookingPage(hotel)}
@@ -279,7 +302,6 @@ const AccommodationModal = () => {
                       Book Now
                     </Button>
                     
-                    {/* Secondary CTA: Add to Schedule (conditional) */}
                     <AnimatePresence>
                       {visitedBookingPages.has(hotel.id) && (
                         <motion.div
@@ -317,38 +339,50 @@ const AccommodationModal = () => {
           </DialogHeader>
 
           <div className="space-y-6 mt-4">
-            {/* Stay Duration Selector */}
+            {/* Hotel Stay Dates Selector with Calendar */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
-                Select Stay Days
+                Select Hotel Stay Dates
               </label>
-              <div id="stay-days-selector" className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
-                {state.tripDates.map((date) => {
-                  const dateKey = date.toISOString().split('T')[0];
-                  const isSelected = stayDetails.selectedDays.includes(dateKey);
-                  
-                  return (
-                    <div
-                      key={dateKey}
-                      className={cn(
-                        "flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-colors",
-                        isSelected ? "border-spot-primary bg-spot-primary/10" : "border-gray-200 hover:border-gray-300"
-                      )}
-                      onClick={() => {
-                        setStayDetails(prev => ({
-                          ...prev,
-                          selectedDays: isSelected 
-                            ? prev.selectedDays.filter(d => d !== dateKey)
-                            : [...prev.selectedDays, dateKey].sort()
-                        }));
-                      }}
-                    >
-                      <Checkbox checked={isSelected} />
-                      <span className="text-sm">{formatDayLabel(dateKey)}</span>
+              <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal h-12 px-4",
+                      !stayDetails.hotelDateRange?.from && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-3 h-4 w-4 text-spot-primary" />
+                    <div className="flex-1">
+                      {getDateDisplayText()}
                     </div>
-                  );
-                })}
-              </div>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="range"
+                    selected={stayDetails.hotelDateRange}
+                    onSelect={(dateRange) => setStayDetails(prev => ({ ...prev, hotelDateRange: dateRange }))}
+                    disabled={(date) => !isDateWithinTrip(date) || date < new Date()}
+                    initialFocus
+                    className="pointer-events-auto"
+                  />
+                  {tripDateRange.from && tripDateRange.to && (
+                    <div className="p-3 border-t bg-gray-50 text-xs text-gray-600">
+                      Trip dates: {format(tripDateRange.from, 'MMM dd')} - {format(tripDateRange.to, 'MMM dd, yyyy')}
+                    </div>
+                  )}
+                </PopoverContent>
+              </Popover>
+              {!stayDetails.hotelDateRange?.from && (
+                <p className="text-xs text-gray-500 mt-1">
+                  Select dates within your trip duration ({tripDateRange.from && tripDateRange.to ? 
+                    `${format(tripDateRange.from, 'MMM dd')} - ${format(tripDateRange.to, 'MMM dd, yyyy')}` : 
+                    'No trip dates selected'
+                  })
+                </p>
+              )}
             </div>
 
             {/* Check-in/Check-out Times */}
@@ -391,7 +425,6 @@ const AccommodationModal = () => {
                 </label>
               </div>
 
-              {/* Breakfast Time Range (conditional) */}
               <AnimatePresence>
                 {stayDetails.hasBreakfast && (
                   <motion.div
@@ -439,7 +472,7 @@ const AccommodationModal = () => {
               </Button>
               <Button
                 onClick={handleStayDetailsSubmit}
-                disabled={stayDetails.selectedDays.length === 0}
+                disabled={!stayDetails.hotelDateRange?.from || !stayDetails.hotelDateRange?.to}
                 className="bg-spot-primary hover:bg-spot-primary/90 text-white"
               >
                 Add to Schedule
