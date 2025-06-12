@@ -34,6 +34,7 @@ const ResizableActivityBlock = ({
   onDrag,
 }: ResizableActivityBlockProps) => {
   const [isMoving, setIsMoving] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
   const [previewEndTime, setPreviewEndTime] = useState<string | null>(null);
   const [previewStartTime, setPreviewStartTime] = useState<string | null>(null);
   const targetRef = useRef<HTMLDivElement>(null);
@@ -50,7 +51,6 @@ const ResizableActivityBlock = ({
     const newDurationMinutes = constrainedHeight / PIXELS_PER_MINUTE;
     const [hours, minutes] = startTime.split(':').map(Number);
     
-    // Validate input time
     if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
       console.warn('Invalid startTime:', startTime);
       return '23:59';
@@ -62,7 +62,6 @@ const ResizableActivityBlock = ({
     const newEndHours = Math.floor(endMinutes / 60);
     const newEndMins = Math.round(endMinutes % 60);
     
-    // Ensure we don't go past 23:59
     if (newEndHours >= 24) {
       return '23:59';
     }
@@ -74,7 +73,7 @@ const ResizableActivityBlock = ({
   }, [startTime]);
 
   const calculateNewStartTime = useCallback((yPosition: number): string => {
-    const startHour = 6; // Same as TimeGrid
+    const startHour = 6;
     const totalMinutes = Math.max(0, Math.round(yPosition / PIXELS_PER_MINUTE));
     const hours = Math.floor(totalMinutes / 60) + startHour;
     const minutes = totalMinutes % 60;
@@ -119,7 +118,7 @@ const ResizableActivityBlock = ({
   }, [calculateNewEndTime]);
 
   const handleResizeEnd = useCallback(() => {
-    setIsMoving(false);
+    setIsResizing(false);
     if (previewEndTime) {
       onResize(startTime, previewEndTime);
     }
@@ -130,7 +129,6 @@ const ResizableActivityBlock = ({
     }
   }, [previewEndTime, startTime, onResize]);
 
-  // Safely get display times with fallbacks
   const displayEndTime = previewEndTime && previewEndTime !== 'Invalid Date' ? previewEndTime : endTime;
   const displayStartTime = previewStartTime && previewStartTime !== 'Invalid Date' ? previewStartTime : startTime;
 
@@ -139,18 +137,19 @@ const ResizableActivityBlock = ({
       <div
         ref={targetRef}
         className={cn(
-          "relative bg-white rounded-lg border-2 transition-all duration-200",
-          isMoving ? "border-spot-primary/60 shadow-lg opacity-80" : "border-spot-primary shadow-sm",
+          "relative bg-white rounded-lg border-2 transition-all duration-200 group",
+          (isMoving || isResizing) ? "border-spot-primary/60 shadow-lg opacity-80" : "border-spot-primary shadow-sm hover:shadow-md",
         )}
         style={{ 
           height: `${height}px`,
           minHeight: `${MIN_DURATION_MINUTES * PIXELS_PER_MINUTE}px`,
         }}
       >
-        <div className="p-3 h-full flex flex-col">
+        {/* Main card content - draggable area */}
+        <div className="p-3 h-full flex flex-col cursor-move group-hover:bg-gray-50/50 transition-colors">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-1 min-w-0 flex-1">
-              <GripVertical className="h-3 w-3 text-gray-400 flex-shrink-0" />
+              <GripVertical className="h-3 w-3 text-gray-400 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
               <MapPin className="h-3 w-3 text-spot-primary flex-shrink-0" />
               <h4 className="text-sm font-medium text-gray-900 truncate">
                 {item.title}
@@ -171,7 +170,7 @@ const ResizableActivityBlock = ({
             <Clock className="h-3 w-3" />
             <span className={cn(
               "transition-colors duration-200",
-              isMoving && "text-spot-primary font-medium"
+              (isMoving || isResizing) && "text-spot-primary font-medium"
             )}>
               {formatTimeRange(displayStartTime, displayEndTime)}
             </span>
@@ -188,6 +187,11 @@ const ResizableActivityBlock = ({
               Duration: {Math.round(calculateDuration(displayStartTime, displayEndTime) / 60 * 10) / 10}h
             </div>
           )}
+        </div>
+
+        {/* Resize handle at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-2 cursor-ns-resize bg-gradient-to-t from-spot-primary/20 to-transparent hover:from-spot-primary/40 transition-colors rounded-b-lg flex items-center justify-center group/resize">
+          <div className="w-8 h-0.5 bg-spot-primary rounded-full opacity-60 group-hover/resize:opacity-100 transition-opacity" />
         </div>
       </div>
 
@@ -208,16 +212,18 @@ const ResizableActivityBlock = ({
         snapGridHeight={SNAP_INTERVAL_PIXELS}
         renderDirections={['s']}
         resizeFormat={(size: number[]) => size}
+        dragArea={true}
         onDragStart={() => setIsMoving(true)}
         onDrag={handleDrag}
         onDragEnd={handleDragEnd}
-        onResizeStart={() => setIsMoving(true)}
+        onResizeStart={() => setIsResizing(true)}
         onResize={handleResize}
         onResizeEnd={handleResizeEnd}
       />
       
-      {isMoving && (previewEndTime || previewStartTime) && (
-        <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg z-50">
+      {(isMoving || isResizing) && (previewEndTime || previewStartTime) && (
+        <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded shadow-lg z-50 whitespace-nowrap">
+          {isMoving ? 'Moving to: ' : 'Resizing to: '}
           {formatTimeRange(displayStartTime, displayEndTime)}
         </div>
       )}
