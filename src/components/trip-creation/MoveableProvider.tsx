@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useRef, useCallback } from 'react';
+import React, { createContext, useContext, useState, useRef, useCallback, useEffect } from 'react';
 import { useTripCreation } from '@/contexts/TripCreationContext';
 import { ScheduleItem } from '@/types/schedule';
 import { positionToTime, snapToGrid, timeToPosition } from '@/utils/timeUtils';
@@ -10,10 +10,11 @@ interface MoveableContextType {
   setActiveItem: (item: ScheduleItem | null) => void;
   isDragging: boolean;
   setIsDragging: (dragging: boolean) => void;
-  dragTarget: HTMLElement | null;
-  setDragTarget: (target: HTMLElement | null) => void;
-  handleDragStart: (item: ScheduleItem, target: HTMLElement) => void;
-  handleDragEnd: (x: number, y: number) => void;
+  dragPosition: { x: number; y: number } | null;
+  setDragPosition: (position: { x: number; y: number } | null) => void;
+  handleDragStart: (item: ScheduleItem, e: any) => void;
+  handleDrag: (e: any) => void;
+  handleDragEnd: (e: any) => void;
 }
 
 const MoveableContext = createContext<MoveableContextType | null>(null);
@@ -34,25 +35,33 @@ const MoveableProvider = ({ children }: MoveableProviderProps) => {
   const { dispatch } = useTripCreation();
   const [activeItem, setActiveItem] = useState<ScheduleItem | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragTarget, setDragTarget] = useState<HTMLElement | null>(null);
+  const [dragPosition, setDragPosition] = useState<{ x: number; y: number } | null>(null);
 
-  const handleDragStart = useCallback((item: ScheduleItem, target: HTMLElement) => {
+  const handleDragStart = useCallback((item: ScheduleItem, e: any) => {
     setActiveItem(item);
-    setDragTarget(target);
     setIsDragging(true);
+    setDragPosition({ x: e.clientX, y: e.clientY });
   }, []);
 
-  const handleDragEnd = useCallback((x: number, y: number) => {
-    if (!activeItem) return;
+  const handleDrag = useCallback((e: any) => {
+    if (isDragging && activeItem) {
+      setDragPosition({ x: e.clientX, y: e.clientY });
+    }
+  }, [isDragging, activeItem]);
+
+  const handleDragEnd = useCallback((e: any) => {
+    if (!activeItem || !isDragging) return;
 
     // Find drop target by coordinates
-    const elementUnderMouse = document.elementFromPoint(x, y);
+    const elementUnderMouse = document.elementFromPoint(e.clientX, e.clientY);
     const timeGrid = elementUnderMouse?.closest('[data-time-grid]');
     
     if (timeGrid) {
       const date = timeGrid.getAttribute('data-date');
       const rect = timeGrid.getBoundingClientRect();
-      const relativeY = y - rect.top;
+      const relativeY = e.clientY - rect.top;
+      
+      // Snap to 30-minute intervals (30px = 30 minutes)
       const snappedPosition = snapToGrid(Math.max(0, relativeY), 30);
       const startTime = positionToTime(snappedPosition, 6);
       
@@ -78,19 +87,21 @@ const MoveableProvider = ({ children }: MoveableProviderProps) => {
       }
     }
     
+    // Reset drag state
     setActiveItem(null);
-    setDragTarget(null);
     setIsDragging(false);
-  }, [activeItem, dispatch]);
+    setDragPosition(null);
+  }, [activeItem, isDragging, dispatch]);
 
   const contextValue: MoveableContextType = {
     activeItem,
     setActiveItem,
     isDragging,
     setIsDragging,
-    dragTarget,
-    setDragTarget,
+    dragPosition,
+    setDragPosition,
     handleDragStart,
+    handleDrag,
     handleDragEnd,
   };
 
@@ -98,16 +109,17 @@ const MoveableProvider = ({ children }: MoveableProviderProps) => {
     <MoveableContext.Provider value={contextValue}>
       {children}
       {/* Drag overlay */}
-      {isDragging && activeItem && (
+      {isDragging && activeItem && dragPosition && (
         <div 
-          className="fixed top-0 left-0 pointer-events-none z-50"
+          className="fixed pointer-events-none z-50"
           style={{ 
+            left: `${dragPosition.x}px`,
+            top: `${dragPosition.y}px`,
             transform: 'translate(-50%, -50%)',
             zIndex: 9999 
           }}
-          id="drag-overlay"
         >
-          <div className="transform rotate-6 opacity-90">
+          <div className="transform rotate-6 opacity-90 scale-105">
             <PlaceCard item={activeItem} isDragging />
           </div>
         </div>

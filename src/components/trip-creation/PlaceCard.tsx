@@ -15,7 +15,7 @@ interface PlaceCardProps {
 const PlaceCard = ({ item, isDragging = false, className }: PlaceCardProps) => {
   const targetRef = useRef<HTMLDivElement>(null);
   const moveableRef = useRef<Moveable>(null);
-  const { handleDragStart, handleDragEnd, setIsDragging, isDragging: globalIsDragging } = useMoveableContext();
+  const { handleDragStart, handleDrag, handleDragEnd, isDragging: globalIsDragging } = useMoveableContext();
 
   const renderPriceLevel = (priceLevel: number) => {
     return Array.from({ length: 4 }, (_, i) => (
@@ -30,21 +30,18 @@ const PlaceCard = ({ item, isDragging = false, className }: PlaceCardProps) => {
   };
 
   const handleDragStartEvent = (e: any) => {
-    if (targetRef.current) {
-      handleDragStart(item, targetRef.current);
-    }
+    e.preventDefault();
+    handleDragStart(item, e);
   };
 
-  const handleDrag = (e: any) => {
-    const overlay = document.getElementById('drag-overlay');
-    if (overlay) {
-      overlay.style.left = `${e.clientX}px`;
-      overlay.style.top = `${e.clientY}px`;
-    }
+  const handleDragEvent = (e: any) => {
+    e.preventDefault();
+    handleDrag(e);
   };
 
   const handleDragEndEvent = (e: any) => {
-    handleDragEnd(e.clientX, e.clientY);
+    e.preventDefault();
+    handleDragEnd(e);
   };
 
   // Don't render moveable for dragging overlay
@@ -52,7 +49,7 @@ const PlaceCard = ({ item, isDragging = false, className }: PlaceCardProps) => {
     return (
       <div
         className={cn(
-          "bg-white border border-gray-200 rounded-lg p-3 shadow-lg border-spot-primary",
+          "bg-white border-2 border-spot-primary rounded-lg p-3 shadow-lg min-w-[250px]",
           className
         )}
       >
@@ -183,9 +180,9 @@ const PlaceCard = ({ item, isDragging = false, className }: PlaceCardProps) => {
         ref={moveableRef}
         target={targetRef.current}
         draggable={true}
-        throttleDrag={1}
+        throttleDrag={0}
         onDragStart={handleDragStartEvent}
-        onDrag={handleDrag}
+        onDrag={handleDragEvent}
         onDragEnd={handleDragEndEvent}
         renderDirections={[]}
       />

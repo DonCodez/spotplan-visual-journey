@@ -1,10 +1,11 @@
 
 import React from 'react';
 import { TimeSlot, ScheduleItem } from '@/types/schedule';
-import { timeToPosition, positionToTime, snapToGrid } from '@/utils/timeUtils';
+import { timeToPosition, positionToTime } from '@/utils/timeUtils';
 import { cn } from '@/lib/utils';
 import TimeRuler from './TimeRuler';
 import ResizableActivityBlock from './ResizableActivityBlock';
+import { useMoveableContext } from './MoveableProvider';
 
 interface TimeGridProps {
   date: string;
@@ -22,6 +23,7 @@ const TimeGrid = ({
   endHour = 23 
 }: TimeGridProps) => {
   const totalHeight = (endHour - startHour + 1) * 60; // 60px per hour
+  const { isDragging } = useMoveableContext();
 
   const handleActivityResize = (slotId: string, newStartTime: string, newEndTime: string) => {
     const slot = timeSlots.find(s => s.id === slotId);
@@ -59,12 +61,30 @@ const TimeGrid = ({
           })}
         </div>
         
-        {/* Drop zone */}
+        {/* Drop zone overlay */}
         <div
-          className="absolute inset-0 transition-colors duration-200"
+          className={cn(
+            "absolute inset-0 transition-colors duration-200",
+            isDragging && "bg-spot-primary/5 border-2 border-dashed border-spot-primary/30"
+          )}
           data-time-grid="true"
           data-date={date}
         >
+          {/* Visual drop indicators during drag */}
+          {isDragging && Array.from({ length: Math.floor(totalHeight / 30) }).map((_, index) => {
+            const position = index * 30;
+            const time = positionToTime(position, startHour);
+            
+            return (
+              <div
+                key={`drop-indicator-${index}`}
+                className="absolute left-2 right-2 h-8 rounded border border-dashed border-spot-primary/50 bg-spot-primary/10 transition-colors duration-200"
+                style={{ top: `${position}px` }}
+                data-time={time}
+              />
+            );
+          })}
+          
           {/* Activity blocks */}
           {timeSlots
             .filter(slot => slot.item)
@@ -91,21 +111,6 @@ const TimeGrid = ({
                 </div>
               );
             })}
-          
-          {/* Drop zones for empty time slots */}
-          {Array.from({ length: Math.floor(totalHeight / 30) }).map((_, index) => {
-            const position = index * 30;
-            const time = positionToTime(position, startHour);
-            
-            return (
-              <div
-                key={`drop-zone-${index}`}
-                className="absolute left-2 right-2 h-8 rounded border-2 border-dashed border-transparent hover:border-spot-primary/30 transition-colors duration-200"
-                style={{ top: `${position}px` }}
-                data-time={time}
-              />
-            );
-          })}
         </div>
         
         {/* Current time indicator (if today) */}
