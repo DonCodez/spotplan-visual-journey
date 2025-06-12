@@ -5,10 +5,10 @@ import { formatTimeAMPM } from '@/utils/timeUtils';
 interface TimeRulerProps {
   startHour?: number;
   endHour?: number;
-  intervalMinutes?: number;
+  pixelsPerMinute?: number;
 }
 
-const TimeRuler = ({ startHour = 6, endHour = 23, intervalMinutes = 60 }: TimeRulerProps) => {
+const TimeRuler = ({ startHour = 6, endHour = 23, pixelsPerMinute = 2 }: TimeRulerProps) => {
   const hours = [];
   
   for (let hour = startHour; hour <= endHour; hour++) {
@@ -17,14 +17,15 @@ const TimeRuler = ({ startHour = 6, endHour = 23, intervalMinutes = 60 }: TimeRu
 
   return (
     <div className="w-20 flex-shrink-0 relative">
+      {/* Hour labels */}
       {hours.map((hour) => {
         const timeString = `${hour.toString().padStart(2, '0')}:00`;
-        const position = (hour - startHour) * 60; // 60px per hour
+        const position = (hour - startHour) * 60 * pixelsPerMinute; // Use pixelsPerMinute for consistency
         
         return (
           <div
             key={hour}
-            className="absolute left-0 right-0 flex items-center justify-end pr-2"
+            className="absolute left-0 right-0 flex items-center justify-end pr-2 -translate-y-2"
             style={{ top: `${position}px` }}
           >
             <span className="text-xs text-gray-500 font-medium">
@@ -34,10 +35,10 @@ const TimeRuler = ({ startHour = 6, endHour = 23, intervalMinutes = 60 }: TimeRu
         );
       })}
       
-      {/* Grid lines for 30-minute marks */}
+      {/* 30-minute marks */}
       {hours.map((hour) => {
-        const halfHourPosition = (hour - startHour) * 60 + 30;
         if (hour < endHour) {
+          const halfHourPosition = (hour - startHour) * 60 * pixelsPerMinute + 30 * pixelsPerMinute;
           return (
             <div
               key={`${hour}-30`}

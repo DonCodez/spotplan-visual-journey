@@ -104,7 +104,11 @@ const TimeGrid = ({
 
   return (
     <div className="flex bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-      <TimeRuler startHour={startHour} endHour={endHour} />
+      <TimeRuler 
+        startHour={startHour} 
+        endHour={endHour} 
+        pixelsPerMinute={PIXELS_PER_MINUTE}
+      />
       
       <div 
         className="flex-1 relative" 
@@ -113,7 +117,7 @@ const TimeGrid = ({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        {/* Grid background */}
+        {/* Grid background with proper alignment to ruler */}
         <div className="absolute inset-0">
           {Array.from({ length: (endHour - startHour + 1) * 4 }).map((_, index) => {
             const position = index * 15 * PIXELS_PER_MINUTE;

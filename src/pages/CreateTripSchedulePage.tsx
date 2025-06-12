@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import TripCreationCloseButton from '@/components/trip-creation/TripCreationCloseButton';
 import ScheduleHeader from '@/components/trip-creation/ScheduleHeader';
-import DragDropProvider from '@/components/trip-creation/DragDropProvider';
 import DayNavigation from '@/components/trip-creation/DayNavigation';
 import PlacesSuggestionPanel from '@/components/trip-creation/PlacesSuggestionPanel';
 import ScheduleCanvas from '@/components/trip-creation/ScheduleCanvas';
