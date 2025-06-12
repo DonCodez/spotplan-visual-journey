@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useDroppable } from '@dnd-kit/core';
 import { Clock, UtensilsCrossed, MapPin, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TimeSlot as TimeSlotType } from '@/types/schedule';
@@ -13,14 +12,6 @@ interface TimeSlotProps {
 
 const TimeSlot = ({ slot, date }: TimeSlotProps) => {
   const { dispatch } = useTripCreation();
-  
-  const { isOver, setNodeRef } = useDroppable({
-    id: `${date}-${slot.id}`,
-    data: {
-      date,
-      slotId: slot.id,
-    },
-  });
 
   const handleRemoveItem = () => {
     dispatch({
@@ -45,14 +36,14 @@ const TimeSlot = ({ slot, date }: TimeSlotProps) => {
 
   return (
     <div
-      ref={setNodeRef}
       className={cn(
         "min-h-[60px] border-2 border-dashed rounded-lg p-3 transition-all duration-200",
-        isOver
-          ? "border-spot-primary bg-spot-primary/10"
-          : "border-gray-200 hover:border-gray-300",
+        "border-gray-200 hover:border-gray-300",
         slot.item && "border-solid border-spot-primary bg-spot-primary/5"
       )}
+      data-time-slot="true"
+      data-date={date}
+      data-slot-id={slot.id}
     >
       {/* Time Header */}
       <div className="flex items-center justify-between mb-2">
@@ -101,7 +92,7 @@ const TimeSlot = ({ slot, date }: TimeSlotProps) => {
       ) : (
         <div className="text-center py-2">
           <p className="text-xs text-gray-400">
-            {isOver ? 'Drop here' : 'Drop activity here'}
+            Drop activity here
           </p>
         </div>
       )}

@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useDroppable } from '@dnd-kit/core';
 import { TimeSlot, ScheduleItem } from '@/types/schedule';
 import { timeToPosition, positionToTime, snapToGrid } from '@/utils/timeUtils';
 import { cn } from '@/lib/utils';
@@ -23,11 +22,6 @@ const TimeGrid = ({
   endHour = 23 
 }: TimeGridProps) => {
   const totalHeight = (endHour - startHour + 1) * 60; // 60px per hour
-  
-  const { isOver, setNodeRef } = useDroppable({
-    id: `time-grid-${date}`,
-    data: { date, type: 'time-grid' },
-  });
 
   const handleActivityResize = (slotId: string, newStartTime: string, newEndTime: string) => {
     const slot = timeSlots.find(s => s.id === slotId);
@@ -67,11 +61,9 @@ const TimeGrid = ({
         
         {/* Drop zone */}
         <div
-          ref={setNodeRef}
-          className={cn(
-            "absolute inset-0 transition-colors duration-200",
-            isOver && "bg-spot-primary/5"
-          )}
+          className="absolute inset-0 transition-colors duration-200"
+          data-time-grid="true"
+          data-date={date}
         >
           {/* Activity blocks */}
           {timeSlots
@@ -127,7 +119,8 @@ const TimeGrid = ({
                     hour12: false, 
                     hour: '2-digit', 
                     minute: '2-digit' 
-                  })
+                  }),
+                  startHour
                 )}px` 
               }}
             />

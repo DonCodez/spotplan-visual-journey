@@ -1,10 +1,10 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Resizable } from 'react-resizable';
-import { useDraggable } from '@dnd-kit/core';
+import Moveable from 'react-moveable';
 import { MapPin, X, Clock, GripVertical } from 'lucide-react';
 import { ScheduleItem } from '@/types/schedule';
-import { formatTimeRange, calculateDuration } from '@/utils/timeUtils';
+import { formatTimeRange, calculateDuration, timeToPosition, positionToTime, snapToGrid } from '@/utils/timeUtils';
 import { cn } from '@/lib/utils';
 
 interface ResizableActivityBlockProps {
@@ -27,29 +27,10 @@ const ResizableActivityBlock = ({
   onRemove,
 }: ResizableActivityBlockProps) => {
   const [isResizing, setIsResizing] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const targetRef = useRef<HTMLDivElement>(null);
   const duration = calculateDuration(startTime, endTime);
   const height = Math.max(60, duration); // 1px per minute, minimum 60px
-
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    isDragging,
-  } = useDraggable({
-    id: `activity-${date}-${slotId}`,
-    data: {
-      item,
-      startTime,
-      endTime,
-      date,
-      slotId,
-    },
-  });
-
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined;
 
   const handleResize = (event: any, { size }: { size: { height: number } }) => {
     // Snap to 30-minute intervals (30px = 30 minutes)
@@ -85,6 +66,35 @@ const ResizableActivityBlock = ({
     e.stopPropagation();
   };
 
+  const handleMoveableDragStart = () => {
+    setIsDragging(true);
+  };
+
+  const handleMoveableDrag = (e: any) => {
+    // Handle position updates for dragging within the time grid
+    const timeGrid = document.querySelector(`[data-date="${date}"]`);
+    if (timeGrid) {
+      const rect = timeGrid.getBoundingClientRect();
+      const relativeY = e.clientY - rect.top;
+      const snappedPosition = snapToGrid(Math.max(0, relativeY), 30);
+      const newStartTime = positionToTime(snappedPosition, 6);
+      
+      // Calculate new end time maintaining duration
+      const [startHours, startMinutes] = newStartTime.split(':').map(Number);
+      const startTotalMinutes = startHours * 60 + startMinutes;
+      const endTotalMinutes = startTotalMinutes + duration;
+      const newEndHours = Math.floor(endTotalMinutes / 60);
+      const newEndMinutes = endTotalMinutes % 60;
+      const newEndTime = `${newEndHours.toString().padStart(2, '0')}:${newEndMinutes.toString().padStart(2, '0')}`;
+      
+      onResize(newStartTime, newEndTime);
+    }
+  };
+
+  const handleMoveableDragEnd = () => {
+    setIsDragging(false);
+  };
+
   return (
     <Resizable
       height={height}
@@ -107,27 +117,23 @@ const ResizableActivityBlock = ({
       }
     >
       <div
+        ref={targetRef}
         className={cn(
-          "relative bg-white rounded-lg border-2 border-spot-primary shadow-sm transition-all duration-200 pointer-events-none",
+          "relative bg-white rounded-lg border-2 border-spot-primary shadow-sm transition-all duration-200",
           isDragging && "opacity-50 rotate-2 shadow-lg",
           isResizing && "border-spot-primary/60 shadow-md",
         )}
         style={{ 
-          ...style,
           height: `${height}px`,
           minHeight: '60px'
         }}
       >
-        {/* Draggable Content Area - excluding bottom resize zone */}
+        {/* Content Area */}
         <div
-          ref={setNodeRef}
-          className="cursor-move relative z-10 h-full"
+          className="relative z-10 h-full"
           style={{ 
-            pointerEvents: 'auto',
             paddingBottom: '16px' // Space for resize handle
           }}
-          {...listeners}
-          {...attributes}
         >
           <div className="p-3 h-full flex flex-col">
             <div className="flex items-start justify-between mb-2">
@@ -163,6 +169,16 @@ const ResizableActivityBlock = ({
           </div>
         </div>
       </div>
+
+      <Moveable
+        target={targetRef.current}
+        draggable={true}
+        onDragStart={handleMoveableDragStart}
+        onDrag={handleMoveableDrag}
+        onDragEnd={handleMoveableDragEnd}
+        renderDirections={[]}
+        throttleDrag={1}
+      />
     </Resizable>
   );
 };
