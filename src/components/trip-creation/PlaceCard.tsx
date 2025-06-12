@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useDraggable } from '@dnd-kit/core';
 import { Star, MapPin, DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ScheduleItem, Restaurant } from '@/types/schedule';
@@ -12,22 +11,22 @@ interface PlaceCardProps {
 }
 
 const PlaceCard = ({ item, isDragging = false, className }: PlaceCardProps) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    isDragging: isCurrentlyDragging,
-  } = useDraggable({
-    id: item.id,
-    data: {
-      item,
-    },
-  });
-
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined;
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData('application/json', JSON.stringify(item));
+    e.dataTransfer.effectAllowed = 'copy';
+    
+    // Create a custom drag image
+    const dragImage = e.currentTarget.cloneNode(true) as HTMLElement;
+    dragImage.style.opacity = '0.8';
+    dragImage.style.transform = 'rotate(5deg)';
+    document.body.appendChild(dragImage);
+    e.dataTransfer.setDragImage(dragImage, 50, 50);
+    
+    // Clean up the drag image after a short delay
+    setTimeout(() => {
+      document.body.removeChild(dragImage);
+    }, 0);
+  };
 
   const renderPriceLevel = (priceLevel: number) => {
     return Array.from({ length: 4 }, (_, i) => (
@@ -43,15 +42,13 @@ const PlaceCard = ({ item, isDragging = false, className }: PlaceCardProps) => {
 
   return (
     <div
-      ref={setNodeRef}
-      style={style}
-      {...listeners}
-      {...attributes}
+      draggable
+      onDragStart={handleDragStart}
       className={cn(
         "bg-white border border-gray-200 rounded-lg p-3 cursor-grab transition-all duration-200",
         "hover:border-spot-primary hover:shadow-md hover:scale-105",
-        isCurrentlyDragging && "opacity-50 scale-95",
-        isDragging && "shadow-lg border-spot-primary",
+        "active:cursor-grabbing active:scale-95",
+        isDragging && "opacity-50 scale-95",
         className
       )}
     >

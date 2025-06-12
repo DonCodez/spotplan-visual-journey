@@ -67,18 +67,16 @@ const CreateTripSchedulePage = () => {
       <div className="container mx-auto px-6 py-8">
         <ScheduleHeader />
         
-        <DragDropProvider>
-          <DayNavigation />
-          
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
-            <div className="lg:col-span-4">
-              <PlacesSuggestionPanel />
-            </div>
-            <div className="lg:col-span-8">
-              <ScheduleCanvas />
-            </div>
+        <DayNavigation />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+          <div className="lg:col-span-4">
+            <PlacesSuggestionPanel />
           </div>
-        </DragDropProvider>
+          <div className="lg:col-span-8">
+            <ScheduleCanvas />
+          </div>
+        </div>
 
         <AccommodationModal />
 
