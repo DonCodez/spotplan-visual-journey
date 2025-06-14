@@ -8,7 +8,7 @@ import ScheduleCanvas from "@/components/schedule-builder/ScheduleCanvas";
 import AccommodationModal from "@/components/schedule-builder/AccommodationModal";
 import { cn } from "@/lib/utils";
 import { format, addDays, eachDayOfInterval } from "date-fns";
-import { useTripCreation } from "@/contexts/TripCreationContext";
+import { useTripCreation, TripCreationProvider } from "@/contexts/TripCreationContext";
 
 // Helper to generate trip days based on context values
 const getTripDates = (dateType: "single" | "range", startDate: Date | null, dateRange?: { from?: Date; to?: Date }) => {
@@ -61,7 +61,7 @@ const getDayCard = (
   );
 };
 
-const CreateTripSchedulePage = () => {
+const CreateTripSchedulePageContent = () => {
   // Grab trip creation state for schedule dates
   const { state } = useTripCreation();
   const { dateType, startDate, dateRange } = state;
@@ -207,6 +207,14 @@ const CreateTripSchedulePage = () => {
       </motion.div>
       <AccommodationModal open={showHotelModal} onOpenChange={setShowHotelModal} />
     </div>
+  );
+};
+
+const CreateTripSchedulePage = () => {
+  return (
+    <TripCreationProvider>
+      <CreateTripSchedulePageContent />
+    </TripCreationProvider>
   );
 };
 
