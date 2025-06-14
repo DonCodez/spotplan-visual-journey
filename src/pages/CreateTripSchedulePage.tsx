@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Hotel, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Star, MapPin, Plus } from "lucide-react";
+import { Hotel, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
 import PlacesSuggestionPanel from "@/components/schedule-builder/PlacesSuggestionPanel";
 import ScheduleCanvas from "@/components/schedule-builder/ScheduleCanvas";
 import AccommodationModal from "@/components/schedule-builder/AccommodationModal";
@@ -18,7 +17,11 @@ const tripDates = Array.from({ length: 9 }).map((_, i) => ({
   label: `Day ${i + 1}`,
 }));
 
-const getDayCard = (day: { id: number; label: string; date: string }, selectedId: number, setSelected: (id: number) => void) => {
+const getDayCard = (
+  day: { id: number; label: string; date: string },
+  selectedId: number,
+  setSelected: (id: number) => void
+) => {
   const dateObj = new Date(day.date);
   return (
     <button
@@ -33,7 +36,12 @@ const getDayCard = (day: { id: number; label: string; date: string }, selectedId
       onClick={() => setSelected(day.id)}
     >
       <CalendarIcon className={cn("mb-1", day.id === selectedId ? "text-[#317312]" : "text-gray-400")} size={22} />
-      <span className={cn("font-semibold leading-tight", day.id === selectedId ? "text-[#317312]" : "text-gray-700")}>
+      <span
+        className={cn(
+          "font-semibold leading-tight",
+          day.id === selectedId ? "text-[#317312]" : "text-gray-700"
+        )}
+      >
         {day.label}
       </span>
       <span className="text-xs text-gray-500">{format(dateObj, "EEE, MMM d")}</span>
@@ -45,37 +53,78 @@ const CreateTripSchedulePage = () => {
   const navigate = useNavigate();
   const [showHotelModal, setShowHotelModal] = useState(false);
   const [selectedDay, setSelectedDay] = useState(1);
+  // Left/right navigation arrow state for day selector
+  const [scrollIdx, setScrollIdx] = useState(0);
+
+  // Show up to 5 days at once in selector (responsive window)
+  const windowSize = 5;
+  const maxIdx = tripDates.length > windowSize ? tripDates.length - windowSize : 0;
+
+  const visibleDays = tripDates.slice(
+    scrollIdx,
+    scrollIdx + windowSize > tripDates.length ? tripDates.length : scrollIdx + windowSize
+  );
+
+  const canGoLeft = scrollIdx > 0;
+  const canGoRight = scrollIdx < maxIdx;
+
+  const handleLeft = () => {
+    if (canGoLeft) setScrollIdx((prev) => prev - 1);
+  };
+  const handleRight = () => {
+    if (canGoRight) setScrollIdx((prev) => prev + 1);
+  };
 
   return (
     <div className="min-h-screen bg-[#f7f8fa] flex flex-col relative pb-10">
-      {/* Header Section */}
-      <div className="py-7 px-0 md:px-8 border-b border-[#E5E1DA] bg-white/80 flex flex-col gap-1 z-10 shadow-sm">
-        <h1 className="text-3xl md:text-4xl font-bold text-[#317312] flex items-center gap-4">
-          <CalendarIcon className="inline-block text-[#317312]" size={32} />
-          <span>Schedule Builder</span>
-        </h1>
-        <span className="text-gray-700 mt-1 mb-2 text-base font-medium">
-          Drag places from the left into your daily schedule
-        </span>
-      </div>
-      {/* SELECT DAY – horizontal carded pills */}
-      <div className="w-full flex justify-center mt-6 px-2 md:px-0 z-10">
+      {/* Select Day (moved higher, header removed) */}
+      <div className="w-full flex justify-center mt-10 px-2 md:px-0 z-10">
         <div className="w-full max-w-5xl rounded-2xl bg-white shadow-lg flex flex-col border border-gray-200 py-5 px-4 gap-1">
           <div className="flex items-center justify-between mb-2">
             <label className="font-semibold text-lg text-[#317312]">Select Day</label>
             <span className="text-gray-500 text-sm">{tripDates.length} days total</span>
           </div>
           <div className="relative">
-            <div className="flex overflow-x-auto gap-3 pb-2" style={{ scrollbarWidth: "none" }}>
-              {/* Could add left arrow here if needed */}
-              {tripDates.map((day) =>
-                getDayCard(day, selectedDay, setSelectedDay)
-              )}
-              {/* Could add right arrow here if needed */}
+            <div className="flex items-center gap-2">
+              {/* Left Arrow */}
+              <button
+                id="scroll-left"
+                onClick={handleLeft}
+                disabled={!canGoLeft}
+                className={cn(
+                  "p-2 rounded-full border border-gray-200 bg-white shadow-sm transition text-[#317312]",
+                  !canGoLeft ? "opacity-20 cursor-default" : "hover:bg-[#F3FCF2] active:bg-[#e0f5d9]"
+                )}
+                aria-label="Scroll days left"
+                tabIndex={0}
+                type="button"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <div className="flex overflow-x-auto gap-3 pb-2 hide-scrollbar">
+                {visibleDays.map((day) =>
+                  getDayCard(day, selectedDay, setSelectedDay)
+                )}
+              </div>
+              {/* Right Arrow */}
+              <button
+                id="scroll-right"
+                onClick={handleRight}
+                disabled={!canGoRight}
+                className={cn(
+                  "p-2 rounded-full border border-gray-200 bg-white shadow-sm transition text-[#317312]",
+                  !canGoRight ? "opacity-20 cursor-default" : "hover:bg-[#F3FCF2] active:bg-[#e0f5d9]"
+                )}
+                aria-label="Scroll days right"
+                tabIndex={0}
+                type="button"
+              >
+                <ChevronRight size={24} />
+              </button>
             </div>
             <div className="text-xs text-gray-400 mt-2 flex items-center gap-4 justify-between">
-              <span>Scroll horizontally or use arrows to navigate</span>
-              <span>Use arrow keys for keyboard navigation</span>
+              <span>Navigate with arrows</span>
+              <span>Use keyboard arrows for fast access</span>
             </div>
           </div>
         </div>
