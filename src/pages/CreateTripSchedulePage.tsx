@@ -66,12 +66,26 @@ const CreateTripSchedulePageContent = () => {
   const { state } = useTripCreation();
   const { dateType, startDate, dateRange } = state;
 
+  const navigate = useNavigate();
+
+  // Reroute if no date selected
+  React.useEffect(() => {
+    // If neither a valid single date nor a valid range date is set, redirect
+    if (
+      (dateType === "single" && !startDate) ||
+      (dateType === "range" && (!dateRange?.from))
+    ) {
+      navigate("/create-trip/destination", { replace: true });
+    }
+    // We intentionally want this to check dateType, startDate, and dateRange
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dateType, startDate, dateRange, navigate]);
+
   // Memoize the correct trip days array
   const tripDates = useMemo(() => getTripDates(dateType, startDate, dateRange), [dateType, startDate, dateRange]);
-  // Fallback: If not defined, show 1 dummy day
+  // Fallback: If not defined, show 1 dummy day (should be caught by redirect above)
   const tripDays = tripDates.length > 0 ? tripDates : [{ id: 1, date: format(new Date(), "yyyy-MM-dd"), label: "Day 1" }];
 
-  const navigate = useNavigate();
   const [showHotelModal, setShowHotelModal] = useState(false);
   const [selectedDay, setSelectedDay] = useState(1);
 
