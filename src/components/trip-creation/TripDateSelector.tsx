@@ -2,7 +2,11 @@
 import { useTripCreation } from "@/contexts/TripCreationContext";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -34,22 +38,22 @@ const TripDateSelector = () => {
   const getDateDisplayText = () => {
     if (state.dateType === "single") {
       return state.startDate
-        ? format(state.startDate, "🗓️ MMM dd")
-        : "🗓️ Select date";
+        ? format(state.startDate, "PPP")
+        : "Select date";
     } else {
       if (state.dateRange?.from) {
         if (state.dateRange.to) {
-          return `🗓️ ${format(state.dateRange.from, "MMM dd")} - ${format(state.dateRange.to, "MMM dd")}`;
+          return `${format(state.dateRange.from, "PPP")} - ${format(state.dateRange.to, "PPP")}`;
         }
-        return `🗓️ ${format(state.dateRange.from, "MMM dd")} - ?`;
+        return `${format(state.dateRange.from, "PPP")} - ?`;
       }
-      return "🗓️ Select dates";
+      return "Select dates";
     }
   };
 
   return (
     <div className="mb-6">
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-gray-700 mb-2">
         Trip Dates
       </label>
       <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
@@ -57,11 +61,14 @@ const TripDateSelector = () => {
           <Button
             variant="outline"
             className={cn(
-              "h-12 w-full pl-12 justify-start text-left font-normal bg-white border-gray-200 focus:border-blue-600 transition-colors",
-              !state.startDate && !state.dateRange?.from && "text-muted-foreground"
+              "relative h-12 w-full flex items-center border border-gray-200 bg-white pl-12 pr-4 rounded-lg justify-start text-left font-normal",
+              (!state.startDate && !state.dateRange?.from) && "text-muted-foreground"
             )}
           >
-            <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-lime-500 w-5 h-5"/>
+            {/* Icon absolutely positioned inside input */}
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-spot-primary flex items-center">
+              <CalendarIcon className="w-5 h-5" />
+            </span>
             {getDateDisplayText()}
           </Button>
         </PopoverTrigger>
@@ -88,7 +95,7 @@ const TripDateSelector = () => {
               selected={state.startDate || undefined}
               onSelect={handleSingleDateSelect}
               initialFocus
-              className="pointer-events-auto"
+              className={cn("p-3 pointer-events-auto")}
             />
           ) : (
             <Calendar
@@ -96,7 +103,7 @@ const TripDateSelector = () => {
               selected={state.dateRange}
               onSelect={handleRangeSelect}
               initialFocus
-              className="pointer-events-auto"
+              className={cn("p-3 pointer-events-auto")}
             />
           )}
         </PopoverContent>
