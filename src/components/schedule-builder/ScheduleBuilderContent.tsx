@@ -1,10 +1,9 @@
 
 import React, { useState } from 'react';
-import { X, Calendar, Plus } from 'lucide-react';
+import { X, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTripCreation } from '@/contexts/TripCreationContext';
-import ScheduleHeader from './ScheduleHeader';
 import SuggestionsPanel from './SuggestionsPanel';
 import ScheduleCanvas from './ScheduleCanvas';
 import AccommodationModal from './AccommodationModal';
@@ -33,11 +32,8 @@ const ScheduleBuilderContent = () => {
         <X className="w-4 h-4 text-gray-600" />
       </button>
 
-      {/* Header */}
-      <ScheduleHeader />
-
       {/* Main Content */}
-      <div className="flex h-[calc(100vh-120px)]">
+      <div className="flex h-screen">
         {/* Left Panel - Suggestions */}
         <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
           <SuggestionsPanel />
