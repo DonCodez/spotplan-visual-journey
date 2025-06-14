@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -68,18 +69,23 @@ const CreateTripSchedulePageContent = () => {
 
   const navigate = useNavigate();
 
+  // Check if we have valid dates
+  const hasValidDates = useMemo(() => {
+    if (dateType === "single") {
+      return startDate !== null;
+    } else if (dateType === "range") {
+      return dateRange?.from !== undefined;
+    }
+    return false;
+  }, [dateType, startDate, dateRange]);
+
   // Reroute if no date selected
   React.useEffect(() => {
-    // If neither a valid single date nor a valid range date is set, redirect
-    if (
-      (dateType === "single" && !startDate) ||
-      (dateType === "range" && (!dateRange?.from))
-    ) {
+    if (!hasValidDates) {
+      console.log("No valid dates found, redirecting to destination page");
       navigate("/create-trip/destination", { replace: true });
     }
-    // We intentionally want this to check dateType, startDate, and dateRange
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateType, startDate, dateRange, navigate]);
+  }, [hasValidDates, navigate]);
 
   // Memoize the correct trip days array
   const tripDates = useMemo(() => getTripDates(dateType, startDate, dateRange), [dateType, startDate, dateRange]);
@@ -114,6 +120,11 @@ const CreateTripSchedulePageContent = () => {
     if (selectedDay > tripDays.length) setSelectedDay(tripDays.length);
     if (selectedDay < 1) setSelectedDay(1);
   }, [tripDays.length]);
+
+  // Don't render anything if we don't have valid dates (redirect will happen)
+  if (!hasValidDates) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-[#f7f8fa] flex flex-col relative pb-10">
