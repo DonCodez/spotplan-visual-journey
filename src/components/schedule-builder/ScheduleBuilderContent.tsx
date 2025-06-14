@@ -87,16 +87,20 @@ const ScheduleBuilderContent = () => {
           {/* Left Arrow */}
           <button
             onClick={scrollLeft}
-            className="absolute left-0 z-10 w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-200 opacity-30 hover:opacity-100"
+            className="absolute left-0 z-10 w-8 h-8 rounded-full bg-green-100 border border-green-200 flex items-center justify-center hover:bg-green-200 transition-all duration-200 opacity-70 hover:opacity-100"
           >
-            <ChevronLeft className="w-4 h-4 text-gray-600" />
+            <ChevronLeft className="w-4 h-4 text-green-700" />
           </button>
 
           {/* Scrollable Day Container */}
           <div 
             ref={scrollContainerRef}
-            className="flex gap-2 overflow-x-auto mx-10 scrollbar-hide"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            className="flex gap-2 overflow-x-auto mx-10"
+            style={{ 
+              scrollbarWidth: 'none', 
+              msOverflowStyle: 'none',
+              WebkitScrollbar: { display: 'none' }
+            }}
           >
             {days.map((day, index) => (
               <button
@@ -119,9 +123,9 @@ const ScheduleBuilderContent = () => {
           {/* Right Arrow */}
           <button
             onClick={scrollRight}
-            className="absolute right-0 z-10 w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-200 opacity-30 hover:opacity-100"
+            className="absolute right-0 z-10 w-8 h-8 rounded-full bg-green-100 border border-green-200 flex items-center justify-center hover:bg-green-200 transition-all duration-200 opacity-70 hover:opacity-100"
           >
-            <ChevronRight className="w-4 h-4 text-gray-600" />
+            <ChevronRight className="w-4 h-4 text-green-700" />
           </button>
         </div>
         
@@ -176,11 +180,9 @@ const ScheduleBuilderContent = () => {
         />
       )}
 
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
+      <style>
+        {`.scrollbar-hide::-webkit-scrollbar { display: none; }`}
+      </style>
     </div>
   );
 };
