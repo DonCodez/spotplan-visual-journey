@@ -7,6 +7,9 @@ import { cn } from '@/lib/utils';
 import PlaceCard from './PlaceCard';
 import { Place, Restaurant } from '@/types/schedule';
 
+const DEFAULT_START_HOUR = 10;
+const SNAP_INTERVAL = 30;
+
 const PlacesSuggestionPanel = () => {
   const { state, dispatch } = useTripCreation();
   const [searchQuery, setSearchQuery] = useState('');
@@ -89,6 +92,56 @@ const PlacesSuggestionPanel = () => {
     (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  // Determine next available slot or default slot
+  const getNextAvailableTime = (): { startTime: string; endTime: string } => {
+    // Default fallback logic
+    const selectedDay = state.selectedDay;
+    if (!selectedDay) {
+      return { startTime: `${DEFAULT_START_HOUR.toString().padStart(2, '0')}:00`, endTime: `${(DEFAULT_START_HOUR + 1).toString().padStart(2, '0')}:00` };
+    }
+    const daySchedule = state.dailySchedules[selectedDay];
+    if (!daySchedule || !Array.isArray(daySchedule.timeSlots)) {
+      return { startTime: `${DEFAULT_START_HOUR.toString().padStart(2, '0')}:00`, endTime: `${(DEFAULT_START_HOUR + 1).toString().padStart(2, '0')}:00` };
+    }
+    // Find latest end time used
+    const used = daySchedule.timeSlots.filter(slot => slot.item);
+    let start = DEFAULT_START_HOUR * 60;
+    if (used.length > 0) {
+      const lastSlot = used[used.length - 1];
+      const [h, m] = lastSlot.endTime.split(':').map(Number);
+      start = h * 60 + m;
+    }
+    // Snap to interval
+    const snapped = Math.ceil(start / SNAP_INTERVAL) * SNAP_INTERVAL;
+    const hours = Math.floor(snapped / 60);
+    const mins = snapped % 60;
+    const startTime = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+    // Default duration
+    const duration = activeTab === 'restaurants' ? 90 : 60;
+    let endMins = snapped + duration;
+    let endHours = Math.floor(endMins / 60);
+    let endMinutes = endMins % 60;
+    const endTime = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+    return { startTime, endTime };
+  };
+
+  const handleAddToSchedule = (item: Place | Restaurant) => {
+    if (!state.selectedDay) return;
+    const { startTime, endTime } = getNextAvailableTime();
+    // Unique slot id
+    const slotId = `slot-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    dispatch({
+      type: 'ADD_ITEM_TO_SCHEDULE',
+      payload: {
+        dayKey: state.selectedDay,
+        timeSlotId: slotId,
+        item,
+        startTime,
+        endTime
+      },
+    });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -148,6 +201,7 @@ const PlacesSuggestionPanel = () => {
             key={item.id}
             item={item}
             className="place-suggestion"
+            onAddToSchedule={handleAddToSchedule}
           />
         ))}
         

@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -135,28 +134,5 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: gradient-shift 1.5s ease-in-out infinite;
-  }
-
-  /* Hide all Moveable visual elements */
-  .moveable-control-box,
-  .moveable-line,
-  .moveable-control,
-  .moveable-origin,
-  .moveable-area,
-  .moveable-direction,
-  .moveable-rotation,
-  .moveable-resize-handle {
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-  }
-
-  /* Ensure Moveable container doesn't interfere */
-  .moveable-hidden {
-    pointer-events: auto;
-  }
-
-  .moveable-hidden * {
-    display: none !important;
   }
 }

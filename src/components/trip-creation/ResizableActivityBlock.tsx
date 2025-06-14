@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Moveable from 'react-moveable';
 import { ScheduleItem } from '@/types/schedule';
@@ -53,29 +52,7 @@ const ResizableActivityBlock = ({
 
   return (
     <div className="relative">
-      {/* Add CSS to hide Moveable's default styling */}
-      <style>
-        {`
-          .moveable-control-box {
-            display: none !important;
-          }
-          .moveable-line {
-            display: none !important;
-          }
-          .moveable-control {
-            display: none !important;
-          }
-          .moveable-origin {
-            display: none !important;
-          }
-          .moveable-area {
-            display: none !important;
-          }
-          .moveable-direction {
-            display: none !important;
-          }
-        `}
-      </style>
+      {/* Removed: Inline <style> that hid Moveable elements */}
 
       <div
         ref={targetRef}
@@ -118,7 +95,7 @@ const ResizableActivityBlock = ({
         snapThreshold={10}
         snapGridWidth={SNAP_INTERVAL_PIXELS}
         snapGridHeight={SNAP_INTERVAL_PIXELS}
-        renderDirections={[]}
+        renderDirections={['s']}
         hideDefaultLines={true}
         resizeFormat={(size: number[]) => size}
         dragArea={true}
@@ -128,7 +105,6 @@ const ResizableActivityBlock = ({
         onResizeStart={() => setIsResizing(true)}
         onResize={handleResize}
         onResizeEnd={handleResizeEnd}
-        className="moveable-hidden"
       />
       
       <PreviewTooltip

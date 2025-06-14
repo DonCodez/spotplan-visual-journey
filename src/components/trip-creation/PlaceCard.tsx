@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Star, MapPin, DollarSign } from 'lucide-react';
+import { Star, MapPin, DollarSign, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ScheduleItem, Restaurant } from '@/types/schedule';
 
@@ -8,26 +8,15 @@ interface PlaceCardProps {
   item: ScheduleItem;
   isDragging?: boolean;
   className?: string;
+  onAddToSchedule?: (item: ScheduleItem) => void;
 }
 
-const PlaceCard = ({ item, isDragging = false, className }: PlaceCardProps) => {
-  const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData('application/json', JSON.stringify(item));
-    e.dataTransfer.effectAllowed = 'copy';
-    
-    // Create a custom drag image
-    const dragImage = e.currentTarget.cloneNode(true) as HTMLElement;
-    dragImage.style.opacity = '0.8';
-    dragImage.style.transform = 'rotate(5deg)';
-    document.body.appendChild(dragImage);
-    e.dataTransfer.setDragImage(dragImage, 50, 50);
-    
-    // Clean up the drag image after a short delay
-    setTimeout(() => {
-      document.body.removeChild(dragImage);
-    }, 0);
-  };
-
+const PlaceCard = ({
+  item,
+  isDragging = false,
+  className,
+  onAddToSchedule,
+}: PlaceCardProps) => {
   const renderPriceLevel = (priceLevel: number) => {
     return Array.from({ length: 4 }, (_, i) => (
       <DollarSign
@@ -41,18 +30,19 @@ const PlaceCard = ({ item, isDragging = false, className }: PlaceCardProps) => {
   };
 
   return (
-    <div
-      draggable
-      onDragStart={handleDragStart}
+    <button
+      type="button"
+      aria-label={`Add ${item.title} to your schedule`}
+      onClick={onAddToSchedule ? () => onAddToSchedule(item) : undefined}
       className={cn(
-        "bg-white border border-gray-200 rounded-lg p-3 cursor-grab transition-all duration-200",
+        "bg-white border border-gray-200 rounded-lg p-3 cursor-pointer transition-all duration-200 flex w-full text-left relative group active:scale-98",
         "hover:border-spot-primary hover:shadow-md hover:scale-105",
-        "active:cursor-grabbing active:scale-95",
         isDragging && "opacity-50 scale-95",
         className
       )}
+      tabIndex={0}
     >
-      <div className="flex gap-3">
+      <div className="flex gap-3 w-full">
         {/* Thumbnail */}
         <div className="flex-shrink-0">
           <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden">
@@ -104,8 +94,11 @@ const PlaceCard = ({ item, isDragging = false, className }: PlaceCardProps) => {
             </span>
           )}
         </div>
+        <span className="absolute top-2 right-2 pointer-events-none opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-all z-10">
+          <Plus className="h-5 w-5 text-spot-primary drop-shadow-sm" />
+        </span>
       </div>
-    </div>
+    </button>
   );
 };
 
