@@ -16,7 +16,14 @@ const CreateTripDestinationContent = () => {
   const navigate = useNavigate();
 
   // Backend Integration: Validation logic for proceeding to next step
-  const canProceed = state.tripType && state.destinationType && (
+  const hasValidDates = state.dateType && (
+    (state.dateType === 'single' && state.startDate) ||
+    (state.dateType === 'range' && state.dateRange?.from)
+  );
+
+  const canProceed = state.tripType && 
+    hasValidDates &&
+    state.destinationType && (
     state.destinationType === 'domestic' || 
     (state.destinationType === 'international' && state.selectedCountry)
   ) && (

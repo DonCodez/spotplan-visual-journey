@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import { DateRange } from "react-day-picker";
 
 // Backend Integration Notes for bolt.new:
 // 1. This context manages trip creation state on the frontend
@@ -25,6 +26,11 @@ export interface TripCreationState {
   groupSize: number;
   groupMembers: GroupMember[];
   currentStep: number;
+  // Date-related fields
+  dateType: 'single' | 'range' | null;
+  startDate: Date | null;
+  endDate: Date | null;
+  dateRange: DateRange | undefined;
   // Backend Integration: Add these fields when implementing API
   // isLoading?: boolean;
   // error?: string | null;
@@ -38,6 +44,7 @@ type TripCreationAction =
   | { type: 'SET_GROUP_SIZE'; payload: number }
   | { type: 'SET_GROUP_MEMBERS'; payload: GroupMember[] }
   | { type: 'SET_CURRENT_STEP'; payload: number }
+  | { type: 'SET_TRIP_DATES'; payload: { dateType: 'single' | 'range'; startDate?: Date | null; endDate?: Date | null; dateRange?: DateRange | undefined } }
   | { type: 'RESET' };
   // Backend Integration: Add these actions when implementing API
   // | { type: 'SET_LOADING'; payload: boolean }
@@ -51,6 +58,10 @@ const initialState: TripCreationState = {
   groupSize: 1,
   groupMembers: [],
   currentStep: 1,
+  dateType: null,
+  startDate: null,
+  endDate: null,
+  dateRange: undefined,
 };
 
 const tripCreationReducer = (state: TripCreationState, action: TripCreationAction): TripCreationState => {
@@ -72,6 +83,14 @@ const tripCreationReducer = (state: TripCreationState, action: TripCreationActio
       return { ...state, groupMembers: action.payload };
     case 'SET_CURRENT_STEP':
       return { ...state, currentStep: action.payload };
+    case 'SET_TRIP_DATES':
+      return { 
+        ...state, 
+        dateType: action.payload.dateType,
+        startDate: action.payload.startDate !== undefined ? action.payload.startDate : state.startDate,
+        endDate: action.payload.endDate !== undefined ? action.payload.endDate : state.endDate,
+        dateRange: action.payload.dateRange !== undefined ? action.payload.dateRange : state.dateRange,
+      };
     case 'RESET':
       return initialState;
     default:
@@ -105,7 +124,11 @@ export const TripCreationProvider = ({ children }: { children: ReactNode }) => {
   //         destinationType: state.destinationType,
   //         selectedCountry: state.selectedCountry,
   //         groupSize: state.groupSize,
-  //         groupMembers: state.groupMembers
+  //         groupMembers: state.groupMembers,
+  //         dateType: state.dateType,
+  //         startDate: state.startDate,
+  //         endDate: state.endDate,
+  //         dateRange: state.dateRange
   //       })
   //     });
   //     const data = await response.json();
