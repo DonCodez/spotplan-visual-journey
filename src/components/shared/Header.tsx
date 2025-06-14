@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ExpandableTabs } from "@/components/ui/expandable-tabs";
 import { Home, User, FileText } from "lucide-react";
+import { useBgTransition } from "@/contexts/BackgroundTransitionContext";
 
 interface HeaderProps {
   theme?: "light" | "dark";
@@ -13,7 +14,8 @@ const Header = ({ theme = "light" }: HeaderProps) => {
   const isDark = theme === "dark";
   const location = useLocation();
   const navigate = useNavigate();
-  
+  const { triggerTransition } = useBgTransition();
+
   const tabs = [
     { title: "Home", icon: Home },
     { title: "About", icon: User },
@@ -34,22 +36,33 @@ const Header = ({ theme = "light" }: HeaderProps) => {
     }
   };
 
+  // Determine which background type each route should use
+  const getBgType = (pathname: string) => {
+    if (pathname === "/privacy-policy") return "dark";
+    if (pathname === "/" || pathname === "/about") return "light";
+    // fallback
+    return "light";
+  };
+
   const handleTabChange = (index: number | null) => {
     if (index !== null) {
-      switch (index) {
-        case 0:
-          navigate("/");
-          break;
-        case 1:
-          navigate("/about");
-          break;
-        case 2:
-          navigate("/privacy-policy");
-          break;
+      const destPath =
+        index === 0 ? "/" : index === 1 ? "/about" : index === 2 ? "/privacy-policy" : "/";
+      const fromBg = getBgType(location.pathname);
+      const toBg = getBgType(destPath);
+
+      // Only do smooth transition if it’s a change between light ↔ dark
+      if (fromBg !== toBg) {
+        triggerTransition(fromBg === "light" ? "to-dark" : "to-light");
+        setTimeout(() => {
+          navigate(destPath);
+        }, 340); // enough to show transition, but feels snappy
+      } else {
+        navigate(destPath);
       }
     }
   };
-  
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: -20 }}
