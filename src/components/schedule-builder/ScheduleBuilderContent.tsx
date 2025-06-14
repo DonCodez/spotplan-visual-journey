@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { X, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -95,11 +94,10 @@ const ScheduleBuilderContent = () => {
           {/* Scrollable Day Container */}
           <div 
             ref={scrollContainerRef}
-            className="flex gap-2 overflow-x-auto mx-10"
+            className="flex gap-2 overflow-x-auto mx-10 scrollbar-hide"
             style={{ 
               scrollbarWidth: 'none', 
-              msOverflowStyle: 'none',
-              WebkitScrollbar: { display: 'none' }
+              msOverflowStyle: 'none'
             }}
           >
             {days.map((day, index) => (
