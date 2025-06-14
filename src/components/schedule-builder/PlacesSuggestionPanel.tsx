@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Star, MapPin, Utensils } from "lucide-react";
+import { Star, MapPin } from "lucide-react";
 
 // Dummy data
 const suggestions = [
@@ -30,28 +30,43 @@ const suggestions = [
   },
 ];
 
-// To be connected to Google Places API by Bolt
-
 const PlacesSuggestionPanel = () => {
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-3 text-[#317312]">Suggestions</h2>
+      <h2 className="text-xl font-bold mb-5 text-[#317312]">Suggestions</h2>
+      <div className="flex gap-2 mb-4">
+        <button className="flex-1 py-2 rounded-lg border-2 border-[#317312] bg-[#F3FCF2] font-semibold text-[#317312] shadow-sm transition hover:bg-[#eafbe6]">
+          Places
+        </button>
+        <button className="flex-1 py-2 rounded-lg border-2 border-transparent font-semibold text-gray-500 transition hover:bg-[#f7faf4]">
+          Restaurants
+        </button>
+      </div>
       <div className="flex flex-col gap-4">
-        {/* Sorting: Day/Proximity/Rating */}
-        {/* // Inline comment for future API sorting connection */}
+        {/* SEARCH: */}
+        <div>
+          <input
+            type="text"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#24BAEC]"
+            placeholder="Search places..."
+          />
+        </div>
+        {/* CARD SUGGESTIONS */}
         {suggestions.map((place) => (
           <div
             key={place.id}
-            className="place-suggestion bg-white rounded-lg shadow flex gap-3 p-3 cursor-pointer transition hover:ring-2 hover:ring-[#24BAEC] hover:scale-[1.02] group"
+            className="place-suggestion bg-[#fcfcfa] rounded-xl shadow flex gap-4 p-4 border border-gray-100 cursor-pointer transition hover:border-[#24BAEC] hover:scale-[1.02] group"
           >
-            <img
-              src={place.img}
-              alt={place.title}
-              className="rounded-md w-20 h-[68px] object-cover"
-            />
-            <div className="flex flex-col justify-between flex-1">
-              <div className="font-bold text-lg text-[#166EF3]">{place.title}</div>
-              <div className="flex gap-2 text-sm items-center text-gray-600">
+            <div className="flex-shrink-0 w-14 h-14 bg-[#f1f8ec] rounded-lg flex items-center justify-center overflow-hidden">
+              <img
+                src={place.img}
+                alt={place.title}
+                className="rounded-md w-12 h-12 object-cover"
+              />
+            </div>
+            <div className="flex flex-col justify-center flex-1 gap-0">
+              <div className="font-bold text-base text-[#166EF3]">{place.title}</div>
+              <div className="flex gap-2 text-xs items-center text-gray-600">
                 <Star className="w-4 h-4 text-yellow-500 inline-block" />
                 {place.rating}
               </div>
@@ -63,7 +78,6 @@ const PlacesSuggestionPanel = () => {
           </div>
         ))}
       </div>
-      {/* // To be connected to Google Places API by Bolt */}
     </div>
   );
 };
