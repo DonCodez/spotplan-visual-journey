@@ -1,7 +1,5 @@
 
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { TripCreationState, TripCreationAction } from '@/types/tripCreation';
-import { tripCreationReducer, initialState } from '@/reducers/tripCreationReducer';
 
 // Backend Integration Notes for bolt.new:
 // 1. This context manages trip creation state on the frontend
@@ -9,12 +7,77 @@ import { tripCreationReducer, initialState } from '@/reducers/tripCreationReduce
 //    - POST /api/trips - to create new trip
 //    - POST /api/trips/{id}/members - to add group members
 //    - GET /api/countries - to fetch countries list
-//    - GET /api/places - Google Places API integration
-//    - GET /api/restaurants - Restaurant filtering and search
-//    - GET /api/hotels - Hotel booking integration
-//    - POST /api/trips/{id}/schedule - Save daily schedules
 // 3. Consider adding validation schema with Zod for API requests
 // 4. Add loading states and error handling for API calls
+
+export interface GroupMember {
+  id: string;
+  name: string;
+  email: string;
+  // Backend Note: Add userId field when user authentication is implemented
+  // userId?: string;
+}
+
+export interface TripCreationState {
+  tripType: 'group' | 'personal' | null;
+  destinationType: 'domestic' | 'international' | null;
+  selectedCountry: string | null;
+  groupSize: number;
+  groupMembers: GroupMember[];
+  currentStep: number;
+  // Backend Integration: Add these fields when implementing API
+  // isLoading?: boolean;
+  // error?: string | null;
+  // tripId?: string; // Will be set when trip is created on backend
+}
+
+type TripCreationAction =
+  | { type: 'SET_TRIP_TYPE'; payload: 'group' | 'personal' }
+  | { type: 'SET_DESTINATION_TYPE'; payload: 'domestic' | 'international' }
+  | { type: 'SET_SELECTED_COUNTRY'; payload: string }
+  | { type: 'SET_GROUP_SIZE'; payload: number }
+  | { type: 'SET_GROUP_MEMBERS'; payload: GroupMember[] }
+  | { type: 'SET_CURRENT_STEP'; payload: number }
+  | { type: 'RESET' };
+  // Backend Integration: Add these actions when implementing API
+  // | { type: 'SET_LOADING'; payload: boolean }
+  // | { type: 'SET_ERROR'; payload: string | null }
+  // | { type: 'SET_TRIP_ID'; payload: string }
+
+const initialState: TripCreationState = {
+  tripType: null,
+  destinationType: null,
+  selectedCountry: null,
+  groupSize: 1,
+  groupMembers: [],
+  currentStep: 1,
+};
+
+const tripCreationReducer = (state: TripCreationState, action: TripCreationAction): TripCreationState => {
+  switch (action.type) {
+    case 'SET_TRIP_TYPE':
+      return { 
+        ...state, 
+        tripType: action.payload,
+        // Reset group data when switching away from group
+        ...(action.payload === 'personal' && { groupSize: 1, groupMembers: [] })
+      };
+    case 'SET_DESTINATION_TYPE':
+      return { ...state, destinationType: action.payload };
+    case 'SET_SELECTED_COUNTRY':
+      return { ...state, selectedCountry: action.payload };
+    case 'SET_GROUP_SIZE':
+      return { ...state, groupSize: action.payload };
+    case 'SET_GROUP_MEMBERS':
+      return { ...state, groupMembers: action.payload };
+    case 'SET_CURRENT_STEP':
+      return { ...state, currentStep: action.payload };
+    case 'RESET':
+      return initialState;
+    default:
+      return state;
+  }
+};
 
 interface TripCreationContextType {
   state: TripCreationState;
@@ -23,10 +86,6 @@ interface TripCreationContextType {
   // createTrip: () => Promise<void>;
   // updateTrip: () => Promise<void>;
   // saveGroupMembers: () => Promise<void>;
-  // fetchPlaces: (day: string, coordinates?: { lat: number; lng: number }) => Promise<Place[]>;
-  // fetchRestaurants: (day: string, mealType: string, coordinates?: { lat: number; lng: number }) => Promise<Restaurant[]>;
-  // fetchHotels: (day: string, coordinates?: { lat: number; lng: number }) => Promise<Hotel[]>;
-  // saveSchedule: () => Promise<void>;
 }
 
 const TripCreationContext = createContext<TripCreationContextType | undefined>(undefined);
@@ -55,25 +114,6 @@ export const TripCreationProvider = ({ children }: { children: ReactNode }) => {
   //     dispatch({ type: 'SET_ERROR', payload: error.message });
   //   } finally {
   //     dispatch({ type: 'SET_LOADING', payload: false });
-  //   }
-  // };
-
-  // const fetchPlaces = async (day: string, coordinates?: { lat: number; lng: number }) => {
-  //   try {
-  //     const params = new URLSearchParams({
-  //       day,
-  //       lat: coordinates?.lat.toString() || '',
-  //       lng: coordinates?.lng.toString() || '',
-  //       type: 'tourist_attraction',
-  //       country: state.selectedCountry || ''
-  //     });
-  //     const response = await fetch(`/api/places?${params}`);
-  //     const places = await response.json();
-  //     dispatch({ type: 'SET_PLACES_DATA', payload: places });
-  //     return places;
-  //   } catch (error) {
-  //     console.error('Failed to fetch places:', error);
-  //     return [];
   //   }
   // };
 
