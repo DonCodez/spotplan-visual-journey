@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { TripCreationProvider } from "@/contexts/TripCreationContext";
 import LandingPage from "./pages/LandingPage";
 import AboutPage from "./pages/AboutPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -15,6 +16,8 @@ import ProfilePage from "./pages/ProfilePage";
 import CreateTripDestinationPage from "./pages/CreateTripDestinationPage";
 import CreateTripSchedulePage from "./pages/CreateTripSchedulePage";
 import NotFound from "./pages/NotFound";
+import { BgTransitionProvider } from "@/contexts/BackgroundTransitionContext";
+import BgTransitionOverlay from "@/components/shared/BgTransitionOverlay";
 
 const queryClient = new QueryClient();
 
@@ -24,22 +27,34 @@ const App: React.FC = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/trips" element={<TripsPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/create-trip/destination" element={<CreateTripDestinationPage />} />
-            <Route path="/create-trip/schedule" element={<CreateTripSchedulePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <BgTransitionProvider>
+          <BgTransitionOverlay />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/trips" element={<TripsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              
+              {/* Trip Creation Routes with shared context */}
+              <Route path="/create-trip/*" element={
+                <TripCreationProvider>
+                  <Routes>
+                    <Route path="destination" element={<CreateTripDestinationPage />} />
+                    <Route path="schedule" element={<CreateTripSchedulePage />} />
+                  </Routes>
+                </TripCreationProvider>
+              } />
+              
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </BgTransitionProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

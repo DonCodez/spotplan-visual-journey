@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { TripCreationProvider, useTripCreation } from '@/contexts/TripCreationContext';
+import { useTripCreation } from '@/contexts/TripCreationContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import DestinationHeader from '@/components/trip-creation/DestinationHeader';
@@ -10,31 +11,38 @@ import DestinationInputPanel from '@/components/trip-creation/DestinationInputPa
 import DestinationMapPanel from '@/components/trip-creation/DestinationMapPanel';
 import TripCreationCloseButton from '@/components/trip-creation/TripCreationCloseButton';
 
-const CreateTripDestinationContent = () => {
+const CreateTripDestinationPage = () => {
   const { state } = useTripCreation();
   const navigate = useNavigate();
 
   // Backend Integration: Validation logic for proceeding to next step
-  const canProceed = state.tripType && state.destinationType && (
-    state.destinationType === 'domestic' || 
-    (state.destinationType === 'international' && state.selectedCountry)
-  ) && (
-    state.tripType === 'personal' || 
-    (state.tripType === 'group' && state.groupMembers.every(member => 
-      member.name.trim() !== '' && member.email.trim() !== ''
-    ))
-  );
+  const canProceed = state.tripType && 
+    state.destinationType && 
+    state.tripDates.length > 0 &&
+    (
+      state.destinationType === 'domestic' || 
+      (state.destinationType === 'international' && state.selectedCountry)
+    ) && (
+      state.tripType === 'personal' || 
+      (state.tripType === 'group' && state.groupMembers.every(member => 
+        member.name.trim() !== '' && member.email.trim() !== ''
+      ))
+    );
 
   const handleNext = async () => {
     if (canProceed) {
       // Backend Integration: Save trip data before proceeding
       // try {
-      //   await createTrip();
+      //   await createTrip(); // This will call the API to create the trip
+      //   console.log('Trip created successfully with ID:', state.tripId);
       //   navigate('/create-trip/schedule');
       // } catch (error) {
-      //   // ...
+      //   console.error('Failed to create trip:', error);
+      //   // Show error toast or message to user
       // }
+      
       // For now, just proceed to next step (remove when backend is connected)
+      console.log('Proceeding to schedule builder with state:', state);
       navigate('/create-trip/schedule');
     }
   };
@@ -76,14 +84,6 @@ const CreateTripDestinationContent = () => {
         </motion.div>
       </div>
     </div>
-  );
-};
-
-const CreateTripDestinationPage = () => {
-  return (
-    <TripCreationProvider>
-      <CreateTripDestinationContent />
-    </TripCreationProvider>
   );
 };
 

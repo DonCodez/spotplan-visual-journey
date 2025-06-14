@@ -1,245 +1,128 @@
 
-import React, { useState, useMemo } from "react";
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Hotel, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
-import PlacesSuggestionPanel from "@/components/schedule-builder/PlacesSuggestionPanel";
-import ScheduleCanvas from "@/components/schedule-builder/ScheduleCanvas";
-import AccommodationModal from "@/components/schedule-builder/AccommodationModal";
-import { cn } from "@/lib/utils";
-import { format, addDays, eachDayOfInterval } from "date-fns";
-import { useTripCreation, TripCreationProvider } from "@/contexts/TripCreationContext";
-
-// Helper to generate trip days based on context values
-const getTripDates = (dateType: "single" | "range", startDate: Date | null, dateRange?: { from?: Date; to?: Date }) => {
-  let days = [];
-  if (dateType === "single" && startDate) {
-    days = [{ id: 1, date: format(startDate, "yyyy-MM-dd"), label: "Day 1" }];
-  } else if (dateType === "range" && dateRange?.from) {
-    const rangeEnd = dateRange.to ? dateRange.to : dateRange.from;
-    const datesArr = eachDayOfInterval({ start: dateRange.from, end: rangeEnd });
-    days = datesArr.map((date, i) => ({
-      id: i + 1,
-      date: format(date, "yyyy-MM-dd"),
-      label: `Day ${i + 1}`,
-    }));
-  }
-  return days;
-};
-
-const getDayCard = (
-  day: { id: number; label: string; date: string },
-  selectedId: number,
-  setSelected: (id: number) => void
-) => {
-  const dateObj = new Date(day.date);
-  return (
-    <button
-      key={day.id}
-      className={cn(
-        "flex flex-col items-center px-2 py-1 rounded-lg border cursor-pointer bg-white shadow-sm transition-all outline-none focus-visible:ring-2 focus-visible:ring-[#317312]",
-        day.id === selectedId
-          ? "ring-2 ring-[#317312] border-[#317312] bg-[#F3FCF2]"
-          : "border-gray-200 hover:bg-gray-100"
-      )}
-      style={{ minWidth: 82, maxWidth: 92 }}
-      onClick={() => setSelected(day.id)}
-      tabIndex={0}
-      type="button"
-    >
-      <CalendarIcon className={cn("mb-0.5", day.id === selectedId ? "text-[#317312]" : "text-gray-400")} size={20} />
-      <span
-        className={cn(
-          "font-semibold leading-tight text-xs",
-          day.id === selectedId ? "text-[#317312]" : "text-gray-700"
-        )}
-      >
-        {day.label}
-      </span>
-      <span className="text-[10px] text-gray-500">{format(dateObj, "EEE, MMM d")}</span>
-    </button>
-  );
-};
-
-const CreateTripSchedulePageContent = () => {
-  // Grab trip creation state for schedule dates
-  const { state } = useTripCreation();
-  const { dateType, startDate, dateRange } = state;
-
-  const navigate = useNavigate();
-
-  // Check if we have valid dates
-  const hasValidDates = useMemo(() => {
-    if (dateType === "single") {
-      return startDate !== null;
-    } else if (dateType === "range") {
-      return dateRange?.from !== undefined;
-    }
-    return false;
-  }, [dateType, startDate, dateRange]);
-
-  // Reroute if no date selected
-  React.useEffect(() => {
-    if (!hasValidDates) {
-      console.log("No valid dates found, redirecting to destination page");
-      navigate("/create-trip/destination", { replace: true });
-    }
-  }, [hasValidDates, navigate]);
-
-  // Memoize the correct trip days array
-  const tripDates = useMemo(() => getTripDates(dateType, startDate, dateRange), [dateType, startDate, dateRange]);
-  // Fallback: If not defined, show 1 dummy day (should be caught by redirect above)
-  const tripDays = tripDates.length > 0 ? tripDates : [{ id: 1, date: format(new Date(), "yyyy-MM-dd"), label: "Day 1" }];
-
-  const [showHotelModal, setShowHotelModal] = useState(false);
-  const [selectedDay, setSelectedDay] = useState(1);
-
-  // Responsive day selector, 5 at a time
-  const windowSize = 5;
-  const [scrollIdx, setScrollIdx] = useState(0);
-  const maxIdx = tripDays.length > windowSize ? tripDays.length - windowSize : 0;
-
-  // Correct visible days slice
-  const visibleDays = tripDays.slice(
-    scrollIdx,
-    scrollIdx + windowSize > tripDays.length ? tripDays.length : scrollIdx + windowSize
-  );
-  const canGoLeft = scrollIdx > 0;
-  const canGoRight = scrollIdx < maxIdx;
-
-  const handleLeft = () => {
-    if (canGoLeft) setScrollIdx((prev) => prev - 1);
-  };
-  const handleRight = () => {
-    if (canGoRight) setScrollIdx((prev) => prev + 1);
-  };
-
-  // Keep selectedDay clamped if trip days change
-  React.useEffect(() => {
-    if (selectedDay > tripDays.length) setSelectedDay(tripDays.length);
-    if (selectedDay < 1) setSelectedDay(1);
-  }, [tripDays.length]);
-
-  // Don't render anything if we don't have valid dates (redirect will happen)
-  if (!hasValidDates) {
-    return null;
-  }
-
-  return (
-    <div className="min-h-screen bg-[#f7f8fa] flex flex-col relative pb-10">
-      {/* Select Day UI */}
-      <div className="w-full flex justify-center mt-10 px-2 md:px-0 z-10">
-        <div className="w-full max-w-5xl rounded-2xl bg-white shadow-lg flex flex-col border border-gray-200 py-4 px-3 gap-1">
-          <div className="flex items-center justify-between mb-1">
-            <label className="font-semibold text-base text-[#317312]">Select Day</label>
-            <span className="text-gray-500 text-xs">{tripDays.length} days total</span>
-          </div>
-          <div className="relative w-full">
-            <div className="flex items-center gap-3 justify-center">
-              {/* Smaller Left Arrow */}
-              <button
-                id="scroll-left"
-                onClick={handleLeft}
-                disabled={!canGoLeft}
-                className={cn(
-                  "p-1.5 rounded-full border border-gray-200 bg-white shadow-sm transition text-[#317312]",
-                  !canGoLeft ? "opacity-15 cursor-default" : "hover:bg-[#F3FCF2] active:bg-[#e0f5d9]"
-                )}
-                aria-label="Scroll days left"
-                tabIndex={0}
-                type="button"
-                style={{ width: 28, height: 28, minWidth: 28, minHeight: 28 }}
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <div className="flex overflow-x-auto gap-2 pb-2 hide-scrollbar">
-                {visibleDays.map((day) =>
-                  getDayCard(day, selectedDay, setSelectedDay)
-                )}
-              </div>
-              {/* Smaller Right Arrow */}
-              <button
-                id="scroll-right"
-                onClick={handleRight}
-                disabled={!canGoRight}
-                className={cn(
-                  "p-1.5 rounded-full border border-gray-200 bg-white shadow-sm transition text-[#317312]",
-                  !canGoRight ? "opacity-15 cursor-default" : "hover:bg-[#F3FCF2] active:bg-[#e0f5d9]"
-                )}
-                aria-label="Scroll days right"
-                tabIndex={0}
-                type="button"
-                style={{ width: 28, height: 28, minWidth: 28, minHeight: 28 }}
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-            <div className="text-[10px] text-gray-400 mt-1 flex items-center gap-4 justify-between px-2">
-              <span>Navigate with arrows</span>
-              <span>Use keyboard arrows for fast access</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Main Grid */}
-      <div className="flex-1 flex flex-col md:flex-row w-full h-full min-h-0 overflow-hidden max-w-7xl mx-auto mt-8 gap-6 px-2 md:px-0">
-        {/* Left Suggestions */}
-        <div className="flex-shrink-0 w-full md:w-[370px]">
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-5 h-full min-h-[400px]">
-            <PlacesSuggestionPanel />
-          </div>
-        </div>
-        {/* Right Canvas */}
-        <div className="flex-1 min-w-0">
-          <div className="h-full bg-white rounded-2xl shadow-lg border border-gray-200 p-6 flex flex-col">
-            <ScheduleCanvas tripDates={tripDays} selectedDay={selectedDay} />
-          </div>
-        </div>
-      </div>
-      {/* CTA Sticky Button */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className="fixed bottom-5 right-5 z-50"
-      >
-        <Button
-          id="next-to-expense-button"
-          size="lg"
-          className="rounded-full shadow-xl px-8 text-white bg-[#317312] hover:bg-[#6EBB2D] transition !py-6 !text-lg"
-          onClick={() => navigate("/dashboard")}
-        >
-          Next → Estimate Expenses
-          <ChevronRight className="ml-2 h-5 w-5" />
-        </Button>
-      </motion.div>
-      {/* Accommodation Button & Modal */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7 }}
-        className="fixed bottom-24 left-5 md:left-auto right-5"
-      >
-        <Button
-          id="open-hotel-popup-button"
-          className="bg-white border border-[#66bb44] text-[#317312] font-semibold px-6 py-3 rounded-full shadow-md flex items-center gap-2 hover:bg-[#eafbe6] hover:text-[#317312]"
-          onClick={() => setShowHotelModal(true)}
-        >
-          <Hotel className="mr-1" />
-          Add Accommodation
-        </Button>
-      </motion.div>
-      <AccommodationModal open={showHotelModal} onOpenChange={setShowHotelModal} />
-    </div>
-  );
-};
+import React, { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, Hotel } from 'lucide-react';
+import { useTripCreation } from '@/contexts/TripCreationContext';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import TripCreationCloseButton from '@/components/trip-creation/TripCreationCloseButton';
+import ScheduleHeader from '@/components/trip-creation/ScheduleHeader';
+import DayNavigation from '@/components/trip-creation/DayNavigation';
+import PlacesSuggestionPanel from '@/components/trip-creation/PlacesSuggestionPanel';
+import ScheduleCanvas from '@/components/trip-creation/ScheduleCanvas';
+import AccommodationModal from '@/components/trip-creation/AccommodationModal';
 
 const CreateTripSchedulePage = () => {
+  const { state, dispatch } = useTripCreation();
+  const navigate = useNavigate();
+
+  // Set the first day as selected when component mounts
+  useEffect(() => {
+    if (state.tripDates.length > 0 && !state.selectedDay) {
+      const firstDayKey = state.tripDates[0].toISOString().split('T')[0];
+      dispatch({ type: 'SET_SELECTED_DAY', payload: firstDayKey });
+    }
+  }, [state.tripDates, state.selectedDay, dispatch]);
+
+  // Redirect to destination page if no dates are selected
+  useEffect(() => {
+    if (state.tripDates.length === 0) {
+      console.log('No trip dates found, redirecting to destination page');
+      navigate('/create-trip/destination');
+    }
+  }, [state.tripDates.length, navigate]);
+
+  // Backend Integration: Validation logic for proceeding to next step
+  const canProceed = state.tripDates.length > 0 && 
+    Object.values(state.dailySchedules).some(schedule => 
+      schedule?.timeSlots?.some(slot => slot.item)
+    );
+
+  const handleNext = async () => {
+    if (canProceed) {
+      // Backend Integration: Save schedule data before proceeding
+      // try {
+      //   await saveSchedule(); // This will call the API to save the schedule
+      //   console.log('Schedule saved successfully');
+      //   navigate('/create-trip/expenses');
+      // } catch (error) {
+      //   console.error('Failed to save schedule:', error);
+      //   // Show error toast or message to user
+      // }
+      
+      // For now, just proceed to next step (remove when backend is connected)
+      console.log('Proceeding to expense estimator with schedule:', state.dailySchedules);
+    }
+  };
+
+  const handleAddAccommodation = () => {
+    dispatch({ type: 'OPEN_ACCOMMODATION_MODAL' });
+  };
+
   return (
-    <TripCreationProvider>
-      <CreateTripSchedulePageContent />
-    </TripCreationProvider>
+    <div className="min-h-screen bg-gray-50">
+      <TripCreationCloseButton />
+      
+      <div className="container mx-auto px-6 py-8">
+        <ScheduleHeader />
+        
+        <DayNavigation />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+          <div className="lg:col-span-4">
+            <PlacesSuggestionPanel />
+          </div>
+          <div className="lg:col-span-8">
+            <ScheduleCanvas />
+          </div>
+        </div>
+
+        <AccommodationModal />
+
+        {/* Floating Add Accommodation Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="fixed bottom-6 left-6 z-20"
+        >
+          <Button
+            id="add-accommodation-button"
+            onClick={handleAddAccommodation}
+            size="default"
+            className="h-12 px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-white hover:bg-gray-50 text-green-600 border border-green-200 hover:border-green-300"
+          >
+            <Hotel className="h-5 w-5 mr-2" />
+            Add Accommodation
+          </Button>
+        </motion.div>
+
+        {/* Sticky CTA Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="fixed bottom-6 right-6 z-20"
+        >
+          <Button
+            id="next-to-expense-button"
+            onClick={handleNext}
+            disabled={!canProceed}
+            size="lg"
+            className={cn(
+              "h-14 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300",
+              canProceed
+                ? "bg-spot-primary hover:bg-spot-primary/90 text-white"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            )}
+          >
+            Next → Estimate Expenses
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+        </motion.div>
+      </div>
+    </div>
   );
 };
 

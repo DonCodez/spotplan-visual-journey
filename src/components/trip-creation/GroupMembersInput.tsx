@@ -1,6 +1,8 @@
+
 import React, { useEffect } from 'react';
 import { Users, Mail, User, Plus, Trash2 } from 'lucide-react';
-import { useTripCreation, GroupMember } from '@/contexts/TripCreationContext';
+import { useTripCreation } from '@/contexts/TripCreationContext';
+import { GroupMember } from '@/types/tripCreation';
 import { Button } from '@/components/ui/button';
 
 const GroupMembersInput = () => {
