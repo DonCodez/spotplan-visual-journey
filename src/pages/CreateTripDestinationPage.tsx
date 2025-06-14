@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -30,17 +29,13 @@ const CreateTripDestinationContent = () => {
     if (canProceed) {
       // Backend Integration: Save trip data before proceeding
       // try {
-      //   await createTrip(); // This will call the API to create the trip
-      //   console.log('Trip created successfully with ID:', state.tripId);
+      //   await createTrip();
       //   navigate('/create-trip/schedule');
       // } catch (error) {
-      //   console.error('Failed to create trip:', error);
-      //   // Show error toast or message to user
+      //   // ...
       // }
-      
       // For now, just proceed to next step (remove when backend is connected)
-      console.log('Proceeding to schedule builder with state:', state);
-      // navigate('/create-trip/schedule');
+      navigate('/create-trip/schedule');
     }
   };
 

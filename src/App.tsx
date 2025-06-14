@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -14,6 +13,7 @@ import DashboardPage from "./pages/DashboardPage";
 import TripsPage from "./pages/TripsPage";
 import ProfilePage from "./pages/ProfilePage";
 import CreateTripDestinationPage from "./pages/CreateTripDestinationPage";
+import CreateTripSchedulePage from "./pages/CreateTripSchedulePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +31,7 @@ const App: React.FC = () => {
             <Route path="/trips" element={<TripsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/create-trip/destination" element={<CreateTripDestinationPage />} />
+            <Route path="/create-trip/schedule" element={<CreateTripSchedulePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/login" element={<LoginPage />} />
