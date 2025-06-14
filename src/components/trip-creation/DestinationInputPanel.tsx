@@ -6,7 +6,6 @@ import GroupSizeSelector from './GroupSizeSelector';
 import GroupMembersInput from './GroupMembersInput';
 import DestinationTypeToggle from './DestinationTypeToggle';
 import CountrySelector from './CountrySelector';
-import TripDatesSelector from './TripDatesSelector';
 import FlightReminder from './FlightReminder';
 
 const DestinationInputPanel = () => {
@@ -22,7 +21,6 @@ const DestinationInputPanel = () => {
       <GroupMembersInput />
       <DestinationTypeToggle />
       <CountrySelector />
-      <TripDatesSelector />
       <FlightReminder />
     </motion.div>
   );
