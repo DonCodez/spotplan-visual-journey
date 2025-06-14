@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { X, Plus } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { X, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTripCreation } from '@/contexts/TripCreationContext';
@@ -14,6 +14,7 @@ const ScheduleBuilderContent = () => {
   const { state } = useTripCreation();
   const [isAccommodationModalOpen, setIsAccommodationModalOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Generate days from trip dates
   const generateDays = () => {
@@ -36,6 +37,18 @@ const ScheduleBuilderContent = () => {
   };
 
   const days = generateDays();
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -140, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 140, behavior: 'smooth' });
+    }
+  };
 
   const handleClose = () => {
     navigate('/');
@@ -70,23 +83,46 @@ const ScheduleBuilderContent = () => {
           <span className="text-sm text-gray-500">{days.length} days total</span>
         </div>
         
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          {days.map((day, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedDay(index)}
-              className={`flex-shrink-0 px-4 py-3 rounded-lg border text-center min-w-[120px] transition-colors ${
-                selectedDay === index
-                  ? 'bg-[#6EBB2D] border-[#6EBB2D] text-white'
-                  : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              <div className="text-xs font-medium">Day {index + 1}</div>
-              <div className="text-xs mt-1">
-                {format(day, 'EEE, MMM d')}
-              </div>
-            </button>
-          ))}
+        <div className="relative flex items-center">
+          {/* Left Arrow */}
+          <button
+            onClick={scrollLeft}
+            className="absolute left-0 z-10 w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-200 opacity-30 hover:opacity-100"
+          >
+            <ChevronLeft className="w-4 h-4 text-gray-600" />
+          </button>
+
+          {/* Scrollable Day Container */}
+          <div 
+            ref={scrollContainerRef}
+            className="flex gap-2 overflow-x-auto mx-10 scrollbar-hide"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {days.map((day, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedDay(index)}
+                className={`flex-shrink-0 px-4 py-3 rounded-lg border text-center min-w-[120px] transition-colors ${
+                  selectedDay === index
+                    ? 'bg-[#6EBB2D] border-[#6EBB2D] text-white'
+                    : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <div className="text-xs font-medium">Day {index + 1}</div>
+                <div className="text-xs mt-1">
+                  {format(day, 'EEE, MMM d')}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Right Arrow */}
+          <button
+            onClick={scrollRight}
+            className="absolute right-0 z-10 w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-200 opacity-30 hover:opacity-100"
+          >
+            <ChevronRight className="w-4 h-4 text-gray-600" />
+          </button>
         </div>
         
         <p className="text-xs text-gray-500 mt-2">
@@ -139,6 +175,12 @@ const ScheduleBuilderContent = () => {
           onClose={() => setIsAccommodationModalOpen(false)}
         />
       )}
+
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   );
 };
