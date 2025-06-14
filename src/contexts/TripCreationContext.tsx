@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 
 // Backend Integration Notes for bolt.new:
@@ -25,10 +24,11 @@ export interface TripCreationState {
   groupSize: number;
   groupMembers: GroupMember[];
   currentStep: number;
-  // Backend Integration: Add these fields when implementing API
-  // isLoading?: boolean;
-  // error?: string | null;
-  // tripId?: string; // Will be set when trip is created on backend
+  // -- ADDED FOR DATE SELECTOR --
+  dateType: "single" | "range";
+  startDate: Date | null;
+  dateRange: import("react-day-picker").DateRange | undefined;
+  // ... backend notes ...
 }
 
 type TripCreationAction =
@@ -38,11 +38,11 @@ type TripCreationAction =
   | { type: 'SET_GROUP_SIZE'; payload: number }
   | { type: 'SET_GROUP_MEMBERS'; payload: GroupMember[] }
   | { type: 'SET_CURRENT_STEP'; payload: number }
-  | { type: 'RESET' };
-  // Backend Integration: Add these actions when implementing API
-  // | { type: 'SET_LOADING'; payload: boolean }
-  // | { type: 'SET_ERROR'; payload: string | null }
-  // | { type: 'SET_TRIP_ID'; payload: string }
+  | { type: 'RESET' }
+  // ---- NEW DATE ACTIONS ----
+  | { type: 'SET_DATE_TYPE'; payload: "single" | "range" }
+  | { type: 'SET_START_DATE'; payload: Date | null }
+  | { type: 'SET_DATE_RANGE'; payload: import("react-day-picker").DateRange | undefined };
 
 const initialState: TripCreationState = {
   tripType: null,
@@ -51,6 +51,10 @@ const initialState: TripCreationState = {
   groupSize: 1,
   groupMembers: [],
   currentStep: 1,
+  // --- INITIALIZE DATES ---
+  dateType: "single",
+  startDate: null,
+  dateRange: undefined,
 };
 
 const tripCreationReducer = (state: TripCreationState, action: TripCreationAction): TripCreationState => {
@@ -74,6 +78,12 @@ const tripCreationReducer = (state: TripCreationState, action: TripCreationActio
       return { ...state, currentStep: action.payload };
     case 'RESET':
       return initialState;
+    case 'SET_DATE_TYPE':
+      return { ...state, dateType: action.payload };
+    case 'SET_START_DATE':
+      return { ...state, startDate: action.payload };
+    case 'SET_DATE_RANGE':
+      return { ...state, dateRange: action.payload };
     default:
       return state;
   }
