@@ -51,6 +51,13 @@ const TripDateSelector = () => {
     }
   };
 
+  // Disable dates before today
+  const disablePastDates = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date < today;
+  };
+
   return (
     <div className="mb-6">
       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -94,6 +101,7 @@ const TripDateSelector = () => {
               mode="single"
               selected={state.startDate || undefined}
               onSelect={handleSingleDateSelect}
+              disabled={disablePastDates}
               initialFocus
               className={cn("p-3 pointer-events-auto")}
             />
@@ -102,6 +110,7 @@ const TripDateSelector = () => {
               mode="range"
               selected={state.dateRange}
               onSelect={handleRangeSelect}
+              disabled={disablePastDates}
               initialFocus
               className={cn("p-3 pointer-events-auto")}
             />
