@@ -1,10 +1,10 @@
 
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TripCreationProvider, useTripCreation } from '@/contexts/TripCreationContext';
+import { useTripCreation } from '@/contexts/TripCreationContext';
 import ScheduleBuilderContent from '@/components/schedule-builder/ScheduleBuilderContent';
 
-const CreateTripScheduleContent = () => {
+const CreateTripSchedulePage = () => {
   const { state } = useTripCreation();
   const navigate = useNavigate();
 
@@ -33,14 +33,6 @@ const CreateTripScheduleContent = () => {
   }
 
   return <ScheduleBuilderContent />;
-};
-
-const CreateTripSchedulePage = () => {
-  return (
-    <TripCreationProvider>
-      <CreateTripScheduleContent />
-    </TripCreationProvider>
-  );
 };
 
 export default CreateTripSchedulePage;
