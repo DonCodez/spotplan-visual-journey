@@ -1,6 +1,10 @@
 
 import React from "react";
-import { Dialog } from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogOverlay,
+  DialogContent,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Star, MapPin } from "lucide-react";
 
@@ -26,22 +30,34 @@ const hotels = [
 
 // // To be connected to hotel booking API by Bolt
 
-const AccommodationModal = ({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) => {
+const AccommodationModal = ({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+}) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur z-50" />
-      <div className="fixed inset-0 flex items-center justify-center z-50">
-        <div className="bg-white rounded-xl shadow-2xl w-[95vw] max-w-xl p-7">
+      <DialogOverlay />
+      <DialogContent className="w-[95vw] max-w-xl p-0 bg-transparent border-none shadow-none">
+        <div className="bg-white rounded-xl shadow-2xl w-full p-7">
           <div className="mb-4 flex items-center gap-3">
-            <span className="text-2xl font-bold text-[#317312]">Select Accommodation</span>
+            <span className="text-2xl font-bold text-[#317312]">
+              Select Accommodation
+            </span>
           </div>
           <div className="flex flex-col gap-4 mt-3">
-            {hotels.map(hotel => (
+            {hotels.map((hotel) => (
               <div
                 key={hotel.id}
                 className="flex gap-3 items-center border rounded-lg px-3 py-2 hotel-card bg-[#f7f6f2] shadow hover:shadow-lg"
               >
-                <img src={hotel.img} alt={hotel.name} className="w-20 h-[64px] object-cover rounded" />
+                <img
+                  src={hotel.img}
+                  alt={hotel.name}
+                  className="w-20 h-[64px] object-cover rounded"
+                />
                 <div className="flex flex-col flex-1">
                   <span className="font-semibold text-[#24BAEC]">{hotel.name}</span>
                   <div className="flex items-center gap-1 text-yellow-500">
@@ -54,7 +70,11 @@ const AccommodationModal = ({ open, onOpenChange }: { open: boolean; onOpenChang
                   </div>
                 </div>
                 <div>
-                  <a href={hotel.bookingUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={hotel.bookingUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Button size="sm" variant="outline" className="mb-2">
                       Visit Booking Site
                     </Button>
@@ -67,7 +87,7 @@ const AccommodationModal = ({ open, onOpenChange }: { open: boolean; onOpenChang
             ))}
           </div>
         </div>
-      </div>
+      </DialogContent>
       {/* 
         // To be hooked up: After clicking Add to Schedule, show popup for:
         // Dates of stay
@@ -80,3 +100,4 @@ const AccommodationModal = ({ open, onOpenChange }: { open: boolean; onOpenChang
 };
 
 export default AccommodationModal;
+
