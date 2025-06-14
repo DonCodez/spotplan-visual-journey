@@ -57,9 +57,6 @@ const SuggestionsPanel = () => {
   const [activeTab, setActiveTab] = useState<'places' | 'restaurants'>('places');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // TODO: Add sorting logic based on day selection, proximity, and ratings
-  // TODO: Connect to Google Places API for real data
-
   const currentData = activeTab === 'places' ? dummyPlaces : dummyRestaurants;
 
   return (
@@ -104,6 +101,7 @@ const SuggestionsPanel = () => {
 
       {/* Places List */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        <p className="text-xs text-gray-500 mb-3">Drag places to your schedule →</p>
         {currentData.map((place) => (
           <PlaceCard
             key={place.id}

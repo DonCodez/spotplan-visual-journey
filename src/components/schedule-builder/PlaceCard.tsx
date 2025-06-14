@@ -1,7 +1,9 @@
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Star, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Moveable from 'moveable';
+import { useDragDrop } from '@/contexts/DragDropContext';
 
 interface PlaceCardProps {
   place: {
@@ -17,13 +19,62 @@ interface PlaceCardProps {
 }
 
 const PlaceCard = ({ place, className }: PlaceCardProps) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const moveableRef = useRef<Moveable | null>(null);
+  const { isDragging, setDragging, setDraggedItem } = useDragDrop();
+
+  useEffect(() => {
+    if (!cardRef.current) return;
+
+    const moveable = new Moveable(document.body, {
+      target: cardRef.current,
+      draggable: true,
+      throttleDrag: 0,
+      edgeDraggable: false,
+      startDragRotate: 0,
+      throttleDragRotate: 0,
+    });
+
+    moveable.on('dragStart', () => {
+      setDragging(true);
+      setDraggedItem(place, place.type === 'restaurant' ? 'restaurant' : 'place');
+      if (cardRef.current) {
+        cardRef.current.style.opacity = '0.7';
+        cardRef.current.style.transform = 'scale(1.05)';
+        cardRef.current.style.zIndex = '1000';
+      }
+    });
+
+    moveable.on('drag', (e) => {
+      if (cardRef.current) {
+        cardRef.current.style.transform = `translate(${e.translate[0]}px, ${e.translate[1]}px) scale(1.05)`;
+      }
+    });
+
+    moveable.on('dragEnd', () => {
+      setDragging(false);
+      if (cardRef.current) {
+        cardRef.current.style.opacity = '1';
+        cardRef.current.style.transform = 'scale(1)';
+        cardRef.current.style.zIndex = 'auto';
+      }
+    });
+
+    moveableRef.current = moveable;
+
+    return () => {
+      moveable.destroy();
+    };
+  }, [place, setDragging, setDraggedItem]);
+
   return (
     <div 
+      ref={cardRef}
       className={cn(
         "bg-white border border-gray-200 rounded-lg p-3 cursor-grab hover:shadow-md transition-shadow duration-200",
+        isDragging && "pointer-events-none",
         className
       )}
-      draggable={false}
     >
       <div className="flex gap-3">
         <div className="w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden">
