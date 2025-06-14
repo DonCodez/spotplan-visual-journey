@@ -25,7 +25,7 @@ const ScheduleCanvas = () => {
       return days;
     }
     
-    // Fallback to default dates
+    // This should not happen since we check for valid dates in the page component
     return [new Date()];
   };
 
