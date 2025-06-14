@@ -21,7 +21,7 @@ interface PlaceCardProps {
 const PlaceCard = ({ place, className }: PlaceCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const moveableRef = useRef<Moveable | null>(null);
-  const { isDragging, setDragging, setDraggedItem } = useDragDrop();
+  const { isDragging, setDragging, setDraggedItem, setMousePosition, getDropTarget } = useDragDrop();
 
   useEffect(() => {
     if (!cardRef.current) return;
@@ -35,28 +35,50 @@ const PlaceCard = ({ place, className }: PlaceCardProps) => {
       throttleDragRotate: 0,
     });
 
-    moveable.on('dragStart', () => {
+    moveable.on('dragStart', (e) => {
+      console.log('Drag started for:', place.title);
       setDragging(true);
       setDraggedItem(place, place.type === 'restaurant' ? 'restaurant' : 'place');
       if (cardRef.current) {
         cardRef.current.style.opacity = '0.7';
         cardRef.current.style.transform = 'scale(1.05)';
         cardRef.current.style.zIndex = '1000';
+        cardRef.current.style.pointerEvents = 'none';
       }
     });
 
     moveable.on('drag', (e) => {
+      const mouseX = e.clientX || (e.inputEvent?.clientX);
+      const mouseY = e.clientY || (e.inputEvent?.clientY);
+      
+      if (mouseX !== undefined && mouseY !== undefined) {
+        setMousePosition({ x: mouseX, y: mouseY });
+      }
+      
       if (cardRef.current) {
         cardRef.current.style.transform = `translate(${e.translate[0]}px, ${e.translate[1]}px) scale(1.05)`;
       }
     });
 
-    moveable.on('dragEnd', () => {
+    moveable.on('dragEnd', (e) => {
+      console.log('Drag ended');
+      const dropTarget = getDropTarget();
+      
+      if (dropTarget) {
+        console.log('Found drop target, placing item');
+        // Trigger drop on the target element
+        const dropEvent = new CustomEvent('moveableDrop', {
+          detail: { item: place, type: place.type === 'restaurant' ? 'restaurant' : 'place' }
+        });
+        dropTarget.dispatchEvent(dropEvent);
+      }
+      
       setDragging(false);
       if (cardRef.current) {
         cardRef.current.style.opacity = '1';
         cardRef.current.style.transform = 'scale(1)';
         cardRef.current.style.zIndex = 'auto';
+        cardRef.current.style.pointerEvents = 'auto';
       }
     });
 
@@ -65,7 +87,7 @@ const PlaceCard = ({ place, className }: PlaceCardProps) => {
     return () => {
       moveable.destroy();
     };
-  }, [place, setDragging, setDraggedItem]);
+  }, [place, setDragging, setDraggedItem, setMousePosition, getDropTarget]);
 
   return (
     <div 

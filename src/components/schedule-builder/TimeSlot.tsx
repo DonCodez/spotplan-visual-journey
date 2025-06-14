@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { useDragDrop } from '@/contexts/DragDropContext';
 import { X } from 'lucide-react';
@@ -19,9 +19,10 @@ interface DroppedItem {
 }
 
 const TimeSlot = ({ time, hour24, isMealSlot, mealType, dayIndex }: TimeSlotProps) => {
-  const { isDragging, draggedItem, setDragging } = useDragDrop();
+  const { isDragging, mousePosition } = useDragDrop();
   const [isDropZone, setIsDropZone] = useState(false);
   const [droppedItem, setDroppedItem] = useState<DroppedItem | null>(null);
+  const dropZoneRef = useRef<HTMLDivElement>(null);
 
   const getMealEmoji = (type?: string) => {
     switch (type) {
@@ -41,43 +42,47 @@ const TimeSlot = ({ time, hour24, isMealSlot, mealType, dayIndex }: TimeSlotProp
     }
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    if (isDragging && !droppedItem) {
-      setIsDropZone(true);
+  useEffect(() => {
+    if (!dropZoneRef.current || !isDragging || droppedItem) {
+      setIsDropZone(false);
+      return;
     }
-  };
 
-  const handleDragLeave = () => {
-    setIsDropZone(false);
-  };
+    if (mousePosition) {
+      const rect = dropZoneRef.current.getBoundingClientRect();
+      const isOver = mousePosition.x >= rect.left && 
+                     mousePosition.x <= rect.right && 
+                     mousePosition.y >= rect.top && 
+                     mousePosition.y <= rect.bottom;
+      setIsDropZone(isOver);
+    }
+  }, [mousePosition, isDragging, droppedItem]);
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDropZone(false);
+  useEffect(() => {
+    const dropZone = dropZoneRef.current;
+    if (!dropZone) return;
+
+    const handleDrop = (e: CustomEvent) => {
+      console.log('Drop event received:', e.detail);
+      if (!droppedItem && e.detail.item) {
+        setDroppedItem({
+          id: e.detail.item.id,
+          title: e.detail.item.title,
+          type: e.detail.type
+        });
+        setIsDropZone(false);
+      }
+    };
+
+    dropZone.addEventListener('moveableDrop', handleDrop as EventListener);
     
-    if (draggedItem && !droppedItem) {
-      setDroppedItem({
-        id: draggedItem.id,
-        title: draggedItem.title,
-        type: draggedItem.type
-      });
-      setDragging(false);
-    }
-  };
+    return () => {
+      dropZone.removeEventListener('moveableDrop', handleDrop as EventListener);
+    };
+  }, [droppedItem]);
 
   const handleRemoveItem = () => {
     setDroppedItem(null);
-  };
-
-  const handleMouseEnter = () => {
-    if (isDragging && !droppedItem) {
-      setIsDropZone(true);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    setIsDropZone(false);
   };
 
   return (
@@ -86,19 +91,20 @@ const TimeSlot = ({ time, hour24, isMealSlot, mealType, dayIndex }: TimeSlotProp
         "time-slot flex items-center gap-4 p-3 border border-gray-100 rounded-lg min-h-[60px] transition-all duration-200",
         isMealSlot && "bg-green-50 border-green-200",
         isDropZone && "border-blue-400 bg-blue-50 border-2",
-        isDragging && "hover:border-blue-400 hover:bg-blue-50"
+        isDragging && !droppedItem && "hover:border-blue-400 hover:bg-blue-50"
       )}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
     >
       <div className="w-20 text-sm font-medium text-gray-600">
         {time}
       </div>
       
-      <div className="flex-1 min-h-[40px] border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center relative">
+      <div 
+        ref={dropZoneRef}
+        className={cn(
+          "time-slot-drop-zone flex-1 min-h-[40px] border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center relative transition-all duration-200",
+          isDropZone && "border-blue-400 bg-blue-100"
+        )}
+      >
         {droppedItem ? (
           <div className="flex items-center justify-between w-full px-3 py-2 bg-white rounded border border-gray-200">
             <div className="flex items-center gap-2">
