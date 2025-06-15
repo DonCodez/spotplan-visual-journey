@@ -3,7 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { useTripCreation } from '@/contexts/TripCreationContext';
+import { TripCreationProvider, useTripCreation } from '@/contexts/TripCreationContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import DestinationHeader from '@/components/trip-creation/DestinationHeader';
@@ -11,7 +11,7 @@ import DestinationInputPanel from '@/components/trip-creation/DestinationInputPa
 import DestinationMapPanel from '@/components/trip-creation/DestinationMapPanel';
 import TripCreationCloseButton from '@/components/trip-creation/TripCreationCloseButton';
 
-const CreateTripDestinationPage = () => {
+const CreateTripDestinationContent = () => {
   const { state } = useTripCreation();
   const navigate = useNavigate();
 
@@ -45,9 +45,9 @@ const CreateTripDestinationPage = () => {
       //   // Show error toast or message to user
       // }
       
-      // For now, just proceed to next step
+      // For now, just proceed to next step (remove when backend is connected)
       console.log('Proceeding to schedule builder with state:', state);
-      navigate('/create-trip/schedule');
+      // navigate('/create-trip/schedule');
     }
   };
 
@@ -88,6 +88,14 @@ const CreateTripDestinationPage = () => {
         </motion.div>
       </div>
     </div>
+  );
+};
+
+const CreateTripDestinationPage = () => {
+  return (
+    <TripCreationProvider>
+      <CreateTripDestinationContent />
+    </TripCreationProvider>
   );
 };
 
