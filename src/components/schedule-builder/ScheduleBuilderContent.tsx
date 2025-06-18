@@ -1,10 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Hotel } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useTripCreation } from '@/contexts/TripCreationContext';
 import TripCreationCloseButton from '@/components/trip-creation/TripCreationCloseButton';
 import ScheduleHeader from './ScheduleHeader';
 import DaySelector from './DaySelector';
@@ -14,14 +15,38 @@ import AccommodationModal from './AccommodationModal';
 
 const ScheduleBuilderContent = () => {
   const navigate = useNavigate();
+  const { state } = useTripCreation();
   const [selectedDay, setSelectedDay] = useState(0);
   const [isAccommodationModalOpen, setIsAccommodationModalOpen] = useState(false);
+
+  // Check if dates are properly set, redirect to destination page if not
+  useEffect(() => {
+    const hasValidDates = state.dateType && (
+      (state.dateType === 'single' && state.startDate) ||
+      (state.dateType === 'range' && state.dateRange?.from)
+    );
+
+    if (!hasValidDates) {
+      console.log('No dates selected, redirecting to destination page');
+      navigate('/create-trip/destination');
+    }
+  }, [state.dateType, state.startDate, state.dateRange, navigate]);
 
   const handleNext = () => {
     // Navigate to expense estimation page (placeholder for now)
     console.log('Proceeding to expense estimation');
     // navigate('/create-trip/expenses');
   };
+
+  // Early return if no valid dates (while redirect is happening)
+  const hasValidDates = state.dateType && (
+    (state.dateType === 'single' && state.startDate) ||
+    (state.dateType === 'range' && state.dateRange?.from)
+  );
+
+  if (!hasValidDates) {
+    return null; // Don't render anything while redirecting
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -53,7 +78,7 @@ const ScheduleBuilderContent = () => {
               size="lg"
               className={cn(
                 "h-14 px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300",
-                "bg-spot-secondary hover:bg-spot-secondary/90 text-white"
+                "bg-green-100 hover:bg-green-200 text-green-800 border border-green-300"
               )}
             >
               <Hotel className="mr-2 h-5 w-5" />
