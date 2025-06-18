@@ -9,9 +9,17 @@ interface DayColumnProps {
   isSelected: boolean;
 }
 
+interface TimeSlotData {
+  time: string;
+  duration: string;
+  type: 'activity' | 'meal';
+  mealType?: 'breakfast' | 'lunch' | 'dinner';
+  emoji?: string;
+}
+
 const DayColumn = ({ dayNumber, date, isSelected }: DayColumnProps) => {
   // Generate time slots from 8 AM to 10 PM
-  const timeSlots = [
+  const timeSlots: TimeSlotData[] = [
     { time: '8:00 AM', duration: '1 hour', type: 'meal', mealType: 'breakfast', emoji: '🥣' },
     { time: '9:00 AM', duration: '1 hour', type: 'activity' },
     { time: '10:00 AM', duration: '1 hour', type: 'activity' },
