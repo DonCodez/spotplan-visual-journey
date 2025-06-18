@@ -90,7 +90,7 @@ const DaySelector = ({ selectedDay, onSelectDay }: DaySelectorProps) => {
           <ChevronLeft className="h-4 w-4" />
         </Button>
         
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide min-w-0 flex-1">
+        <div className="flex gap-3 overflow-x-auto min-w-0 flex-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {dayButtons.map((button) => (
             <Button
               key={button.day}

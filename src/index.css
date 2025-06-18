@@ -136,4 +136,14 @@
     -webkit-text-fill-color: transparent;
     animation: gradient-shift 1.5s ease-in-out infinite;
   }
+
+  /* Hide scrollbars but keep scroll functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
