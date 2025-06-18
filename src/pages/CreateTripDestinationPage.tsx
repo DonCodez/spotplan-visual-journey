@@ -45,9 +45,9 @@ const CreateTripDestinationContent = () => {
       //   // Show error toast or message to user
       // }
       
-      // For now, proceed to schedule builder
+      // For now, just proceed to next step (remove when backend is connected)
       console.log('Proceeding to schedule builder with state:', state);
-      navigate('/create-trip/schedule');
+      // navigate('/create-trip/schedule');
     }
   };
 
