@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Hotel } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import TripCreationCloseButton from '@/components/trip-creation/TripCreationCloseButton';
@@ -10,10 +10,12 @@ import ScheduleHeader from './ScheduleHeader';
 import DaySelector from './DaySelector';
 import SuggestionsPanel from './SuggestionsPanel';
 import ScheduleGrid from './ScheduleGrid';
+import AccommodationModal from './AccommodationModal';
 
 const ScheduleBuilderContent = () => {
   const navigate = useNavigate();
   const [selectedDay, setSelectedDay] = useState(0);
+  const [isAccommodationModalOpen, setIsAccommodationModalOpen] = useState(false);
 
   const handleNext = () => {
     // Navigate to expense estimation page (placeholder for now)
@@ -37,27 +39,55 @@ const ScheduleBuilderContent = () => {
           <ScheduleGrid selectedDay={selectedDay} />
         </div>
 
-        {/* Sticky CTA Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="fixed bottom-6 right-6 z-20"
-        >
-          <Button
-            id="next-to-expense-button"
-            onClick={handleNext}
-            size="lg"
-            className={cn(
-              "h-14 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300",
-              "bg-spot-primary hover:bg-spot-primary/90 text-white"
-            )}
+        {/* Floating Action Buttons */}
+        <div className="fixed bottom-6 right-6 z-20 flex flex-col gap-3">
+          {/* Add Accommodation Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
           >
-            Next → Estimate Expenses
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </motion.div>
+            <Button
+              id="open-hotel-popup-button"
+              onClick={() => setIsAccommodationModalOpen(true)}
+              size="lg"
+              className={cn(
+                "h-14 px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300",
+                "bg-spot-secondary hover:bg-spot-secondary/90 text-white"
+              )}
+            >
+              <Hotel className="mr-2 h-5 w-5" />
+              Add Accommodation
+            </Button>
+          </motion.div>
+
+          {/* Next Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            <Button
+              id="next-to-expense-button"
+              onClick={handleNext}
+              size="lg"
+              className={cn(
+                "h-14 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300",
+                "bg-spot-primary hover:bg-spot-primary/90 text-white"
+              )}
+            >
+              Next → Estimate Expenses
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </motion.div>
+        </div>
       </div>
+
+      <AccommodationModal
+        isOpen={isAccommodationModalOpen}
+        onClose={() => setIsAccommodationModalOpen(false)}
+        selectedDay={selectedDay}
+      />
     </div>
   );
 };

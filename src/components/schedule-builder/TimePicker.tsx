@@ -33,8 +33,8 @@ interface TimePickerProps {
 }
 
 const TimePicker = ({ isOpen, onClose, place, selectedDay }: TimePickerProps) => {
-  const [selectedTime, setSelectedTime] = useState('');
-  const [duration, setDuration] = useState('1');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
 
   const generateTimeOptions = () => {
     const options = [];
@@ -51,8 +51,8 @@ const TimePicker = ({ isOpen, onClose, place, selectedDay }: TimePickerProps) =>
   const timeOptions = generateTimeOptions();
 
   const handleAddToSchedule = () => {
-    if (selectedTime) {
-      console.log(`Adding ${place.name} to Day ${selectedDay + 1} at ${selectedTime} for ${duration} hour(s)`);
+    if (startTime && endTime) {
+      console.log(`Adding ${place.name} to Day ${selectedDay + 1} from ${startTime} to ${endTime}`);
       // TODO: Add to schedule state/context
       onClose();
     }
@@ -92,7 +92,7 @@ const TimePicker = ({ isOpen, onClose, place, selectedDay }: TimePickerProps) =>
               <label className="text-sm font-medium text-gray-700 mb-2 block">
                 Start Time
               </label>
-              <Select value={selectedTime} onValueChange={setSelectedTime}>
+              <Select value={startTime} onValueChange={setStartTime}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select start time" />
                 </SelectTrigger>
@@ -108,19 +108,18 @@ const TimePicker = ({ isOpen, onClose, place, selectedDay }: TimePickerProps) =>
 
             <div>
               <label className="text-sm font-medium text-gray-700 mb-2 block">
-                Duration
+                End Time
               </label>
-              <Select value={duration} onValueChange={setDuration}>
+              <Select value={endTime} onValueChange={setEndTime}>
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue placeholder="Select end time" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="0.5">30 minutes</SelectItem>
-                  <SelectItem value="1">1 hour</SelectItem>
-                  <SelectItem value="1.5">1.5 hours</SelectItem>
-                  <SelectItem value="2">2 hours</SelectItem>
-                  <SelectItem value="3">3 hours</SelectItem>
-                  <SelectItem value="4">4 hours</SelectItem>
+                  {timeOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -137,7 +136,7 @@ const TimePicker = ({ isOpen, onClose, place, selectedDay }: TimePickerProps) =>
             </Button>
             <Button
               onClick={handleAddToSchedule}
-              disabled={!selectedTime}
+              disabled={!startTime || !endTime}
               className="flex-1 bg-spot-primary hover:bg-spot-primary/90"
             >
               Add to Schedule

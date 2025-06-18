@@ -40,6 +40,13 @@ const DaySelector = ({ selectedDay, onSelectDay }: DaySelectorProps) => {
           date: format(currentDate, 'EEE, MMM d')
         });
       }
+    } else {
+      // Fallback if no dates are set
+      buttons.push({
+        day: 0,
+        label: 'Day 1',
+        date: 'Select dates first'
+      });
     }
     
     return buttons;
@@ -69,7 +76,7 @@ const DaySelector = ({ selectedDay, onSelectDay }: DaySelectorProps) => {
     >
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold text-gray-900">Select Day</h2>
-        <span className="text-sm text-gray-500">{totalDays} days total</span>
+        <span className="text-sm text-gray-500">{totalDays} {totalDays === 1 ? 'day' : 'days'} total</span>
       </div>
       
       <div className="flex items-center gap-4">
